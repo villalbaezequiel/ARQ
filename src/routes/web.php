@@ -15,6 +15,11 @@ Route::get('/', function () {
     return view('welcome');
 });
 
+// redirect temporally
+Route::get('/', function(){
+    return redirect('/home');
+});
+
 Auth::routes();
 
 Route::get('/home', 'HomeController@index')->name('home');
