@@ -17,7 +17,11 @@ Route::get('/', function () {
 
 // redirect temporally
 Route::get('/', function(){
-    return redirect('/home');
+    return redirect('/clients');
+});
+
+Route::get('/home', function(){
+    return redirect('/clients');
 });
 
 Auth::routes();
