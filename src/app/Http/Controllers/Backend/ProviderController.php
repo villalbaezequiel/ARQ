@@ -13,38 +13,38 @@ use App\Provider;
 
 class ProviderController extends Controller
 {
-    protected $_permission;
-    protected $permissionApproved = ['1', '3'];
+    // protected $_permission;
+    // protected $permissionApproved = ['1', '3'];
 
-    /**
-     * Instantiate a new controller instance.
-     *
-     * @return void
-     */
-    public function __construct()
-    {
-      $this->middleware(function ($request, $next) {
+    // /**
+    //  * Instantiate a new controller instance.
+    //  *
+    //  * @return void
+    //  */
+    // public function __construct()
+    // {
+    //   $this->middleware(function ($request, $next) {
 
-        if(\Request::route()->getName() == "crew.store"){
-          return $next($request);
-        }
+    //     if(\Request::route()->getName() == "crew.store"){
+    //       return $next($request);
+    //     }
 
-        $cancelPermission = true;
-        $this->_permission = json_decode(Auth::user()->permissions);
+    //     $cancelPermission = true;
+    //     $this->_permission = json_decode(Auth::user()->permissions);
 
-        if($this->_permission){
-          foreach($this->permissionApproved as $approved){
-            foreach($this->_permission as $userPermission){
-              if($approved == $userPermission){
-                $cancelPermission = false;
-                return $next($request);
-              }
-            }
-          }
-        }
+    //     if($this->_permission){
+    //       foreach($this->permissionApproved as $approved){
+    //         foreach($this->_permission as $userPermission){
+    //           if($approved == $userPermission){
+    //             $cancelPermission = false;
+    //             return $next($request);
+    //           }
+    //         }
+    //       }
+    //     }
 
-      });
-    }
+    //   });
+    // }
 
     /**
      * Display a listing of the resource.

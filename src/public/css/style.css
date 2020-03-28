@@ -1,0 +1,215 @@
+html, body {
+  text-transform: uppercase!important;
+  font-size: 13.5px!important;
+}
+
+.swal2-popup .swal2-title {
+  text-transform: uppercase!important;
+  font-size: 27px!important;
+}
+
+.swal2-popup .swal2-actions button {
+  text-transform: uppercase!important;
+  font-size: 13.5px!important;
+}
+
+.btn {
+  font-size: 13.5px!important;
+}
+
+.sidebar .user .user-info > a, .sidebar .nav p {
+  font-size: 13.5px!important;
+}
+
+.card [class*="card-header-"] .card-text .card-title {
+  font-size: 13.5px !important;
+}
+
+.col-form-label {
+  font-size: 13.5px!important;
+}
+
+.tim-row{
+    margin-bottom: 20px;
+}
+
+.tim-white-buttons {
+    background-color: #777777;
+}
+.typography-line{
+    padding-left: 25%;
+    margin-bottom: 35px;
+    position: relative;
+    display: block;
+    width: 100%;
+}
+.typography-line span{
+    bottom: 10px;
+    color: #c0c1c2;
+    display: block;
+    font-weight: 400;
+    font-size: 13.5px;
+    line-height: 13px;
+    left: 0;
+    position: absolute;
+    width: 260px;
+    text-transform: none;
+}
+.tim-row{
+    padding-top: 60px;
+}
+.tim-row h3{
+    margin-top: 0;
+}
+.tim-typo{
+    padding-left: 25%;
+    margin-bottom: 40px;
+    position: relative;
+    width: 100%;
+}
+.tim-typo .tim-note{
+    bottom: 5px;
+    color: #c0c1c2;
+    display: block;
+    font-weight: 400;
+    font-size: 13.5px;
+    line-height: 15px;
+    left: 0;
+    margin-left: 20px;
+    position: absolute;
+    width: 260px;
+}
+.valoration_content {
+    direction: rtl;/* right to left */
+    unicode-bidi: bidi-override;/* bidi de bidireccional */
+}
+.valoration_star {
+    font-size: 20px;
+    padding-right: 10px!important;
+}
+.valoration_star:hover,
+.valoration_star:hover ~ label {
+    color: orange;
+}
+.valoration_star_input:checked ~ label {
+    color: orange;
+}
+@media screen and (max-width:770px){
+
+  div.dataTables_wrapper div.dataTables_filter,
+  div.dataTables_wrapper div.dataTables_length {
+    text-align: left;
+  }
+
+  div.dataTables_wrapper div.dataTables_info {
+    white-space: normal;
+  }
+
+  div.dataTables_wrapper div.dataTables_paginate ul.pagination {
+    justify-content:center
+  }
+
+}
+.required-red {
+    color: #c7254e;
+}
+.hidden {
+  display: none!important;
+}
+.text-header-frame {
+  width: 48%;
+  text-align: center;
+}
+.card-section-color {
+  background-color: rgba(0,0,0,.03)!important;
+  border-top: 1px solid rgba(0,0,0,.125)!important;
+}
+.text-muted {
+  color: #6c757d !important;
+}
+.swal-wide {
+  width: 60%!important;
+}
+@media screen and (max-width: 900px) {
+  li.paginate_button.previous {
+      display: inline;
+  }
+
+  li.paginate_button.next {
+      display: inline;
+  }
+
+  li.paginate_button {
+      display: none;
+  }
+}
+
+@media screen and (max-width: 450px) {
+  table.dataTable > tbody > tr.child ul.dtr-details > li {
+    display: grid;
+  }
+
+  table.dataTable.nowrap td, table.dataTable.nowrap th {
+    white-space: normal;
+  }
+
+  .card-icon-project {
+    float: none!important;
+  }
+
+  .card-wizard .input-group-text {
+    padding: 0px !important;
+  }
+
+  .input-group-prepend {
+    display: block!important;
+    width: 100%;
+  }
+
+  .fixed-plugin {
+    display: none!important;
+  }
+
+  .dropdown-menu.show {
+    left: 1px!important;
+    width: 100%!important;
+  }
+  .dropdown-item {
+    white-space: normal!important;
+  }
+
+}
+
+@media screen and (max-width: 550px) {
+  .fc-toolbar .fc-right {
+    display: inline-block;
+    float: none;
+  }
+
+  #swal2-content .text-right {
+    text-align: left!important;
+  }
+}
+
+table.dataTable > tbody > tr.child ul.dtr-details {
+  width: 100%;
+}
+
+.card-footer-project {
+  display: block!important;
+  text-align: center!important;
+}
+
+.card-footer-project > .btn.btn-fab, .btn.btn-just-icon{
+  min-width: 33px!important;
+  width: 33px!important;
+}
+
+.no-wrap {
+  white-space: inherit!important;
+}
+
+#minimizeSidebar {
+  min-width: 41px!important;
+  width: 41px!important;
+}

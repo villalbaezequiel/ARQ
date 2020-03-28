@@ -23,7 +23,7 @@ class CreateUsersTable extends Migration
             $table->string('cuit')->nullable();
             $table->string('gender')->nullable();
             $table->string('civil_status')->nullable();
-            $table->timestamp('birthdate')->nullable();
+            $table->string('birthdate')->nullable();
             $table->integer('id_study')->nullable();
             $table->string('id_nationality')->nullable();
             $table->integer('id_country')->nullable();

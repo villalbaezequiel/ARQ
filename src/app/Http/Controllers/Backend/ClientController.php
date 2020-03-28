@@ -13,33 +13,33 @@ use App\Client;
 
 class ClientController extends Controller
 {
-    protected $_permission;
-    protected $permissionApproved = ['1', '4'];
+    // protected $_permission;
+    // protected $permissionApproved = ['1', '4'];
 
-    /**
-     * Instantiate a new controller instance.
-     *
-     * @return void
-     */
-    public function __construct()
-    {
-      $this->middleware(function ($request, $next) {
-        $cancelPermission = true;
-        $this->_permission = json_decode(Auth::user()->permissions);
+    // /**
+    //  * Instantiate a new controller instance.
+    //  *
+    //  * @return void
+    //  */
+    // public function __construct()
+    // {
+    //   $this->middleware(function ($request, $next) {
+    //     $cancelPermission = true;
+    //     $this->_permission = json_decode(Auth::user()->permissions);
 
-        if($this->_permission){
-          foreach($this->permissionApproved as $approved){
-            foreach($this->_permission as $userPermission){
-              if($approved == $userPermission){
-                $cancelPermission = false;
-                return $next($request);
-              }
-            }
-          }
-        }
+    //     if($this->_permission){
+    //       foreach($this->permissionApproved as $approved){
+    //         foreach($this->_permission as $userPermission){
+    //           if($approved == $userPermission){
+    //             $cancelPermission = false;
+    //             return $next($request);
+    //           }
+    //         }
+    //       }
+    //     }
 
-      });
-    }
+    //   });
+    // }
 
     /**
      * Display a listing of the resource.
@@ -93,7 +93,7 @@ class ClientController extends Controller
           $user->cuit         = $request->get('cuit');
           $user->gender       = $request->get('gender');
           $user->civil_status = $request->get('civil_status');
-          $user->birthdate    = (isset($birthdate[2]) ? $birthdate[2].'-'.$birthdate[1].'-'.$birthdate[0] : $request->get('birthdate'));
+          // $user->birthdate    = (isset($birthdate[2]) ? $birthdate[2].'-'.$birthdate[1].'-'.$birthdate[0] : $request->get('birthdate'));
           $user->id_study     = $request->get('id_study');
           $user->id_nationality = $request->get('id_nationality');
           $user->id_country   = $request->get('id_country');
@@ -105,6 +105,7 @@ class ClientController extends Controller
           $user->cp           = $request->get('cp');
           $user->telephone    = $request->get('telephone');
           $user->other_telephone = $request->get('other_telephone');
+          $user->password     = Hash::make('arq_'.$request->get('cuit'));
           $user->is_client    = 1;
           $user->is_active    = $request->get('is_active');
           $user->save();
