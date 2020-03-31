@@ -26,7 +26,7 @@
 </head>
 
 <body class="">
-    <div class="wrapper ">
+    <div class="wrapper">
       @include('backend.components.sidebar')
       <div class="main-panel">
         @include('backend.components.nav')
@@ -38,6 +38,13 @@
       </div>
     </div>
     @include('backend.components.setting_fixed')
+
+    @guest
+    @else
+      <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
+          @csrf
+      </form>
+    @endif
 
     <!-- Javascripts Plugins  -->
     <script src="{{ asset('/js/core/jquery-3.3.1.min.js') }}"></script>

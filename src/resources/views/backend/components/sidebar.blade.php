@@ -30,9 +30,13 @@
             </li>
 
             <li class="nav-item">
-              <a class="nav-link" href="{{ url('/logout') }}">
-                <span class="sidebar-mini"> CS </span>
-                <span class="sidebar-normal"> Cerrar Sesión </span>
+              <a 
+                class="nav-link"
+                href="{{ route('logout') }}"
+                onclick="event.preventDefault();
+                document.getElementById('logout-form').submit();">
+                  <span class="sidebar-mini"> CS </span>
+                  <span class="sidebar-normal"> Cerrar Sesión </span>
               </a>
             </li>
           </ul>
