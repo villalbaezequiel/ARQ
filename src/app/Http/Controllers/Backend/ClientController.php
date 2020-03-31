@@ -10,6 +10,7 @@ use Illuminate\Support\Facades\Auth;
 use App\Helpers;
 use App\User;
 use App\Client;
+use App\UserFile;
 
 class ClientController extends Controller
 {
@@ -123,6 +124,8 @@ class ClientController extends Controller
           $client->iva = $request->get('iva');
           $client->save();
 
+          User::uploadFiles($request, 'files', "$user->id");
+
           return redirect('/clients')->with('message', 'Cliente creado con exito!');
 
         else:
@@ -175,7 +178,8 @@ class ClientController extends Controller
     {
       $client = Client::find($id);
       return view('backend.client.edit', [
-        'client' => $client
+        'client' => $client,
+        'user_files' => UserFile::where('user_id', $client->id_user)->get()
       ]);
     }
 
@@ -226,7 +230,7 @@ class ClientController extends Controller
           $user->is_active    = $request->get('is_active');
           $user->save();
 
-          // New Client
+          // Updated Client
           $client = Client::find($id);
           $client->id_user = $user->id;
           $client->nick = $request->get('nick');
@@ -238,6 +242,8 @@ class ClientController extends Controller
           $client->iibb = $request->get('iibb');
           $client->iva = $request->get('iva');
           $client->save();
+
+          User::uploadFiles($request, 'files', "$user->id");
 
           return redirect('/clients')->with('message', 'Cliente editado con exito!');
 

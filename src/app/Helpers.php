@@ -671,5 +671,5 @@ class Helpers extends Model
    {
       return ($day == 0 || $day == 6);
    }
-
+   
 }

@@ -5,7 +5,9 @@ namespace App;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
+use Illuminate\Http\Request;
 use App\Helpers;
+use App\UserFile;
 
 class User extends Authenticatable
 {
@@ -51,6 +53,44 @@ class User extends Authenticatable
       $user = User::find($id);
       if($user) {
         return Helpers::getActive($user->is_active);
+      }
+    }
+
+    static public function uploadFiles(Request $request, $nameField, $user_id, $mandatory = false, $maxUpload = '5120')
+    {
+      if($request)
+      {
+        try {
+
+          $required = ($mandatory ? 'required' : '');
+
+          $request->validate([
+            $nameField => "$required|max:$maxUpload",
+          ]);
+
+          if($request->hasFile($nameField))
+          {
+            $files = $request->file($nameField);
+            $count = 1;
+            foreach($files as $file)
+            {
+              $fileName = date('Ymdhis').$count.'.'.$file->getClientOriginalExtension();
+              $file->move(public_path("users/$user_id"), $fileName);
+
+              $media              = new UserFile;
+              $media->user_id     = $user_id;
+              $media->path        = "users/$user_id/$fileName";
+              $media->path_label  = $file->getClientOriginalName();
+              $media->save();
+
+              $count++;
+            }
+          }
+          return true;
+
+        } catch(\Exception $error) {
+          return false;
+        }
       }
     }
 }

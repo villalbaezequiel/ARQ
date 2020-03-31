@@ -6,7 +6,7 @@
 <div class="container-fluid">
   <div class="row">
     <div class="col-md-12">
-      {!! Form::open(['route' => 'clients.store', 'method' => 'POST', 'class' => 'form-horizontal']) !!}
+      {!! Form::open(['route' => 'clients.store', 'method' => 'POST', 'class' => 'form-horizontal', 'enctype' => 'multipart/form-data']) !!}
         <div class="card ">
           <div class="card-header card-header-primary card-header-text">
             <div class="card-text">
@@ -359,6 +359,21 @@
                       <span class="check"></span>
                     </span>
                   </label>
+                </div>
+              </div>
+            </div>
+
+            <div class="row" style="padding: 15px;">
+                <label class="col-md-12 col-form-label">
+                    <center><strong>Ducumentos</strong></center>
+                </label>
+            </div>
+
+            <div class="row">
+              <div class="col-md-12">
+                <div class="form-group text-center">
+                  <label class="btn" for="file_id">Seleccionar Documentos</label>
+                  <input type="file" name="files[]" id="file_id" multiple>
                 </div>
               </div>
             </div>

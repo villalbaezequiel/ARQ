@@ -9,7 +9,7 @@
 <div class="container-fluid">
   <div class="row">
     <div class="col-md-12">
-      {!! Form::open(['route' => ['providers.update' , $provider->id], 'method' => 'PUT', 'class' => 'form-horizontal']) !!}
+      {!! Form::open(['route' => ['providers.update' , $provider->id], 'method' => 'PUT', 'class' => 'form-horizontal', 'enctype' => 'multipart/form-data']) !!}
         <div class="card ">
           <div class="card-header card-header-primary card-header-text">
             <div class="card-text">
@@ -18,6 +18,17 @@
           </div>
           <div class="card-body">
           
+          @if (session('message'))
+            <div class="toolbar">
+              <div class="alert alert-success alert-dismissible fade show" role="alert">
+                {{ session('message') }}
+                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                  <span aria-hidden="true">&times;</span>
+                </button>
+              </div>
+            </div>
+          @endif
+
           <div class="row">
               <label class="col-md-2 col-form-label">Nombre <span class="required-red">*</span></label>
               <div class="col-md-7">
@@ -336,6 +347,48 @@
             </div>
 
             <div class="row" style="padding: 15px;">
+                <label class="col-md-12 col-form-label">
+                    <center><strong>Ducumentos</strong></center>
+                </label>
+            </div>
+
+            <div class="row">
+              <div class="col-md-12">
+                <div class="form-group text-center">
+                  <label class="btn" for="file_id">Seleccionar Documentos</label>
+                  <input type="file" name="files[]" id="file_id" multiple>
+                </div>
+              </div>
+            </div>
+
+            @if(count($user_files))
+            <div class="row">
+              <div class="col-md-10 mx-auto">
+                <table class="table">
+                  <thead>
+                    <tr>
+                      <th><strong>Nombre</strong></th>
+                      <th><strong>Path</strong></th>
+                      <th class="text-right"><strong>Acciones </strong></th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                  @foreach($user_files as $file)
+                    <tr>
+                      <td>{{ $file->path_label }}</td>
+                      <td><a href="{{ url($file->path) }}" target="_blank">{{ $file->path }}</a></td>
+                      <td class="text-right">
+                        <input type="submit" class="btn" value="Eliminar" form="file_{{ $file->id }}">
+                      </td>
+                    </tr>
+                  @endforeach
+                  </tbody>
+                </table>
+              </div>
+            </div>
+            @endif
+
+            <div class="row" style="padding: 15px;">
               <label class="col-md-12 col-form-label">
                 <center><strong>Agregar Valoración</strong></center>
               </label>
@@ -392,6 +445,13 @@
         </div>
         {!! Form::close() !!}
 
+        @if(count($user_files))
+          @foreach($user_files as $file)
+            {!! Form::open(['route' => ['user_files.destroy', $file->id], 'method' => 'DELETE', 'id' => "file_$file->id"]) !!}
+            {!! Form::close() !!}
+          @endforeach
+        @endif
+
     </div>
   </div>
 </div>
@@ -410,6 +470,7 @@ $(document).ready(function(){
     }
 
   });
+  
 });
 </script>
 @endsection

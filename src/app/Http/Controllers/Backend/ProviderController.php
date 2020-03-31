@@ -5,11 +5,11 @@ namespace App\Http\Controllers\Backend;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use App\Http\Controllers\Controller;
-use App\Notifications\NewTeam;
 use Illuminate\Support\Facades\Auth;
 use App\Helpers;
 use App\User;
 use App\Provider;
+use App\UserFile;
 
 class ProviderController extends Controller
 {
@@ -129,43 +129,10 @@ class ProviderController extends Controller
           $provider->alias_account    = $request->get('alias_account');
           $provider->save();
 
-          if($request->get('crew_register_person')){
+          User::uploadFiles($request, 'files', "$user->id");
 
-            // Envio un Mail al Admin notificandolo que se REGISTRO un nuevo CREW
-
-            // info del administrador
-            if(!empty(env('NEW_CREW_NOTIFICATION1'))){
-              $chekUserAdmin = User::where('email', env('NEW_CREW_NOTIFICATION1'))
-                                    ->where('is_crew', '0')
-                                    ->where('active', '1')
-                                    ->first();
-            }
-
-            if(!empty(env('NEW_CREW_NOTIFICATION2'))){
-              $chekUserAdminSecundario = User::where('email', env('NEW_CREW_NOTIFICATION2'))
-                                    ->where('is_crew', '0')
-                                    ->where('active', '1')
-                                    ->first();
-            }
-
-            if(isset($chekUserAdmin) && $chekUserAdmin != null){
-              $userAdmin = User::find($chekUserAdmin->id);
-            } elseif(isset($chekUserAdminSecundario) && $chekUserAdminSecundario != null) {
-              $userAdmin = User::find($chekUserAdminSecundario->id);
-            }
-
-            $data = array(
-              'user' => $userAdmin,
-              'crew' => $provider
-            );
-            $userAdmin->notify(new NewTeam($data));
-
-            return redirect('/register')->with('message', '1');
-
-          } else {
-            return redirect('/providers')->with('message', 'Team creado con exito!');
-          }
-
+          return redirect('/providers')->with('message', 'Proveedor creado con exito!');
+          
         else:
 
           if($email == 1){
@@ -216,6 +183,7 @@ class ProviderController extends Controller
       $provider = Provider::find($id);
       return view('backend.provider.edit', [
         'provider' => $provider,
+        'user_files' => UserFile::where('user_id', $provider->id_user)->get(),
         'user' => User::where('id', $provider->id_user)->first()
       ]);
     }
@@ -281,7 +249,9 @@ class ProviderController extends Controller
           $provider->alias_account    = $request->get('alias_account');
           $provider->save();
 
-          return redirect('/providers')->with('message', 'Team editado con exito!');
+          User::uploadFiles($request, 'files', "$user->id");
+
+          return redirect('/providers')->with('message', 'Proveedor editado con exito!');
 
         else:
 
@@ -327,7 +297,7 @@ class ProviderController extends Controller
       // Provider Delete
       $provider->delete();
 
-      return response(array('message' => 'Team eliminado con exito!'));
+      return response(array('message' => 'Proveedor eliminado con exito!'));
     }
 
   }
