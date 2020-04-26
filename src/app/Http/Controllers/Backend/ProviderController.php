@@ -78,70 +78,115 @@ class ProviderController extends Controller
     {
       $message;
       try {
-        // Validations, check: email, dni, cuit
-        $email = User::where('email', $request->get('email'))->count();
-        $dni   = User::where('dni', $request->get('dni'))->count();
+        // Validations, check: cuit
         $cuit  = User::where('cuit', $request->get('cuit'))->count();
+        $email = User::where('email', $request->get('contact_email'))->count();
+        $create_provider_guest = ($request->get('create_provider_guest') ? $request->get('create_provider_guest') : null);
 
-        if($email == 0 && $dni == 0 && $cuit == 0):
-
-          // add format birthdate
-          $birthdate = explode('/', $request->get('birthdate'));
-
+        if($cuit == 0):
           // New User
           $user = new User;
-          $user->name         = $request->get('name');
-          $user->last_name    = $request->get('last_name');
-          $user->email        = $request->get('email');
-          $user->type_dni     = $request->get('type_dni');
-          $user->dni          = $request->get('dni');
-          $user->cuit         = $request->get('cuit');
-          $user->gender       = $request->get('gender');
-          $user->civil_status = $request->get('civil_status');
-          $user->birthdate    = (isset($birthdate[2]) ? $birthdate[2].'-'.$birthdate[1].'-'.$birthdate[0] : $request->get('birthdate'));
-          $user->id_study     = $request->get('id_study');
-          $user->id_nationality = $request->get('id_nationality');
-          $user->id_country   = $request->get('id_country');
-          $user->visa         = $request->get('visa');
-          $user->location     = $request->get('location');
-          $user->address      = $request->get('address');
+          $user->name           = $request->get('name');
+          $user->cuit           = $request->get('cuit');
+          $user->id_country     = $request->get('id_country');
+          $user->id_province    = $request->get('id_province');
+          $user->location       = $request->get('location');
+          $user->address        = $request->get('address');
           $user->address_number = $request->get('address_number');
-          $user->piso_depto   = $request->get('piso_depto');
-          $user->cp           = $request->get('cp');
-          $user->telephone    = $request->get('telephone');
-          $user->other_telephone = $request->get('other_telephone');
-          $user->password     = Hash::make('arq_'.$request->get('cuit'));
-          $user->is_provider  = 1;
-          $user->is_active    = $request->get('is_active');
+          $user->cp             = $request->get('cp');
+          $user->piso_depto     = $request->get('piso_depto');
+          
+          $user->email          = ($email > 0 ? $request->get('cuit') : $request->get('contact_email'));
+          $user->password       = Hash::make('arq_'.$request->get('cuit'));
+          $user->is_provider    = 1;
+          $user->is_active      = $request->get('is_active');
           $user->save();
 
           // New Provider
           $provider                   = new Provider;
           $provider->id_user          = $user->id;
           $provider->id_category      = $request->get('id_category');
-          $provider->social_work      = $request->get('social_work');
-          $provider->social_work_name = $request->get('social_work_name');
-          $provider->social_work_code = $request->get('social_work_code');
-          $provider->cbu              = $request->get('cbu');
+          $provider->condition_iva    = $request->get('condition_iva');
+          $provider->invoice_type     = $request->get('invoice_type');
+          $provider->retains_gross_income           = $request->get('retains_gross_income');
+          $provider->retains_gross_income_porcentage= $request->get('retains_gross_income_porcentage');
+
+          // data contact
+          $provider->contact_name     = $request->get('contact_name');
+          $provider->contact_cargo    = $request->get('contact_cargo');
+          $provider->contact_telephone= $request->get('contact_telephone');
+          $provider->contact_email    = $request->get('contact_email');
+
+          $provider->contact_name_2     = $request->get('contact_name_2');
+          $provider->contact_cargo_2    = $request->get('contact_cargo_2');
+          $provider->contact_telephone_2= $request->get('contact_telephone_2');
+          $provider->contact_email_2    = $request->get('contact_email_2');
+
+          $provider->contact_name_3     = $request->get('contact_name_3');
+          $provider->contact_cargo_3    = $request->get('contact_cargo_3');
+          $provider->contact_telephone_3= $request->get('contact_telephone_3');
+          $provider->contact_email_3    = $request->get('contact_email_3');
+
+          // data bank
           $provider->bank             = $request->get('bank');
           $provider->type_account     = $request->get('type_account');
           $provider->number_account   = $request->get('number_account');
+          $provider->cbu              = $request->get('cbu');
           $provider->alias_account    = $request->get('alias_account');
+
+          $provider->bank_2             = $request->get('bank_2');
+          $provider->type_account_2     = $request->get('type_account_2');
+          $provider->number_account_2   = $request->get('number_account_2');
+          $provider->cbu_2              = $request->get('cbu_2');
+          $provider->alias_account_2    = $request->get('alias_account_2');
+
+          $provider->bank_3             = $request->get('bank_3');
+          $provider->type_account_3     = $request->get('type_account_3');
+          $provider->number_account_3   = $request->get('number_account_3');
+          $provider->cbu_3              = $request->get('cbu_3');
+          $provider->alias_account_3    = $request->get('alias_account_3');
+
+          // data secure
+          $provider->secure_number_poliza = $request->get('secure_number_poliza');
+          if($create_provider_guest)
+          {
+            $provider->secure_expiration    = ($request->get('secure_expiration') ? $request->get('secure_expiration')." 00:00:00" : null);
+          } else {
+            $provider->secure_expiration    = Helpers::setDateFormatTimestamp($request->get('secure_expiration'));
+          }     
+
+          $provider->secure_number_poliza_2 = $request->get('secure_number_poliza_2');
+          if($create_provider_guest)
+          {
+            $provider->secure_expiration_2    = ($request->get('secure_expiration_2') ? $request->get('secure_expiration_2')." 00:00:00" : null);
+          } else {
+            $provider->secure_expiration_2    = Helpers::setDateFormatTimestamp($request->get('secure_expiration_2'));
+          }
+
+          $provider->secure_number_poliza_3 = $request->get('secure_number_poliza_3');
+          if($create_provider_guest)
+          {
+            $provider->secure_expiration_3    = ($request->get('secure_expiration_3') ? $request->get('secure_expiration_3')." 00:00:00" : null);
+          } else {
+            $provider->secure_expiration_3    = Helpers::setDateFormatTimestamp($request->get('secure_expiration_3'));
+          }
+
           $provider->save();
 
           User::uploadFiles($request, 'files', "$user->id");
 
-          return redirect('/providers')->with('message', 'Proveedor creado con exito!');
-          
+          if($create_provider_guest)
+          {
+            return back()->with('message', 'Proveedor creado con exito!');
+          } else {
+            return redirect('/providers')->with('message', 'Proveedor creado con exito!');
+          }          
         else:
 
-          if($email == 1){
-            $message = Helpers::setMessageValidationForm('Email');
-          } elseif($dni == 1){
-            $message = Helpers::setMessageValidationForm('DNI');
-          } else {
+          if($cuit == 1){
             $message = Helpers::setMessageValidationForm('CUIT');
           }
+
           return back()->withInput()->with('message', $message);
 
         endif;
@@ -199,54 +244,82 @@ class ProviderController extends Controller
     {
       $message;
       try {
-        // Validations, check: email, dni, cuit
-        $email  = User::where('email', $request->get('email'))->where('id', '!=', $request->get('id_user'))->count();
-        $dni    = User::where('dni', $request->get('dni'))->where('id', '!=', $request->get('id_user'))->count();
+        // Validations, check: cuit
+        $email = User::where('email', $request->get('contact_email'))->count();
         $cuit   = User::where('cuit', $request->get('cuit'))->where('id', '!=', $request->get('id_user'))->count();
 
-        if($email == 0 && $dni == 0 && $cuit == 0):
-
-          // add format birthdate
-          $birthdate = explode('/', $request->get('birthdate'));
-
+        if($cuit == 0):          
           // Update User
           $user = User::find($request->get('id_user'));
-          $user->name         = $request->get('name');
-          $user->last_name    = $request->get('last_name');
-          $user->email        = $request->get('email');
-          $user->type_dni     = $request->get('type_dni');
-          $user->dni          = $request->get('dni');
-          $user->cuit         = $request->get('cuit');
-          $user->gender       = $request->get('gender');
-          $user->civil_status = $request->get('civil_status');
-          $user->birthdate    = (isset($birthdate[2]) ? $birthdate[2].'-'.$birthdate[1].'-'.$birthdate[0] : $request->get('birthdate'));
-          $user->id_study     = $request->get('id_study');
-          $user->id_nationality = $request->get('id_nationality');
-          $user->id_country   = $request->get('id_country');
-          $user->visa         = $request->get('visa');
-          $user->location     = $request->get('location');
-          $user->address      = $request->get('address');
+          $user->name           = $request->get('name');
+          $user->cuit           = $request->get('cuit');
+          $user->id_country     = $request->get('id_country');
+          $user->id_province     = $request->get('id_province');
+          $user->location       = $request->get('location');
+          $user->address        = $request->get('address');
           $user->address_number = $request->get('address_number');
-          $user->piso_depto   = $request->get('piso_depto');
-          $user->cp           = $request->get('cp');
-          $user->telephone    = $request->get('telephone');
-          $user->other_telephone = $request->get('other_telephone');
-          $user->is_provider  = 1;
-          $user->is_active    = $request->get('is_active');
+          $user->cp             = $request->get('cp');
+          $user->piso_depto     = $request->get('piso_depto');
+
+          $user->email          = ($email > 0 ? $request->get('cuit') : $request->get('contact_email'));
+          $user->is_provider    = 1;
+          $user->is_active      = $request->get('is_active');
           $user->save();
           
           // Update Provider
           $provider = Provider::find($id);
           $provider->id_user          = $user->id;
           $provider->id_category      = $request->get('id_category');
-          $provider->social_work      = $request->get('social_work');
-          $provider->social_work_name = $request->get('social_work_name');
-          $provider->social_work_code = $request->get('social_work_code');
-          $provider->cbu              = $request->get('cbu');
+          $provider->condition_iva    = $request->get('condition_iva');
+          $provider->invoice_type     = $request->get('invoice_type');
+          $provider->retains_gross_income           = $request->get('retains_gross_income');
+          $provider->retains_gross_income_porcentage= $request->get('retains_gross_income_porcentage');
+
+          // data contact
+          $provider->contact_name     = $request->get('contact_name');
+          $provider->contact_cargo    = $request->get('contact_cargo');
+          $provider->contact_telephone= $request->get('contact_telephone');
+          $provider->contact_email    = $request->get('contact_email');
+
+          $provider->contact_name_2     = $request->get('contact_name_2');
+          $provider->contact_cargo_2    = $request->get('contact_cargo_2');
+          $provider->contact_telephone_2= $request->get('contact_telephone_2');
+          $provider->contact_email_2    = $request->get('contact_email_2');
+
+          $provider->contact_name_3     = $request->get('contact_name_3');
+          $provider->contact_cargo_3    = $request->get('contact_cargo_3');
+          $provider->contact_telephone_3= $request->get('contact_telephone_3');
+          $provider->contact_email_3    = $request->get('contact_email_3');
+
+          // data bank
           $provider->bank             = $request->get('bank');
           $provider->type_account     = $request->get('type_account');
           $provider->number_account   = $request->get('number_account');
+          $provider->cbu              = $request->get('cbu');
           $provider->alias_account    = $request->get('alias_account');
+
+          $provider->bank_2             = $request->get('bank_2');
+          $provider->type_account_2     = $request->get('type_account_2');
+          $provider->number_account_2   = $request->get('number_account_2');
+          $provider->cbu_2              = $request->get('cbu_2');
+          $provider->alias_account_2    = $request->get('alias_account_2');
+
+          $provider->bank_3             = $request->get('bank_3');
+          $provider->type_account_3     = $request->get('type_account_3');
+          $provider->number_account_3   = $request->get('number_account_3');
+          $provider->cbu_3              = $request->get('cbu_3');
+          $provider->alias_account_3    = $request->get('alias_account_3');
+
+          // data secure
+          $provider->secure_number_poliza = $request->get('secure_number_poliza');
+          $provider->secure_expiration    = Helpers::setDateFormatTimestamp($request->get('secure_expiration'));
+
+          $provider->secure_number_poliza_2 = $request->get('secure_number_poliza_2');
+          $provider->secure_expiration_2    = Helpers::setDateFormatTimestamp($request->get('secure_expiration_2'));
+
+          $provider->secure_number_poliza_3 = $request->get('secure_number_poliza_3');
+          $provider->secure_expiration_3    = Helpers::setDateFormatTimestamp($request->get('secure_expiration_3'));
+
           $provider->save();
 
           User::uploadFiles($request, 'files', "$user->id");
@@ -255,11 +328,7 @@ class ProviderController extends Controller
 
         else:
 
-          if($email == 1){
-            $message = Helpers::setMessageValidationForm('Email');
-          } elseif($dni == 1){
-            $message = Helpers::setMessageValidationForm('DNI');
-          } else {
+          if($cuit == 1){
             $message = Helpers::setMessageValidationForm('CUIT');
           }
           return back()->withInput()->with('message', $message);

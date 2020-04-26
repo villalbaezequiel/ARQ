@@ -48,7 +48,6 @@
                 <td>{{ \App\User::getActive($provider->id_user) }}</td>
                 <td class="text-right">
                   {!! Form::open(['route' => ['providers.destroy', $provider->id], 'method' => 'DELETE', 'class'=> 'alert-confirm-delete']) !!}
-                    <a href="{{ url('/providers/') }}" class="btn btn-link btn-warning btn-just-icon edit" title="Historial de Obras"><i class="material-icons">calendar_today</i></a>
                     <a href="{{ url('/providers/'.$provider->id.'/edit') }}" class="btn btn-link btn-warning btn-just-icon edit" title="Editar"><i class="material-icons">dvr</i></a>
                     <button type="submit" class="btn btn-link btn-danger btn-just-icon remove" title="Eliminar"><i class="material-icons">close</i></button>
                   {!! Form::close() !!}

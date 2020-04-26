@@ -33,3 +33,7 @@ Route::group(['middleware' => ['auth']], function () {
     Route::resource('/providers', 'Backend\ProviderController');
     Route::resource('/user_files', 'Backend\UserFileController');
 });
+
+Route::get('/registro-proveedor', function(){
+    return view('frontend.provider.create');
+});

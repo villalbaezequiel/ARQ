@@ -27,6 +27,7 @@ class CreateUsersTable extends Migration
             $table->integer('id_study')->nullable();
             $table->string('id_nationality')->nullable();
             $table->integer('id_country')->nullable();
+            $table->integer('id_province')->nullable();
             $table->string('location')->nullable();
             $table->string('address')->nullable();
             $table->integer('address_number')->nullable();
