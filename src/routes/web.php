@@ -36,4 +36,4 @@ Route::group(['middleware' => ['auth']], function () {
 
 Route::get('/registro-proveedor', function(){
     return view('frontend.provider.create');
-});
+})->name('register_provider_guest');
