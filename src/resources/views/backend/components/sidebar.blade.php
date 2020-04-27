@@ -46,9 +46,9 @@
     <ul class="nav">
 
       <li class="nav-item nav-check-url ">
-        <a class="nav-link" href="{{ url('/') }}">
+        <a class="nav-link" href="{{ url('/projects') }}">
           <i class="material-icons">list_alt</i>
-          <p> Obras </p>
+          <p> Proyectos </p>
         </a>
       </li>
 
