@@ -27,15 +27,6 @@
             @endif
 
             <div class="row">
-              <label class="col-md-2 col-form-label">Nombre <span class="required-red">*</span></label>
-              <div class="col-md-7">
-                <div class="form-group">
-                  <input class="form-control" type="text" name="name" value="{{ old('name') }}" maxlength="125" required>
-                </div>
-              </div>
-            </div>
-
-            <div class="row">
               <label class="col-md-2 col-form-label">Apellido <span class="required-red">*</span></label>
               <div class="col-md-7">
                 <div class="form-group">
@@ -45,32 +36,10 @@
             </div>
 
             <div class="row">
-              <label class="col-md-2 col-form-label">Nombre Fantasía <span class="required-red">*</span></label>
+              <label class="col-md-2 col-form-label">Nombre <span class="required-red">*</span></label>
               <div class="col-md-7">
                 <div class="form-group">
-                  <input class="form-control" type="text" name="nick" value="{{ old('nick') }}" maxlength="125" required>
-                </div>
-              </div>
-            </div>
-
-            <div class="row">
-              <label class="col-md-2 col-form-label">Email <span class="required-red">*</span></label>
-              <div class="col-md-7">
-                <div class="form-group">
-                  <input class="form-control" type="email" name="email" value="{{ old('email') }}" maxlength="125" required>
-                </div>
-              </div>
-            </div>
-
-            <div class="row">
-              <label class="col-md-2 col-form-label">Tipo de Documentación <span class="required-red">*</span></label>
-              <div class="col-md-7">
-                <div class="form-group">
-                  <select class="form-control selectpicker" data-style="btn btn-link" name="type_dni" required>
-                    @foreach(\App\Helpers::getTypesDocumentationPerson() as $key => $val)
-                    <option value="{{ $key }}" <?php if(old('type_dni') == $key){ echo "selected='selected'"; } ?>>{{ $val }}</option>
-                    @endforeach
-                  </select>
+                  <input class="form-control" type="text" name="name" value="{{ old('name') }}" maxlength="125" required>
                 </div>
               </div>
             </div>
@@ -80,140 +49,6 @@
               <div class="col-md-7">
                 <div class="form-group">
                   <input class="form-control input-type-number" type="number" name="dni" value="{{ old('dni') }}" minlength="8" maxlength="8" required>
-                </div>
-              </div>
-            </div>
-
-            <div class="row">
-              <label class="col-md-2 col-form-label">CUIT <span class="required-red">*</span></label>
-              <div class="col-md-7">
-                <div class="form-group">
-                  <input class="form-control input-type-number" type="number" name="cuit" value="{{ old('cuit') }}" maxlength="125" required>
-                </div>
-              </div>
-              <label class="col-md-3 label-on-right">
-                <code>inserte únicamente números.</code>
-              </label>
-            </div>
-
-            <div class="row">
-              <label class="col-md-2 col-form-label">Género <span class="required-red">*</span></label>
-              <div class="col-md-7">
-                <div class="form-group">
-                  <select class="form-control selectpicker" data-style="btn btn-link" name="gender" required>
-                    <option value="">Seleccionar</option>
-                    @foreach(\App\Helpers::getGendersPerson() as $key => $val)
-                    <option value="{{ $key }}" <?php if(old('gender') == $key){ echo "selected='selected'"; } ?>>{{ $val }}</option>
-                    @endforeach
-                  </select>
-                </div>
-              </div>
-            </div>
-
-            <div class="row">
-              <label class="col-md-2 col-form-label">Estado Civil <span class="required-red">*</span></label>
-              <div class="col-md-7">
-                <div class="form-group">
-                  <select class="form-control selectpicker" data-style="btn btn-link" name="civil_status" required>
-                    <option value="">Seleccionar</option>
-                    @foreach(\App\Helpers::getCivilStatus() as $key => $val)
-                    <option value="{{ $key }}" <?php if(old('civil_status') == $key){ echo "selected='selected'"; } ?>>{{ $val }}</option>
-                    @endforeach
-                  </select>
-                </div>
-              </div>
-            </div>
-
-            <div class="row">
-              <label class="col-md-2 col-form-label">Fecha de Nacimiento <span class="required-red">*</span></label>
-              <div class="col-md-7">
-                <div class="form-group">
-                  <input class="form-control datepicker validate-year" style="background-color: white!important;" pattern="^([0-2][0-9]|(3)[0-1])(\/)(((0)[0-9])|((1)[0-2]))(\/)\d{4}$" type="text" name="birthdate" value="{{ old('birthdate') }}" minlength="10" maxlength="10" required readonly>
-                </div>
-              </div>
-            </div>
-
-            <div class="row">
-              <label class="col-md-2 col-form-label">Nivel de Estudio <span class="required-red">*</span></label>
-              <div class="col-md-7">
-                <div class="form-group">
-                  <select class="form-control selectpicker" data-live-search="true" data-style="btn btn-link" name="id_study" required>
-                    <option value="1">Secundario</option>
-                    <option value="2">Terciario</option>
-                    <option value="3">Universitario</option>
-                  </select>
-                </div>
-              </div>
-            </div>
-
-            <div class="row">
-              <label class="col-md-2 col-form-label">Nacionalidad <span class="required-red">*</span></label>
-              <div class="col-md-7">
-                <div class="form-group">
-                  <select class="form-control selectpicker" data-live-search="true" data-style="btn btn-link" name="id_nationality" required>
-                    <option value="1">Argentina/o</option>
-                  </select>
-                </div>
-              </div>
-            </div>
-
-            <div class="row">
-              <label class="col-md-2 col-form-label">Tiene Visa <span class="required-red">*</span></label>
-              <div class="col-md-7">
-                <div class="form-group">
-                  <select class="form-control selectpicker" data-live-search="true" data-style="btn btn-link" name="visa" required>
-                    <option value="1">Si</option>
-                    <option value="0">No</option>
-                  </select>
-                </div>
-              </div>
-            </div>
-
-            <div class="row">
-              <label class="col-md-2 col-form-label">Razón Social <span class="required-red">*</span></label>
-              <div class="col-md-7">
-                <div class="form-group">
-                  <input class="form-control" type="text" name="razon_social" value="{{ old('razon_social') }}" maxlength="125" required>
-                </div>
-              </div>
-            </div>
-          
-            <div class="row">
-              <label class="col-md-2 col-form-label">Dirección <span class="required-red">*</span></label>
-              <div class="col-md-3">
-                <div class="form-group">
-                  <input class="form-control" type="text" name="address" value="{{ old('address') }}" required>
-                </div>
-              </div>
-              <div class="col-md-2">
-                <div class="form-group">
-                  <input class="form-control input-type-number" type="text" name="address_number" value="{{ old('address_number') }}" placeholder="Número Dirección *" required>
-                </div>
-              </div>
-              <div class="col-md-2">
-                <div class="form-group">
-                  <input class="form-control" type="text" name="piso_depto" value="{{ old('piso_depto') }}" placeholder="Piso/Depto">
-                </div>
-              </div>
-            </div>
-
-            <div class="row">
-              <label class="col-md-2 col-form-label">Pais <span class="required-red">*</span></label>
-              <div class="col-md-3">
-                <div class="form-group">
-                  <select class="form-control selectpicker" data-style="btn btn-link" data-live-search="true" name="country" required>
-                    <option value="1">Argentina</option>
-                  </select>
-                </div>
-              </div>
-              <div class="col-md-2">
-                <div class="form-group">
-                  <input class="form-control" type="text" name="location" value="{{ old('location') }}" placeholder="Localidad *" required>
-                </div>
-              </div>
-              <div class="col-md-2">
-                <div class="form-group">
-                  <input class="form-control input-type-number" type="text" name="cp" value="{{ old('cp') }}" placeholder="Codigo Postal *" required>
                 </div>
               </div>
             </div>
@@ -237,7 +72,16 @@
             </div>
 
             <div class="row">
-              <label class="col-md-2 col-form-label label-checkbox">Cliente Activo</label>
+              <label class="col-md-2 col-form-label">Email <span class="required-red">*</span></label>
+              <div class="col-md-7">
+                <div class="form-group">
+                  <input class="form-control" type="email" name="email" value="{{ old('email') }}" maxlength="125" required>
+                </div>
+              </div>
+            </div>
+
+            <div class="row">
+              <label class="col-md-2 col-form-label label-checkbox">Activo</label>
               <div class="col-md-10 checkbox-radios">
                 <div class="form-check form-check-inline">
                   <label class="form-check-label">
@@ -260,8 +104,17 @@
 
             <div class="row" style="padding: 15px;">
               <label class="col-md-12 col-form-label">
-                <center><strong>Contactos dentro de la empresa</strong></center>
+                <center><strong>Datos Contador/Secretaria/Otro</strong></center>
               </label>
+            </div>
+
+            <div class="row">
+              <label class="col-md-2 col-form-label">Apellido</label>
+              <div class="col-md-7">
+                <div class="form-group">
+                  <input class="form-control" type="text" name="contact_last_name" value="{{ old('contact_last_name') }}" maxlength="125">
+                </div>
+              </div>
             </div>
 
             <div class="row">
@@ -274,10 +127,10 @@
             </div>
 
             <div class="row">
-              <label class="col-md-2 col-form-label">Email</label>
+              <label class="col-md-2 col-form-label">DNI</label>
               <div class="col-md-7">
                 <div class="form-group">
-                  <input class="form-control" type="email" email="true" name="contact_email" value="{{ old('contact_email') }}" maxlength="125">
+                  <input class="form-control input-type-number" type="number" name="contact_dni" value="{{ old('contact_dni') }}" minlength="8" maxlength="8">
                 </div>
               </div>
             </div>
@@ -291,74 +144,352 @@
               </div>
             </div>
 
-            <div class="row" style="padding: 15px;">
-              <label class="col-md-12 col-form-label">
-                <center><strong>Retenciones impositvas</strong></center>
-              </label>
-            </div>
-
             <div class="row">
-              <label class="col-md-2 col-form-label label-checkbox">Retienen Ganancias?</label>
-              <div class="col-md-10 checkbox-radios">
-                <div class="form-check form-check-inline">
-                  <label class="form-check-label">
-                    <input class="form-check-input" type="radio" value="1" name="retencion_ganancia"> Si
-                    <span class="form-check-sign">
-                      <span class="check"></span>
-                    </span>
-                  </label>
-                </div>
-                <div class="form-check form-check-inline">
-                  <label class="form-check-label">
-                    <input class="form-check-input" type="radio" value="0" name="retencion_ganancia" checked> No
-                    <span class="form-check-sign">
-                      <span class="check"></span>
-                    </span>
-                  </label>
+              <label class="col-md-2 col-form-label">Otro Teléfono</label>
+              <div class="col-md-7">
+                <div class="form-group">
+                  <input class="form-control input-type-number" type="text" name="contact_other_telephone" value="{{ old('contact_other_telephone') }}" maxlength="125">
                 </div>
               </div>
             </div>
 
             <div class="row">
-              <label class="col-md-2 col-form-label label-checkbox">Retienen IIBB?</label>
-              <div class="col-md-10 checkbox-radios">
-                <div class="form-check form-check-inline">
-                  <label class="form-check-label">
-                    <input class="form-check-input" type="radio" value="1" name="iibb"> Si
-                    <span class="form-check-sign">
-                      <span class="check"></span>
-                    </span>
-                  </label>
-                </div>
-                <div class="form-check form-check-inline">
-                  <label class="form-check-label">
-                    <input class="form-check-input" type="radio" value="0" name="iibb" checked> No
-                    <span class="form-check-sign">
-                      <span class="check"></span>
-                    </span>
-                  </label>
+              <label class="col-md-2 col-form-label">Email</label>
+              <div class="col-md-7">
+                <div class="form-group">
+                  <input class="form-control" type="email" name="contact_email" value="{{ old('contact_email') }}" maxlength="125">
                 </div>
               </div>
             </div>
 
-            <div class="row">
-              <label class="col-md-2 col-form-label label-checkbox">Retienen IVA?</label>
-              <div class="col-md-10 checkbox-radios">
-                <div class="form-check form-check-inline">
-                  <label class="form-check-label">
-                    <input class="form-check-input" type="radio" value="1" name="iva"> Si
-                    <span class="form-check-sign">
-                      <span class="check"></span>
-                    </span>
-                  </label>
+            <div class="row p-2">
+                <label class="col-md-12 col-form-label">
+                    <center><strong>Datos de facturación</strong></center>
+                </label>
+            </div>
+
+            <div class="row p-2">
+                <a class="col-md-2 col-form-label" style="color: #aaa; font-weight: 600;" data-toggle="collapse" href="#billing_1">
+                  Facturación 1 &#8595;
+                </a>
+                <div class="col-md-8"></div>
+            </div>
+            <div id="billing_1" class="collapse show">
+              <div class="row">
+                <label class="col-md-2 col-form-label">Razón Social / Nombre</label>
+                <div class="col-md-8">
+                  <div class="form-group">
+                    <input class="form-control" type="text" name="billing_razon_social" value="{{ old('billing_razon_social') }}" maxlength="125">
+                  </div>
                 </div>
-                <div class="form-check form-check-inline">
-                  <label class="form-check-label">
-                    <input class="form-check-input" type="radio" value="0" name="iva" checked> No
-                    <span class="form-check-sign">
-                      <span class="check"></span>
-                    </span>
-                  </label>
+              </div>
+
+              <div class="row">
+                <label class="col-md-2 col-form-label">CUIT</label>
+                <div class="col-md-8">
+                  <div class="form-group">
+                  <input class="form-control input-type-number" type="number" name="billing_cuit" value="{{ old('billing_cuit') }}" maxlength="125">
+                  </div>
+                </div>
+              </div>
+
+              <div class="row">
+                <label class="col-md-2 col-form-label">Ingresos brutos</label>
+                <div class="col-md-8">
+                  <div class="form-group">
+                    <input class="form-control input-type-number" type="number" name="billing_gross_income" value="{{ old('billing_gross_income') }}" maxlength="125">
+                  </div>
+                </div>
+              </div>
+
+              <div class="row">
+                <label class="col-md-2 col-form-label">Condicion de IVA</label>
+                <div class="col-md-8">
+                  <div class="form-group">
+                    <select class="form-control selectpicker" data-style="btn btn-link" name="billing_condition_iva">
+                      <option value="0">No</option>
+                      <option value="1">Si</option>
+                    </select>
+                  </div>
+                </div>
+              </div>
+
+              <div class="row">
+                <label class="col-md-2 col-form-label">Pais</label>
+                <div class="col-md-3">
+                  <div class="form-group">
+                    <select class="form-control selectpicker" data-style="btn btn-link" data-live-search="true" name="billing_id_country">
+                      @foreach(\App\Helpers::getCountries() as $key => $val)
+                        <option value="{{ $key }}">{{ $val }}</option>
+                      @endforeach
+                    </select>
+                  </div>
+                </div>
+                <div class="col-md-3">
+                  <div class="form-group">
+                    <select class="form-control selectpicker" data-style="btn btn-link" data-live-search="true" name="billing_id_province">
+                      @foreach(\App\Helpers::getProvinces() as $key => $val)
+                        <option value="{{ $key }}">{{ $val }}</option>
+                      @endforeach
+                    </select>
+                  </div>
+                </div>
+                <div class="col-md-2">
+                  <div class="form-group">
+                    <input class="form-control" type="text" name="billing_location" value="{{ old('billing_location') }}" placeholder="Localidad">
+                  </div>
+                </div>
+              </div>
+
+              <div class="row">
+                <label class="col-md-2 col-form-label">Dirección</label>
+                <div class="col-md-4">
+                  <div class="form-group">
+                    <input class="form-control" type="text" name="billing_address" value="{{ old('billing_address') }}">
+                  </div>
+                </div>
+                <div class="col-md-1">
+                  <div class="form-group">
+                    <input class="form-control input-type-number" type="text" name="billing_address_number" value="{{ old('billing_address_number') }}" placeholder="Número">
+                  </div>
+                </div>
+                <div class="col-md-2">
+                  <div class="form-group">
+                    <input class="form-control" type="text" name="billing_piso_depto" value="{{ old('billing_piso_depto') }}" placeholder="Piso/Depto">
+                  </div>
+                </div>
+                <div class="col-md-1">
+                  <div class="form-group">
+                    <input class="form-control input-type-number" type="text" name="billing_cp" value="{{ old('billing_cp') }}" placeholder="CP">
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="row p-2">
+                <a class="col-md-2 col-form-label" style="color: #aaa; font-weight: 600;" data-toggle="collapse" href="#billing_2">
+                  Facturación 2 &#8595;
+                </a>
+                <div class="col-md-8"></div>
+            </div>
+            <div id="billing_2" class="collapse">
+              <div class="row">
+                <label class="col-md-2 col-form-label">Razón Social / Nombre</label>
+                <div class="col-md-8">
+                  <div class="form-group">
+                    <input class="form-control" type="text" name="billing_razon_social_2" value="{{ old('billing_razon_social_2') }}" maxlength="125">
+                  </div>
+                </div>
+              </div>
+
+              <div class="row">
+                <label class="col-md-2 col-form-label">CUIT</label>
+                <div class="col-md-8">
+                  <div class="form-group">
+                  <input class="form-control input-type-number" type="number" name="billing_cuit_2" value="{{ old('billing_cuit_2') }}" maxlength="125">
+                  </div>
+                </div>
+              </div>
+
+              <div class="row">
+                <label class="col-md-2 col-form-label">Ingresos brutos</label>
+                <div class="col-md-8">
+                  <div class="form-group">
+                    <input class="form-control input-type-number" type="number" name="billing_gross_income_2" value="{{ old('billing_gross_income_2') }}" maxlength="125">
+                  </div>
+                </div>
+              </div>
+
+              <div class="row">
+                <label class="col-md-2 col-form-label">Condicion de IVA</label>
+                <div class="col-md-8">
+                  <div class="form-group">
+                    <select class="form-control selectpicker" data-style="btn btn-link" name="billing_condition_iva_2">
+                      <option value="0">No</option>
+                      <option value="1">Si</option>
+                    </select>
+                  </div>
+                </div>
+              </div>
+
+              <div class="row">
+                <label class="col-md-2 col-form-label">Pais</label>
+                <div class="col-md-3">
+                  <div class="form-group">
+                    <select class="form-control selectpicker" data-style="btn btn-link" data-live-search="true" name="billing_id_country_2">
+                      @foreach(\App\Helpers::getCountries() as $key => $val)
+                        <option value="{{ $key }}">{{ $val }}</option>
+                      @endforeach
+                    </select>
+                  </div>
+                </div>
+                <div class="col-md-3">
+                  <div class="form-group">
+                    <select class="form-control selectpicker" data-style="btn btn-link" data-live-search="true" name="billing_id_province_2">
+                      @foreach(\App\Helpers::getProvinces() as $key => $val)
+                        <option value="{{ $key }}">{{ $val }}</option>
+                      @endforeach
+                    </select>
+                  </div>
+                </div>
+                <div class="col-md-2">
+                  <div class="form-group">
+                    <input class="form-control" type="text" name="billing_location_2" value="{{ old('billing_location_2') }}" placeholder="Localidad">
+                  </div>
+                </div>
+              </div>
+
+              <div class="row">
+                <label class="col-md-2 col-form-label">Dirección</label>
+                <div class="col-md-4">
+                  <div class="form-group">
+                    <input class="form-control" type="text" name="billing_address_2" value="{{ old('billing_address_2') }}">
+                  </div>
+                </div>
+                <div class="col-md-1">
+                  <div class="form-group">
+                    <input class="form-control input-type-number" type="text" name="billing_address_number_2" value="{{ old('billing_address_number_2') }}" placeholder="Número">
+                  </div>
+                </div>
+                <div class="col-md-2">
+                  <div class="form-group">
+                    <input class="form-control" type="text" name="billing_piso_depto_2" value="{{ old('billing_piso_depto_2') }}" placeholder="Piso/Depto">
+                  </div>
+                </div>
+                <div class="col-md-1">
+                  <div class="form-group">
+                    <input class="form-control input-type-number" type="text" name="billing_cp_2" value="{{ old('billing_cp_2') }}" placeholder="CP">
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="row p-2">
+                <label class="col-md-12 col-form-label">
+                    <center><strong>Datos de Pagos</strong></center>
+                </label>
+            </div>
+
+            <div class="row p-2">
+                <a class="col-md-2 col-form-label" style="color: #aaa; font-weight: 600;" data-toggle="collapse" href="#payment_1">
+                  Pago 1 &#8595;
+                </a>
+                <div class="col-md-8"></div>
+            </div>
+            <div id="payment_1" class="collapse show">
+              <div class="row">
+                <label class="col-md-2 col-form-label">Tipo de pago</label>
+                <div class="col-md-8">
+                  <div class="form-group">
+                    <input class="form-control" type="text" name="payment_type" value="{{ old('payment_type') }}" maxlength="125">
+                  </div>
+                </div>
+              </div>
+
+              <div class="row">
+                <label class="col-md-2 col-form-label">Tarjeta</label>
+                <div class="col-md-8">
+                  <div class="form-group">
+                    <input class="form-control" type="text" name="payment_card" value="{{ old('payment_card') }}" maxlength="125">
+                  </div>
+                </div>
+              </div>
+
+              <div class="row">
+                <label class="col-md-2 col-form-label">Numero</label>
+                <div class="col-md-8">
+                  <div class="form-group">
+                  <input class="form-control input-type-number" type="number" name="payment_card_number" value="{{ old('payment_card_number') }}" maxlength="125">
+                  </div>
+                </div>
+              </div>
+
+              <div class="row">
+                <label class="col-md-2 col-form-label">Nombre</label>
+                <div class="col-md-8">
+                  <div class="form-group">
+                    <input class="form-control" type="text" name="payment_card_name" value="{{ old('payment_card_name') }}" maxlength="125">
+                  </div>
+                </div>
+              </div>
+
+              <div class="row">
+                <label class="col-md-2 col-form-label">Fecha de vencimiento</label>
+                <div class="col-md-8">
+                  <div class="form-group">
+                    <input class="form-control" type="text" name="payment_card_date_expiration" value="{{ old('payment_card_date_expiration') }}" maxlength="125">
+                  </div>
+                </div>
+              </div>
+
+              <div class="row">
+                <label class="col-md-2 col-form-label">Codigo de vencimiento</label>
+                <div class="col-md-8">
+                  <div class="form-group">
+                    <input class="form-control" type="text" name="payment_card_code_expiration" value="{{ old('payment_card_code_expiration') }}" maxlength="125">
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="row p-2">
+                <a class="col-md-2 col-form-label" style="color: #aaa; font-weight: 600;" data-toggle="collapse" href="#payment_2">
+                  Pago 2 &#8595;
+                </a>
+                <div class="col-md-8"></div>
+            </div>
+            <div id="payment_2" class="collapse">
+              <div class="row">
+                <label class="col-md-2 col-form-label">Tipo de pago</label>
+                <div class="col-md-8">
+                  <div class="form-group">
+                    <input class="form-control" type="text" name="payment_type_2" value="{{ old('payment_type_2') }}" maxlength="125">
+                  </div>
+                </div>
+              </div>
+
+              <div class="row">
+                <label class="col-md-2 col-form-label">Tarjeta</label>
+                <div class="col-md-8">
+                  <div class="form-group">
+                    <input class="form-control" type="text" name="payment_card_2" value="{{ old('payment_card_2') }}" maxlength="125">
+                  </div>
+                </div>
+              </div>
+
+              <div class="row">
+                <label class="col-md-2 col-form-label">Numero</label>
+                <div class="col-md-8">
+                  <div class="form-group">
+                  <input class="form-control input-type-number" type="number" name="payment_card_number_2" value="{{ old('payment_card_number_2') }}" maxlength="125">
+                  </div>
+                </div>
+              </div>
+
+              <div class="row">
+                <label class="col-md-2 col-form-label">Nombre</label>
+                <div class="col-md-8">
+                  <div class="form-group">
+                    <input class="form-control" type="text" name="payment_card_name_2" value="{{ old('payment_card_name_2') }}" maxlength="125">
+                  </div>
+                </div>
+              </div>
+
+              <div class="row">
+                <label class="col-md-2 col-form-label">Fecha de vencimiento</label>
+                <div class="col-md-8">
+                  <div class="form-group">
+                    <input class="form-control" type="text" name="payment_card_date_expiration_2" value="{{ old('payment_card_date_expiration_2') }}" maxlength="125">
+                  </div>
+                </div>
+              </div>
+
+              <div class="row">
+                <label class="col-md-2 col-form-label">Codigo de vencimiento</label>
+                <div class="col-md-8">
+                  <div class="form-group">
+                    <input class="form-control" type="text" name="payment_card_code_expiration_2" value="{{ old('payment_card_code_expiration_2') }}" maxlength="125">
+                  </div>
                 </div>
               </div>
             </div>

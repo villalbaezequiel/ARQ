@@ -117,8 +117,8 @@
               <div class="col-md-8">
                 <div class="form-group">
                   <select class="form-control selectpicker" data-style="btn btn-link" name="condition_iva">
-                    <option value="0" <?php if($user->condition_iva == "0"){ echo "selected='selected'"; } ?>>No</option>
-                    <option value="1" <?php if($user->condition_iva == "1"){ echo "selected='selected'"; } ?>>Si</option>
+                    <option value="0" <?php if($provider->condition_iva == "0"){ echo "selected='selected'"; } ?>>No</option>
+                    <option value="1" <?php if($provider->condition_iva == "1"){ echo "selected='selected'"; } ?>>Si</option>
                   </select>
                 </div>
               </div>
@@ -129,8 +129,8 @@
               <div class="col-md-8">
                 <div class="form-group">
                   <select class="form-control selectpicker" data-style="btn btn-link" name="retains_gross_income">
-                    <option value="0" <?php if($user->retains_gross_income == "0"){ echo "selected='selected'"; } ?>>No</option>
-                    <option value="1" <?php if($user->retains_gross_income == "2"){ echo "selected='selected'"; } ?>>Si</option>
+                    <option value="0" <?php if($provider->retains_gross_income == "0"){ echo "selected='selected'"; } ?>>No</option>
+                    <option value="1" <?php if($provider->retains_gross_income == "2"){ echo "selected='selected'"; } ?>>Si</option>
                   </select>
                 </div>
               </div>

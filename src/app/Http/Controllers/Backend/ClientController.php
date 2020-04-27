@@ -74,54 +74,76 @@ class ClientController extends Controller
     {
       $message;
       try {
-        // Validations, check: email, dni, cuit
+        // Validations, check: email, dni
         $email = User::where('email', $request->get('email'))->count();
         $dni   = User::where('dni', $request->get('dni'))->count();
-        $cuit  = User::where('cuit', $request->get('cuit'))->count();
                 
-        if($email == 0 && $dni == 0 && $cuit == 0):
+        if($email == 0 && $dni == 0):
 
-          // add format birthdate
-          $birthdate = explode('/', $request->get('birthdate'));
-
-          // Update User
-          $user = new User;
+          // new User
+          $user               = new User;
           $user->name         = $request->get('name');
           $user->last_name    = $request->get('last_name');
           $user->email        = $request->get('email');
-          $user->type_dni     = $request->get('type_dni');
           $user->dni          = $request->get('dni');
-          $user->cuit         = $request->get('cuit');
-          $user->gender       = $request->get('gender');
-          $user->civil_status = $request->get('civil_status');
-          // $user->birthdate    = (isset($birthdate[2]) ? $birthdate[2].'-'.$birthdate[1].'-'.$birthdate[0] : $request->get('birthdate'));
-          $user->id_study     = $request->get('id_study');
-          $user->id_nationality = $request->get('id_nationality');
-          $user->id_country   = $request->get('id_country');
-          $user->visa         = $request->get('visa');
-          $user->location     = $request->get('location');
-          $user->address      = $request->get('address');
-          $user->address_number = $request->get('address_number');
-          $user->piso_depto   = $request->get('piso_depto');
-          $user->cp           = $request->get('cp');
           $user->telephone    = $request->get('telephone');
           $user->other_telephone = $request->get('other_telephone');
-          $user->password     = Hash::make('arq_'.$request->get('cuit'));
-          $user->is_client    = 1;
           $user->is_active    = $request->get('is_active');
+
+          $user->password     = Hash::make('arq_'.$request->get('dni'));
+          $user->is_client    = 1;
           $user->save();
 
-          // New Client
-          $client = new Client;
-          $client->id_user = $user->id;
-          $client->nick = $request->get('nick');
-          $client->razon_social = $request->get('razon_social');
-          $client->contact_name = $request->get('contact_name');
-          $client->contact_email = $request->get('contact_email');
-          $client->contact_telephone = $request->get('contact_telephone');
-          $client->retencion_ganancia = $request->get('retencion_ganancia');
-          $client->iibb = $request->get('iibb');
-          $client->iva = $request->get('iva');
+          // new Client
+          $client             = new Client;
+          $client->id_user    = $user->id;
+          $client->contact_last_name  = $request->get('contact_last_name');
+          $client->contact_name       = $request->get('contact_name');
+          $client->contact_dni        = $request->get('contact_dni');
+          $client->contact_telephone  = $request->get('contact_telephone');
+          $client->contact_other_telephone = $request->get('contact_other_telephone');
+          $client->contact_email      = $request->get('contact_email');
+
+          // data billing
+          $client->billing_razon_social = $request->get('billing_razon_social');
+          $client->billing_cuit         = $request->get('billing_cuit');
+          $client->billing_gross_income = $request->get('billing_gross_income');
+          $client->billing_condition_iva= $request->get('billing_condition_iva');
+          $client->billing_id_country   = $request->get('billing_id_country');
+          $client->billing_id_province  = $request->get('billing_id_province');
+          $client->billing_location     = $request->get('billing_location');
+          $client->billing_address      = $request->get('billing_address');
+          $client->billing_address_number = $request->get('billing_address_number');
+          $client->billing_piso_depto   = $request->get('billing_piso_depto');
+          $client->billing_cp           = $request->get('billing_cp');
+
+          $client->billing_razon_social_2 = $request->get('billing_razon_social_2');
+          $client->billing_cuit_2         = $request->get('billing_cuit_2');
+          $client->billing_gross_income_2 = $request->get('billing_gross_income_2');
+          $client->billing_condition_iva_2= $request->get('billing_condition_iva_2');
+          $client->billing_id_country_2   = $request->get('billing_id_country_2');
+          $client->billing_id_province_2  = $request->get('billing_id_province_2');
+          $client->billing_location_2     = $request->get('billing_location_2');
+          $client->billing_address_2      = $request->get('billing_address_2');
+          $client->billing_address_number_2 = $request->get('billing_address_number_2');
+          $client->billing_piso_depto_2   = $request->get('billing_piso_depto_2');
+          $client->billing_cp_2           = $request->get('billing_cp_2');
+
+          // data payment
+          $client->payment_type         = $request->get('payment_type');
+          $client->payment_card                 = $request->get('payment_card');
+          $client->payment_card_number          = $request->get('payment_card_number');
+          $client->payment_card_name            = $request->get('payment_card_name');
+          $client->payment_card_date_expiration = $request->get('payment_card_date_expiration');
+          $client->payment_card_code_expiration = $request->get('payment_card_code_expiration');
+
+          $client->payment_type_2         = $request->get('payment_type_2');
+          $client->payment_card_2                 = $request->get('payment_card_2');
+          $client->payment_card_number_2          = $request->get('payment_card_number_2');
+          $client->payment_card_name_2            = $request->get('payment_card_name_2');
+          $client->payment_card_date_expiration_2 = $request->get('payment_card_date_expiration_2');
+          $client->payment_card_code_expiration_2 = $request->get('payment_card_code_expiration_2');
+
           $client->save();
 
           User::uploadFiles($request, 'files', "$user->id");
@@ -134,8 +156,6 @@ class ClientController extends Controller
             $message = Helpers::setMessageValidationForm('Email');
           } elseif($dni == 1){
             $message = Helpers::setMessageValidationForm('DNI');
-          } else {
-            $message = Helpers::setMessageValidationForm('CUIT');
           }
           return back()->withInput()->with('message', $message);
 
@@ -177,9 +197,12 @@ class ClientController extends Controller
     public function edit($id)
     {
       $client = Client::find($id);
+      $user   = User::find($client->id_user);
+      
       return view('backend.client.edit', [
-        'client' => $client,
-        'user_files' => UserFile::where('user_id', $client->id_user)->get()
+        'user'        => $user,
+        'client'      => $client,
+        'user_files'  => UserFile::where('user_id', $client->id_user)->get()
       ]);
     }
 
@@ -194,53 +217,75 @@ class ClientController extends Controller
     {
       $message;
       try {
-        // Validations, check: email, dni, cuit
+        // Validations, check: email, dni
         $email  = User::where('email', $request->get('email'))->where('id', '!=', $request->get('id_user'))->count();
         $dni    = User::where('dni', $request->get('dni'))->where('id', '!=', $request->get('id_user'))->count();
-        $cuit   = User::where('cuit', $request->get('cuit'))->where('id', '!=', $request->get('id_user'))->count();
 
-        if($email == 0 && $dni == 0 && $cuit == 0):
-
-          // add format birthdate
-          $birthdate = explode('/', $request->get('birthdate'));
+        if($email == 0 && $dni == 0):
 
           // Update User
-          $user = User::find($request->get('id_user'));
+          $user               = User::find($request->get('id_user'));
           $user->name         = $request->get('name');
           $user->last_name    = $request->get('last_name');
           $user->email        = $request->get('email');
-          $user->type_dni     = $request->get('type_dni');
           $user->dni          = $request->get('dni');
-          $user->cuit         = $request->get('cuit');
-          $user->gender       = $request->get('gender');
-          $user->civil_status = $request->get('civil_status');
-          $user->birthdate    = (isset($birthdate[2]) ? $birthdate[2].'-'.$birthdate[1].'-'.$birthdate[0] : $request->get('birthdate'));
-          $user->id_study     = $request->get('id_study');
-          $user->id_nationality = $request->get('id_nationality');
-          $user->id_country   = $request->get('id_country');
-          $user->visa         = $request->get('visa');
-          $user->location     = $request->get('location');
-          $user->address      = $request->get('address');
-          $user->address_number = $request->get('address_number');
-          $user->piso_depto   = $request->get('piso_depto');
-          $user->cp           = $request->get('cp');
           $user->telephone    = $request->get('telephone');
           $user->other_telephone = $request->get('other_telephone');
-          $user->is_client    = 1;
           $user->is_active    = $request->get('is_active');
+
+          $user->is_client    = 1;
           $user->save();
 
           // Updated Client
-          $client = Client::find($id);
-          $client->id_user = $user->id;
-          $client->nick = $request->get('nick');
-          $client->razon_social = $request->get('razon_social');
-          $client->contact_name = $request->get('contact_name');
-          $client->contact_email = $request->get('contact_email');
-          $client->contact_telephone = $request->get('contact_telephone');
-          $client->retencion_ganancia = $request->get('retencion_ganancia');
-          $client->iibb = $request->get('iibb');
-          $client->iva = $request->get('iva');
+          $client             = Client::find($id);
+          $client->id_user    = $user->id;
+          $client->contact_last_name  = $request->get('contact_last_name');
+          $client->contact_name       = $request->get('contact_name');
+          $client->contact_dni        = $request->get('contact_dni');
+          $client->contact_telephone  = $request->get('contact_telephone');
+          $client->contact_other_telephone = $request->get('contact_other_telephone');
+          $client->contact_email      = $request->get('contact_email');
+
+          // data billing
+          $client->billing_razon_social = $request->get('billing_razon_social');
+          $client->billing_cuit         = $request->get('billing_cuit');
+          $client->billing_gross_income = $request->get('billing_gross_income');
+          $client->billing_condition_iva= $request->get('billing_condition_iva');
+          $client->billing_id_country   = $request->get('billing_id_country');
+          $client->billing_id_province  = $request->get('billing_id_province');
+          $client->billing_location     = $request->get('billing_location');
+          $client->billing_address      = $request->get('billing_address');
+          $client->billing_address_number = $request->get('billing_address_number');
+          $client->billing_piso_depto   = $request->get('billing_piso_depto');
+          $client->billing_cp           = $request->get('billing_cp');
+
+          $client->billing_razon_social_2 = $request->get('billing_razon_social_2');
+          $client->billing_cuit_2         = $request->get('billing_cuit_2');
+          $client->billing_gross_income_2 = $request->get('billing_gross_income_2');
+          $client->billing_condition_iva_2= $request->get('billing_condition_iva_2');
+          $client->billing_id_country_2   = $request->get('billing_id_country_2');
+          $client->billing_id_province_2  = $request->get('billing_id_province_2');
+          $client->billing_location_2     = $request->get('billing_location_2');
+          $client->billing_address_2      = $request->get('billing_address_2');
+          $client->billing_address_number_2 = $request->get('billing_address_number_2');
+          $client->billing_piso_depto_2   = $request->get('billing_piso_depto_2');
+          $client->billing_cp_2           = $request->get('billing_cp_2');
+
+          // data payment
+          $client->payment_type                 = $request->get('payment_type');
+          $client->payment_card                 = $request->get('payment_card');
+          $client->payment_card_number          = $request->get('payment_card_number');
+          $client->payment_card_name            = $request->get('payment_card_name');
+          $client->payment_card_date_expiration = $request->get('payment_card_date_expiration');
+          $client->payment_card_code_expiration = $request->get('payment_card_code_expiration');
+
+          $client->payment_type_2                 = $request->get('payment_type_2');
+          $client->payment_card_2                 = $request->get('payment_card_2');
+          $client->payment_card_number_2          = $request->get('payment_card_number_2');
+          $client->payment_card_name_2            = $request->get('payment_card_name_2');
+          $client->payment_card_date_expiration_2 = $request->get('payment_card_date_expiration_2');
+          $client->payment_card_code_expiration_2 = $request->get('payment_card_code_expiration_2');
+
           $client->save();
 
           User::uploadFiles($request, 'files', "$user->id");
@@ -253,8 +298,6 @@ class ClientController extends Controller
             $message = Helpers::setMessageValidationForm('Email');
           } elseif($dni == 1){
             $message = Helpers::setMessageValidationForm('DNI');
-          } else {
-            $message = Helpers::setMessageValidationForm('CUIT');
           }
           return back()->withInput()->with('message', $message);
 
