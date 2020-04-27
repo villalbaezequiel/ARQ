@@ -10,6 +10,7 @@ use App\Helpers;
 use App\User;
 use App\Provider;
 use App\UserFile;
+use App\SubItem;
 
 class ProviderController extends Controller
 {
@@ -65,7 +66,9 @@ class ProviderController extends Controller
     */
     public function create()
     {
-      return view('backend.provider.create');
+      return view('backend.provider.create', [
+        'sub_items' => SubItem::where('is_active', '1')->get()
+      ]);
     }
 
     /**
@@ -105,7 +108,7 @@ class ProviderController extends Controller
           // New Provider
           $provider                   = new Provider;
           $provider->id_user          = $user->id;
-          $provider->id_category      = $request->get('id_category');
+          $provider->id_category      = json_encode($request->get('id_category'));
           $provider->condition_iva    = $request->get('condition_iva');
           $provider->invoice_type     = $request->get('invoice_type');
           $provider->retains_gross_income           = $request->get('retains_gross_income');
@@ -229,7 +232,8 @@ class ProviderController extends Controller
       return view('backend.provider.edit', [
         'provider' => $provider,
         'user_files' => UserFile::where('user_id', $provider->id_user)->get(),
-        'user' => User::where('id', $provider->id_user)->first()
+        'user' => User::where('id', $provider->id_user)->first(),
+        'sub_items' => SubItem::where('is_active', '1')->get()
       ]);
     }
 
@@ -269,7 +273,7 @@ class ProviderController extends Controller
           // Update Provider
           $provider = Provider::find($id);
           $provider->id_user          = $user->id;
-          $provider->id_category      = $request->get('id_category');
+          $provider->id_category      = json_encode($request->get('id_category'));
           $provider->condition_iva    = $request->get('condition_iva');
           $provider->invoice_type     = $request->get('invoice_type');
           $provider->retains_gross_income           = $request->get('retains_gross_income');

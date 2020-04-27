@@ -33,8 +33,7 @@
             <thead>
               <tr>
                 <th><strong>#ID</strong></th>
-                <th><strong>Nombre</strong></th>
-                <th><strong>Rubro</strong></th>
+                <th><strong>Nombre/Razon Social</strong></th>
                 <th><strong>Activo</strong></th>
                 <th class="text-right"><strong>Acciones </strong></th>
               </tr>
@@ -44,7 +43,6 @@
               <tr class="item-alert-confirm-delete">
                 <td>{{ $provider->id }}</td>
                 <td>{{ \App\User::getFullName($provider->id_user) }}</td>
-                <td>{{ $provider->id_category }}</td>
                 <td>{{ \App\User::getActive($provider->id_user) }}</td>
                 <td class="text-right">
                   {!! Form::open(['route' => ['providers.destroy', $provider->id], 'method' => 'DELETE', 'class'=> 'alert-confirm-delete']) !!}

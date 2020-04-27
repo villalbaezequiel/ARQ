@@ -32,6 +32,8 @@ Route::group(['middleware' => ['auth']], function () {
     Route::resource('/clients', 'Backend\ClientController');
     Route::resource('/providers', 'Backend\ProviderController');
     Route::resource('/user_files', 'Backend\UserFileController');
+    Route::resource('/items', 'Backend\ItemController');
+    Route::resource('/sub_items', 'Backend\SubItemController');
 });
 
 Route::get('/registro-proveedor', function(){

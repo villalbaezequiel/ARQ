@@ -16,7 +16,7 @@ class CreateProvidersTable extends Migration
         Schema::create('providers', function (Blueprint $table) {
             $table->bigIncrements('id');
             $table->integer('id_user');
-            $table->integer('id_category');            
+            $table->string('id_category');            
             $table->enum('condition_iva', [0, 1])->nullable();
             $table->enum('retains_gross_income', [0, 1])->nullable();
             $table->string('retains_gross_income_porcentage')->nullable();
