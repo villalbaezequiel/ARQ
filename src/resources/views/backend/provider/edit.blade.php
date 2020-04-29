@@ -154,7 +154,11 @@
               <label class="col-md-2 col-form-label">Tipo de factura <span class="required-red">*</span></label>
               <div class="col-md-8">
                 <div class="form-group">
-                  <input class="form-control" type="text" name="invoice_type" value="{{ $provider->invoice_type }}" maxlength="125" required>
+                  <select class="form-control selectpicker" data-style="btn btn-link" name="invoice_type">
+                    <option value="A" <?php if($provider->invoice_type == "A") { echo "selected='selected'"; } ?>>A</option>
+                    <option value="B" <?php if($provider->invoice_type == "B") { echo "selected='selected'"; } ?>>B</option>
+                    <option value="C" <?php if($provider->invoice_type == "C") { echo "selected='selected'"; } ?>>C</option>
+                  </select>
                 </div>
               </div>
             </div>
