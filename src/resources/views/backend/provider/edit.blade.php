@@ -606,7 +606,15 @@
               <div class="col-md-12">
                 <div class="form-group text-center">
                   <label class="btn" for="file_id">Seleccionar Documentos</label>
-                  <input type="file" name="files[]" id="file_id" multiple>
+                  <input type="file" name="files[]" id="file_id" onchange="javascript:updateList()" multiple>
+                </div>
+              </div>
+            </div>
+
+            <div class="row hidden" id="name_files_content">
+              <label class="col-md-2 col-form-label">Documentos</label>
+              <div class="col-md-8">
+                <div class="form-group" id="name_files_list">
                 </div>
               </div>
             </div>
@@ -721,6 +729,21 @@ $(document).ready(function(){
     }
 
   });
+
+  updateList = function() {
+      var input = document.getElementById('file_id');
+      var output = document.getElementById('name_files_list');
+      var children = "";
+      for (var i = 0; i < input.files.length; ++i) {
+          children += "<li class='list-group-item'>" + input.files.item(i).name + '</li>';
+      }
+
+      if(children.length > 0)
+      {
+        $("#name_files_content").removeClass("hidden");
+        output.innerHTML = "<ul class='list-group'>"+children+'</ul>';
+      }
+  }
   
 });
 </script>
