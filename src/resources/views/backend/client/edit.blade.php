@@ -210,8 +210,8 @@
                 <div class="col-md-8">
                   <div class="form-group">
                     <select class="form-control selectpicker" data-style="btn btn-link" name="billing_condition_iva">
-                      <option value="0" <?php if($client->billing_condition_iva == "0"){ echo "selected='selected'"; } ?>>No</option>
-                      <option value="1" <?php if($client->billing_condition_iva == "1"){ echo "selected='selected'"; } ?>>Si</option>
+                      <option value="0" <?php if($client->billing_condition_iva == "0"){ echo "selected='selected'"; } ?>>No Inscripto</option>
+                      <option value="1" <?php if($client->billing_condition_iva == "1"){ echo "selected='selected'"; } ?>>Inscripto</option>
                     </select>
                   </div>
                 </div>
@@ -308,8 +308,8 @@
                 <div class="col-md-8">
                   <div class="form-group">
                     <select class="form-control selectpicker" data-style="btn btn-link" name="billing_condition_iva_2">
-                      <option value="0" <?php if($client->billing_condition_iva_2 == "0"){ echo "selected='selected'"; } ?>>No</option>
-                      <option value="1" <?php if($client->billing_condition_iva_2 == "1"){ echo "selected='selected'"; } ?>>Si</option>
+                      <option value="0" <?php if($client->billing_condition_iva_2 == "0"){ echo "selected='selected'"; } ?>>No Inscripto</option>
+                      <option value="1" <?php if($client->billing_condition_iva_2 == "1"){ echo "selected='selected'"; } ?>>Inscripto</option>
                     </select>
                   </div>
                 </div>
@@ -362,136 +362,6 @@
                 <div class="col-md-1">
                   <div class="form-group">
                     <input class="form-control input-type-number" type="text" name="billing_cp_2" value="{{ $client->billing_cp_2 }}" placeholder="CP">
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            <div class="row p-2">
-                <label class="col-md-12 col-form-label">
-                    <center><strong>Datos de Pagos</strong></center>
-                </label>
-            </div>
-
-            <div class="row p-2">
-                <a class="col-md-2 col-form-label" style="color: #aaa; font-weight: 600;" data-toggle="collapse" href="#payment_1">
-                  Pago 1 &#8595;
-                </a>
-                <div class="col-md-8"></div>
-            </div>
-            <div id="payment_1" class="collapse show">
-              <div class="row">
-                <label class="col-md-2 col-form-label">Tipo de pago</label>
-                <div class="col-md-8">
-                  <div class="form-group">
-                    <input class="form-control" type="text" name="payment_type" value="{{ $client->payment_type }}" maxlength="125">
-                  </div>
-                </div>
-              </div>
-
-              <div class="row">
-                <label class="col-md-2 col-form-label">Tarjeta</label>
-                <div class="col-md-8">
-                  <div class="form-group">
-                    <input class="form-control" type="text" name="payment_card" value="{{ $client->payment_card }}" maxlength="125">
-                  </div>
-                </div>
-              </div>
-
-              <div class="row">
-                <label class="col-md-2 col-form-label">Numero</label>
-                <div class="col-md-8">
-                  <div class="form-group">
-                  <input class="form-control input-type-number" type="number" name="payment_card_number" value="{{ $client->payment_card_number }}" maxlength="125">
-                  </div>
-                </div>
-              </div>
-
-              <div class="row">
-                <label class="col-md-2 col-form-label">Nombre</label>
-                <div class="col-md-8">
-                  <div class="form-group">
-                    <input class="form-control" type="text" name="payment_card_name" value="{{ $client->payment_card_name }}" maxlength="125">
-                  </div>
-                </div>
-              </div>
-
-              <div class="row">
-                <label class="col-md-2 col-form-label">Fecha de vencimiento</label>
-                <div class="col-md-8">
-                  <div class="form-group">
-                    <input class="form-control" type="text" name="payment_card_date_expiration" value="{{ $client->payment_card_date_expiration }}" maxlength="125">
-                  </div>
-                </div>
-              </div>
-
-              <div class="row">
-                <label class="col-md-2 col-form-label">Codigo de vencimiento</label>
-                <div class="col-md-8">
-                  <div class="form-group">
-                    <input class="form-control" type="text" name="payment_card_code_expiration" value="{{ $client->payment_card_code_expiration }}" maxlength="125">
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            <div class="row p-2">
-                <a class="col-md-2 col-form-label" style="color: #aaa; font-weight: 600;" data-toggle="collapse" href="#payment_2">
-                  Pago 2 &#8595;
-                </a>
-                <div class="col-md-8"></div>
-            </div>
-            <div id="payment_2" class="collapse">
-              <div class="row">
-                <label class="col-md-2 col-form-label">Tipo de pago</label>
-                <div class="col-md-8">
-                  <div class="form-group">
-                    <input class="form-control" type="text" name="payment_type_2" value="{{ $client->payment_type_2 }}" maxlength="125">
-                  </div>
-                </div>
-              </div>
-
-              <div class="row">
-                <label class="col-md-2 col-form-label">Tarjeta</label>
-                <div class="col-md-8">
-                  <div class="form-group">
-                    <input class="form-control" type="text" name="payment_card_2" value="{{ $client->payment_card_2 }}" maxlength="125">
-                  </div>
-                </div>
-              </div>
-
-              <div class="row">
-                <label class="col-md-2 col-form-label">Numero</label>
-                <div class="col-md-8">
-                  <div class="form-group">
-                  <input class="form-control input-type-number" type="number" name="payment_card_number_2" value="{{ $client->payment_card_number_2 }}" maxlength="125">
-                  </div>
-                </div>
-              </div>
-
-              <div class="row">
-                <label class="col-md-2 col-form-label">Nombre</label>
-                <div class="col-md-8">
-                  <div class="form-group">
-                    <input class="form-control" type="text" name="payment_card_name_2" value="{{ $client->payment_card_name_2 }}" maxlength="125">
-                  </div>
-                </div>
-              </div>
-
-              <div class="row">
-                <label class="col-md-2 col-form-label">Fecha de vencimiento</label>
-                <div class="col-md-8">
-                  <div class="form-group">
-                    <input class="form-control" type="text" name="payment_card_date_expiration_2" value="{{ $client->payment_card_date_expiration_2 }}" maxlength="125">
-                  </div>
-                </div>
-              </div>
-
-              <div class="row">
-                <label class="col-md-2 col-form-label">Codigo de vencimiento</label>
-                <div class="col-md-8">
-                  <div class="form-group">
-                    <input class="form-control" type="text" name="payment_card_code_expiration_2" value="{{ $client->payment_card_code_expiration_2 }}" maxlength="125">
                   </div>
                 </div>
               </div>

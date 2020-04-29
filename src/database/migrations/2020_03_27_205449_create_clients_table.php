@@ -26,6 +26,8 @@ class CreateClientsTable extends Migration
             $table->string('contact_email')->nullable();
 
             // data billing
+            // info: 
+            // billing_condition_iva: 1 => Inscripto 0 => No Inscripto
             $table->string('billing_razon_social')->nullable();
             $table->string('billing_cuit')->nullable();
             $table->string('billing_gross_income')->nullable();
@@ -49,21 +51,6 @@ class CreateClientsTable extends Migration
             $table->integer('billing_address_number_2')->nullable();
             $table->string('billing_piso_depto_2')->nullable();
             $table->integer('billing_cp_2')->nullable();
-
-            // data payment
-            $table->string('payment_type')->nullable();
-            $table->string('payment_card')->nullable();
-            $table->string('payment_card_number')->nullable();
-            $table->string('payment_card_name')->nullable();
-            $table->string('payment_card_date_expiration')->nullable();
-            $table->string('payment_card_code_expiration')->nullable();
-
-            $table->string('payment_type_2')->nullable();
-            $table->string('payment_card_2')->nullable();
-            $table->string('payment_card_number_2')->nullable();
-            $table->string('payment_card_name_2')->nullable();
-            $table->string('payment_card_date_expiration_2')->nullable();
-            $table->string('payment_card_code_expiration_2')->nullable();
 
             $table->timestamps();
         });

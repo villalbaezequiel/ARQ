@@ -129,21 +129,6 @@ class ClientController extends Controller
           $client->billing_piso_depto_2   = $request->get('billing_piso_depto_2');
           $client->billing_cp_2           = $request->get('billing_cp_2');
 
-          // data payment
-          $client->payment_type         = $request->get('payment_type');
-          $client->payment_card                 = $request->get('payment_card');
-          $client->payment_card_number          = $request->get('payment_card_number');
-          $client->payment_card_name            = $request->get('payment_card_name');
-          $client->payment_card_date_expiration = $request->get('payment_card_date_expiration');
-          $client->payment_card_code_expiration = $request->get('payment_card_code_expiration');
-
-          $client->payment_type_2         = $request->get('payment_type_2');
-          $client->payment_card_2                 = $request->get('payment_card_2');
-          $client->payment_card_number_2          = $request->get('payment_card_number_2');
-          $client->payment_card_name_2            = $request->get('payment_card_name_2');
-          $client->payment_card_date_expiration_2 = $request->get('payment_card_date_expiration_2');
-          $client->payment_card_code_expiration_2 = $request->get('payment_card_code_expiration_2');
-
           $client->save();
 
           User::uploadFiles($request, 'files', "$user->id");
@@ -270,21 +255,6 @@ class ClientController extends Controller
           $client->billing_address_number_2 = $request->get('billing_address_number_2');
           $client->billing_piso_depto_2   = $request->get('billing_piso_depto_2');
           $client->billing_cp_2           = $request->get('billing_cp_2');
-
-          // data payment
-          $client->payment_type                 = $request->get('payment_type');
-          $client->payment_card                 = $request->get('payment_card');
-          $client->payment_card_number          = $request->get('payment_card_number');
-          $client->payment_card_name            = $request->get('payment_card_name');
-          $client->payment_card_date_expiration = $request->get('payment_card_date_expiration');
-          $client->payment_card_code_expiration = $request->get('payment_card_code_expiration');
-
-          $client->payment_type_2                 = $request->get('payment_type_2');
-          $client->payment_card_2                 = $request->get('payment_card_2');
-          $client->payment_card_number_2          = $request->get('payment_card_number_2');
-          $client->payment_card_name_2            = $request->get('payment_card_name_2');
-          $client->payment_card_date_expiration_2 = $request->get('payment_card_date_expiration_2');
-          $client->payment_card_code_expiration_2 = $request->get('payment_card_code_expiration_2');
 
           $client->save();
 
