@@ -88,7 +88,7 @@
                         <span class="input-group-text">
                           Cliente<span class="required-red">*</span>
                         </span>
-                        <select class="form-control selectpicker" data-style="btn btn-link" name="id_client" required>
+                        <select class="form-control selectpicker" data-style="btn btn-link" name="id_client[]" multiple required>
                           <option value="99999">Seleccionar</option>
                           @foreach($clients as $client)
                             <option value="{{ $client->id }}">{{ $client->last_name . $client->name }}</option>

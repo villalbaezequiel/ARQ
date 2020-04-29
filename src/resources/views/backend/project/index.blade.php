@@ -34,7 +34,7 @@
             <thead>
               <tr>
                 <th>Nombre</th>
-                <th>Cliente</th>
+                <th>Cliente/s</th>
                 <th>Fechas: Inicio - Finalización</th>
                 <th>Activo</th>
                 <th class="text-center">Acciones</th>
@@ -44,13 +44,22 @@
               @foreach($projects as $project)
 
               <?php
-               $start_date = explode('-', \App\Helpers::getDate($project->start_date));
-               $finish_date = explode('-', \App\Helpers::getDate($project->finish_date));
+                $start_date  = explode('-', \App\Helpers::getDate($project->start_date));
+                $finish_date = explode('-', \App\Helpers::getDate($project->finish_date));
+                $clients     = '';
+
+                if(json_decode($project->id_client))
+                {
+                  foreach(json_decode($project->id_client) as $key => $val)
+                  {
+                    $clients .= \App\Client::getName($val) . ', ';
+                  }
+                }
               ?>
 
               <tr class="item-alert-confirm-delete">
                 <td>{{ $project->name }}</td>
-                <td>{{ \App\Client::getName($project->id_client) }}</td>
+                <td>{{ $clients }}</td>
                 <td>{{ $start_date[2].'/'.$start_date[1].'/'.$start_date[0] }} - {{ $finish_date[2].'/'.$finish_date[1].'/'.$finish_date[0] }}</td>
                 <td>{{ \App\Helpers::getActive($project->active) }}</td>
                 <td class="text-right">

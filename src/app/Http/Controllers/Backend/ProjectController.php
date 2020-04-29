@@ -48,7 +48,7 @@ class ProjectController extends Controller
             $project                = new Project;
             $project->start_date    = Project::getDateParseFormat($request->get('start_date'));
             $project->finish_date   = Project::getDateParseFormat($request->get('finish_date'));
-            $project->id_client     = $request->get('id_client');
+            $project->id_client     = json_encode($request->get('id_client'));
             $project->name          = $request->get('name');
             $project->description   = $request->get('description');
             $project->observations  = $request->get('observations');
@@ -119,7 +119,7 @@ class ProjectController extends Controller
             $project                = Project::find($id);
             $project->start_date    = Project::getDateParseFormat($request->get('start_date'));
             $project->finish_date   = Project::getDateParseFormat($request->get('finish_date'));
-            $project->id_client     = $request->get('id_client');
+            $project->id_client     = json_encode($request->get('id_client'));
             $project->name          = $request->get('name');
             $project->description   = $request->get('description');
             $project->observations  = $request->get('observations');

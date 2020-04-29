@@ -17,7 +17,7 @@ class CreateProjectsTable extends Migration
             $table->bigIncrements('id');
             $table->string('start_date')->nullable();
             $table->string('finish_date')->nullable();
-            $table->integer('id_client')->nullable();
+            $table->string('id_client')->nullable();
             $table->string('name')->nullable();
             $table->string('description')->nullable();
             $table->string('observations')->nullable();
