@@ -369,7 +369,7 @@
 
             <div class="row" style="padding: 15px;">
                 <label class="col-md-12 col-form-label">
-                    <center><strong>Ducumentos</strong></center>
+                    <center><strong>Documentos</strong></center>
                 </label>
             </div>
 
