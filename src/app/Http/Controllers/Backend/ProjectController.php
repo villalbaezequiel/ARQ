@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Helpers;
 use App\Project;
+use App\ProjectDocument;
 use App\Client;
 
 class ProjectController extends Controller
@@ -60,7 +61,12 @@ class ProjectController extends Controller
             $project->cp            = $request->get('cp');
             $project->piso_depto    = $request->get('piso_depto');
             $project->is_active     = $request->get('is_active');
+            $project->link_google_drive = $request->get('link_google_drive');
+            $project->link_dropbox      = $request->get('link_dropbox');
             $project->save();
+
+            //save ProductDocument
+            Project::uploadDocuments($request, 'files', $project->id);
 
             return redirect('/projects')->with('message', 'Proyecto creado con exito!');
 
@@ -100,8 +106,9 @@ class ProjectController extends Controller
     {
         $clients = Client::select('clients.id', 'users.last_name', 'users.name')->join('users', 'clients.id_user', 'users.id')->where('users.is_active', '1')->get();
         return view('backend.project.edit', [
-            'project' => Project::find($id),
-            'clients' => $clients
+            'project'           => Project::find($id),
+            'clients'           => $clients,
+            'project_documents' => ProjectDocument::where('id_project', $id)->get()
         ]);
     }
 
@@ -131,7 +138,12 @@ class ProjectController extends Controller
             $project->cp            = $request->get('cp');
             $project->piso_depto    = $request->get('piso_depto');
             $project->is_active     = $request->get('is_active');
+            $project->link_google_drive = $request->get('link_google_drive');
+            $project->link_dropbox      = $request->get('link_dropbox');
             $project->save();
+
+            //save ProductDocument
+            Project::uploadDocuments($request, 'files', $project->id);
 
             return redirect('/projects')->with('message', 'Proyecto editado con exito!');
 

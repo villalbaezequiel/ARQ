@@ -30,6 +30,7 @@ Route::get('/home', 'HomeController@index')->name('home');
 
 Route::group(['middleware' => ['auth']], function () {
     Route::resource('/projects', 'Backend\ProjectController');
+    Route::resource('/project_documents', 'Backend\ProjectDocumentController');
     Route::resource('/clients', 'Backend\ClientController');
     Route::resource('/providers', 'Backend\ProviderController');
     Route::resource('/user_files', 'Backend\UserFileController');

@@ -21,7 +21,7 @@
     <div class="wizard-container">
       <div class="card card-wizard active" data-color="purple" id="wizardProfile">
 
-        {!! Form::open(['route' => ['projects.update', $project->id], 'method' => 'PUT', 'class' => 'form-horizontal', 'onKeyPress' => 'return disableEnterKey(event)', 'id' => 'logic_project']) !!}
+        {!! Form::open(['route' => ['projects.update', $project->id], 'method' => 'PUT', 'class' => 'form-horizontal', 'onKeyPress' => 'return disableEnterKey(event)', 'id' => 'logic_project', 'enctype' => 'multipart/form-data']) !!}
           <div class="card-header text-center">
             <h3 class="card-title">
               Editar Proyecto
@@ -31,17 +31,38 @@
             <ul class="nav nav-pills">
               <li class="nav-item" style="width: 50%;">
                 <a class="nav-link active" href="#module_one" data-toggle="tab" role="tab">
-                  Módulo 1
+                  Información
                 </a>
               </li>
               <li class="nav-item" style="width: 50%;">
                 <a class="nav-link" href="#module_two" data-toggle="tab" role="tab">
-                  Módulo 2
+                  Presupuesto
+                </a>
+              </li>
+              <li class="nav-item" style="width: 50%;">
+                <a class="nav-link" href="#module_three" data-toggle="tab" role="tab">
+                  Costo real
+                </a>
+              </li>
+              <li class="nav-item" style="width: 50%;">
+                <a class="nav-link" href="#module_four" data-toggle="tab" role="tab">
+                  Documentos
+                </a>
+              </li>
+              <li class="nav-item" style="width: 50%;">
+                <a class="nav-link" href="#module_five" data-toggle="tab" role="tab">
+                  Flujo de caja
+                </a>
+              </li>
+              <li class="nav-item" style="width: 50%;">
+                <a class="nav-link" href="#module_six" data-toggle="tab" role="tab">
+                  Proveedores
                 </a>
               </li>
             </ul>
+
             <div class="moving-tab" style="width: 50%; transform: translate3d(-8px, 0px, 0px); transition: transform 0s ease 0s;">
-              Módulo 1
+              Informacion
             </div>
           </div>
           <div class="card-body">
@@ -98,7 +119,7 @@
                                 if($val == $client->id){ echo "selected"; }
                               }?>
                             >
-                              {{ $client->last_name . $client->name }}
+                              {{ $client->last_name .' '. $client->name }}
                             </option>
                           @endforeach
                         </select>
@@ -183,8 +204,26 @@
               </div>
 
               <div class="tab-pane" id="module_two">
-                <h5 class="info-text"> Sub Modulos </h5>
+                <h5 class="info-text"> Presupuesto </h5>
               </div>
+
+              <div class="tab-pane" id="module_three">
+                <h5 class="info-text"> Estado / Costo Real </h5>
+              </div>
+
+              <div class="tab-pane" id="module_four">
+                <h5 class="info-text"> Documentos </h5>
+
+                @include('backend.project.components.edit.documents')
+              </div>
+
+              <div class="tab-pane" id="module_five">
+                <h5 class="info-text"> Flujo de Caja </h5>
+              </div>
+
+              <div class="tab-pane" id="module_six">
+                <h5 class="info-text"> Proveedores </h5>
+              </div>           
 
             </div>
           </div>
@@ -203,6 +242,8 @@
           </div>
 
         {!! Form::close() !!}
+
+        @include('backend.project.components.edit.documents_form_delete')
 
       </div>
     </div>
@@ -231,7 +272,7 @@ $(document).ready(function(){
         
   };
 
-  frameJs.initMaterialWizard(rules);
+  arqJs.initMaterialWizard(rules);
   
   $('a').click(function(e){
     if(!$(this).hasClass('none-alert')){

@@ -326,7 +326,7 @@ class ProviderController extends Controller
 
           $provider->save();
 
-          User::uploadFiles($request, 'files', "$user->id");
+          User::uploadFiles($request, 'files', $user->id);
 
           return redirect('/providers')->with('message', 'Proveedor editado con exito!');
 

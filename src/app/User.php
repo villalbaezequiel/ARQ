@@ -75,11 +75,11 @@ class User extends Authenticatable
             foreach($files as $file)
             {
               $fileName = date('Ymdhis').$count.'.'.$file->getClientOriginalExtension();
-              $file->move(public_path("users/$user_id"), $fileName);
+              $file->move(public_path("documents/users/$user_id"), $fileName);
 
               $media              = new UserFile;
               $media->user_id     = $user_id;
-              $media->path        = "users/$user_id/$fileName";
+              $media->path        = "documents/users/$user_id/$fileName";
               $media->path_label  = $file->getClientOriginalName();
               $media->save();
 

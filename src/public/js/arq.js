@@ -224,7 +224,7 @@ $(document).ready(function(){
 });
 
 
-let frameJs = {
+let arqJs = {
 
   initDateTimePicker: () => {
     $('.datetimepicker').datetimepicker({
@@ -489,6 +489,21 @@ let frameJs = {
 
     setDisabled: (row) => {
       $(row).prop('disabled', true);
+    },
+
+    updateList: () => {
+      var input = document.getElementById('file_id');
+      var output = document.getElementById('name_files_list');
+      var children = "";
+      for (var i = 0; i < input.files.length; ++i) {
+          children += "<li class='list-group-item'>" + input.files.item(i).name + '</li>';
+      }
+
+      if(children.length > 0)
+      {
+        $("#name_files_content").removeClass("hidden");
+        output.innerHTML = "<ul class='list-group'>"+children+'</ul>';
+      }
     }
 
 }
