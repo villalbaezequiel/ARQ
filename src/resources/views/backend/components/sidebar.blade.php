@@ -67,13 +67,13 @@
       </li>
 
       <li class="nav-item nav-check-url ">
-        <a class="nav-link none-alert" data-toggle="collapse" href="#users-nav-menu">
+        <a class="nav-link none-alert" data-toggle="collapse" href="#items">
           <i class="material-icons">group_work</i>
           <p> Rubros
             <b class="caret"></b>
           </p>
         </a>
-        <div class="collapse" id="users-nav-menu">
+        <div class="collapse" id="items">
           <ul class="nav">
             <li class="nav-item nav-check-url ">
               <a class="nav-link" href="{{ url('/items') }}">

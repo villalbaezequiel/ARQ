@@ -213,7 +213,6 @@
 
               <div class="tab-pane" id="module_four">
                 <h5 class="info-text"> Documentos </h5>
-
                 @include('backend.project.components.edit.documents')
               </div>
 
@@ -251,57 +250,7 @@
   </div>
 </div>
 @endsection
+
 @section('javascript')
-<script>
-$(document).ready(function(){
-
-  // input validate
-  let rules = {
-        start_date: {
-          required: true
-        },
-        finish_date: {
-          required: true
-        },
-        name: {
-          required: true
-        },
-        id_client: {
-          required: true
-        }
-        
-  };
-
-  arqJs.initMaterialWizard(rules);
-  
-  $('a').click(function(e){
-    if(!$(this).hasClass('none-alert')){
-      var parentForm = $(this).parents('form');
-      if(parentForm.length != 1 || $(this).hasClass('back-history')){
-        e.preventDefault();
-        alertLeaveForm(this);
-      }
-    }
-  });
-
-  $('.show-content-observation').click(function(e){
-    e.preventDefault();
-
-    Swal.fire({
-      'title': 'Observaciones',
-      input: 'textarea',
-      inputValue: $('textarea[name=observations]').val(),
-      showCancelButton: true
-    })
-    .then((result) => {
-      if(result.dismiss == "cancel"){
-        return false;
-      }
-
-      $('textarea[name=observations]').val(result.value);
-      $('#logic_project').submit();
-    });
-  });
-});
-</script>
+  <script src="{{ asset('/js/project.js') }}"></script>
 @endsection

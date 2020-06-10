@@ -17,11 +17,11 @@ Route::get('/', function () {
 
 // redirect temporally
 Route::get('/', function(){
-    return redirect('/clients');
+    return redirect('/projects');
 });
 
 Route::get('/home', function(){
-    return redirect('/clients');
+    return redirect('/projects');
 });
 
 Auth::routes();

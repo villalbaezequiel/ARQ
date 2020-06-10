@@ -1,16 +1,20 @@
-<div class="row">
-    <label class="col-md-2 col-form-label">Link Google Drive</label>
-    <div class="col-md-8">
-        <div class="form-group">
+<div class="col-md-10">
+    <div class="form-group">
+        <div class="input-group-prepend">
+        <span class="input-group-text">
+            Link Google Drive
+        </span>
         <input class="form-control" type="text" name="link_google_drive" value="{{ $project->link_google_drive }}" maxlength="255">
         </div>
     </div>
 </div>
 
-<div class="row">
-    <label class="col-md-2 col-form-label">Link Dropbox</label>
-    <div class="col-md-8">
-        <div class="form-group">
+<div class="col-md-10">
+    <div class="form-group">
+        <div class="input-group-prepend">
+        <span class="input-group-text">
+            Link Dropbox
+        </span>
         <input class="form-control" type="text" name="link_dropbox" value="{{ $project->link_dropbox }}" maxlength="255">
         </div>
     </div>

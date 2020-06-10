@@ -8,6 +8,8 @@ use App\Helpers;
 use App\Project;
 use App\ProjectDocument;
 use App\Client;
+use App\Item;
+use App\SubItem;
 
 class ProjectController extends Controller
 {
@@ -30,9 +32,30 @@ class ProjectController extends Controller
      */
     public function create()
     {
+        $items      = [];
+        $itemsParent= Item::select('id', 'name')->where('is_active', '1')->get();
+
+        foreach($itemsParent as $item)
+        {
+            $subItems= SubItem::select('id', 'name')
+                                ->where('is_active', '1')
+                                ->where('id_item', $item->id)
+                                ->get();
+            if(count($subItems))
+            {
+                $items[] = [
+                    'id'    => $item->id, 
+                    'name'  => $item->name,
+                    'data'  => $subItems
+                ];
+            }
+        }
+
         $clients = Client::select('clients.id', 'users.last_name', 'users.name')->join('users', 'clients.id_user', 'users.id')->where('users.is_active', '1')->get();
+        
         return view('backend.project.create', [
-            'clients' => $clients
+            'clients' => $clients,
+            'items'   => $items
         ]);
     }
 
@@ -104,10 +127,27 @@ class ProjectController extends Controller
      */
     public function edit($id)
     {
+        $items      = [];
+        $itemsParent= Item::select('id', 'name')->where('is_active', '1')->get();
+
+        foreach($itemsParent as $item)
+        {
+            $subItems= SubItem::select('id', 'name')
+                                ->where('is_active', '1')
+                                ->where('id_item', $item->id)
+                                ->get();
+            $items[] = [
+                'id'    => $item->id, 
+                'name'  => $item->name,
+                'data'  => $subItems
+            ];
+        }
+        
         $clients = Client::select('clients.id', 'users.last_name', 'users.name')->join('users', 'clients.id_user', 'users.id')->where('users.is_active', '1')->get();
         return view('backend.project.edit', [
             'project'           => Project::find($id),
             'clients'           => $clients,
+            'items'             => $items,
             'project_documents' => ProjectDocument::where('id_project', $id)->get()
         ]);
     }
