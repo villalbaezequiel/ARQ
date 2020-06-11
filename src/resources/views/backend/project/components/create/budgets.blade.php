@@ -26,10 +26,6 @@
             <button class="btn btn-success" onclick="addGroupItems(event); return false;">Agregar</button>
         </div>
 
-        <div class="col-md-4 text-center">
-            <button class="btn btn-success">Aprobar</button>
-        </div>
-
       </div>
     </div>
 </div>

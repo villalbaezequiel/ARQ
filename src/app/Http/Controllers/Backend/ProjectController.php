@@ -225,7 +225,7 @@ class ProjectController extends Controller
                 {
                     foreach($request->get('budget') as $key => $val)
                     {
-                        if($val['id'])
+                        if(isset($val['id']))
                         {
                             $projectBudget = ProjectBudget::find($val['id']);
                             $projectBudget->id_subitem  = $key;

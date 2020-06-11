@@ -210,6 +210,7 @@
 
               <div class="tab-pane" id="module_three">
                 <h5 class="info-text"> Estado / Costo Real </h5>
+                @include('backend.project.components.edit.real_cost')
               </div>
 
               <div class="tab-pane" id="module_four">
