@@ -63,10 +63,10 @@
                 <th></th>
                 <th></th>
                 <th></th>
+                <th><input type="number" name="global_subtotal"  value="0" class="form-control" readonly></th>
                 <th></th>
-                <th></th>
-                <th></th>
-                <th></th>
+                <th><input type="number" name="global_total"     value="0" class="form-control" readonly></th>
+                <th><input type="number" name="global_incidence" value="0"class="form-control" readonly></th>
                 <th></th>
             </tr>
         </tbody>

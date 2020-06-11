@@ -48,15 +48,10 @@ $(document).ready(function() {
       });
     });
 
-
-    $(".calculate-subtotal").keyup(function(){
-      let id = $(this).data('idsubiteam');
-
-      let valCalculate = ( $('#quantity_'+id).val() * $('#unit_cost_'+id).val());
-
-      $('#subtotal_'+id).val(valCalculate);
-      $('#total_'+id).val(valCalculate);
-    });
+    calculateTotales();
+    removeItem();
+    validateNumberDecimal();
+    calculateGlobalItem();
     
 });
 
@@ -101,10 +96,10 @@ function generateTemplateItems(idItem, nameItem, dataSubItems)
   let items = `
     <tr class="b-c-gray" id="item-${idItem}">
       <th colspan="4" class="text-left pl-3">${nameItem}</th>
-      <th> </th>
-      <th> </th>
-      <th> </th>
-      <th> </th>
+      <th><input type="number" name="item_subtotal" class="form-control validate-number-decimal" readonly></th>
+      <th></th>
+      <th><input type="number" name="item_total" class="form-control validate-number-decimal" readonly></th>
+      <th><input type="number" name="item_incidence" class="form-control validate-number-decimal" maxlength="6" readonly></th>
       <th>
         <button
           class="btn btn-danger removeItem" 
@@ -114,26 +109,21 @@ function generateTemplateItems(idItem, nameItem, dataSubItems)
       </th>
     </tr>`;
 
-  let realCost = `
-    <tr class="b-c-gray">
-      <th colspan="4" class="text-left pl-3">${nameItem}</th>
-      <th> </th>
-      <th> </th>
-      <th> </th>
-      <th> </th>
-    </tr>`;
-
   $.each(dataSubItems, function(i, v){
     items += `
       <tr id="subitem-${v.id}" data-iditeam="${idItem}" class="sub_items_content">
+      
+        <input      type="hidden" name="budget[${v.id}][id_item]" value="${idItem}" />
+
         <td class="pl-3"><input class="form-control" value="${v.name}" disabled /></td>
-        <td><input type="text" name="unit[${v.id}][]" class="form-control" /></td>
-        <td><input type="number" name="quantity[${v.id}][]" id="quantity_${v.id}" data-idsubiteam="${v.id}" class="form-control calculate-subtotal" /></td>
-        <td><input type="number" name="unit_cost[${v.id}][]" id="unit_cost_${v.id}" data-idsubiteam="${v.id}" class="form-control calculate-subtotal" /></td>
-        <td><input type="number" name="subtotal[${v.id}][]" id="subtotal_${v.id}" class="form-control" readonly /></td>
-        <td><input type="number" name="tax[${v.id}][]" class="form-control" /></td>
-        <td><input type="number" name="total[${v.id}][]" id="total_${v.id}" class="form-control" readonly /></td>
-        <td><input type="number" name="incidence[${v.id}][]" id="incidence_${v.id}" class="form-control" readonly /></td>
+        <td><input type="text"    name="budget[${v.id}][unit]"      class="form-control" required /></td>
+        <td><input type="number"  name="budget[${v.id}][quantity]"  maxlength="11"  id="quantity_${v.id}" data-idsubiteam="${v.id}" class="form-control calculate-subtotal" required /></td>
+        <td><input type="number"  name="budget[${v.id}][unit_cost]" maxlength="10"  id="unit_cost_${v.id}" data-idsubiteam="${v.id}" class="form-control calculate-subtotal" required /></td>
+        <td><input type="number"  name="budget[${v.id}][subtotal]"  maxlength="10"  id="subtotal_${v.id}" class="form-control" readonly required /></td>
+        <td><input type="text"    name="budget[${v.id}][tax]"       maxlength="6"   class="form-control validate-number-decimal" required /></td>
+        <td><input type="number"  name="budget[${v.id}][total]"     maxlength="10"  id="total_${v.id}" class="form-control" readonly required /></td>
+        <td></td>
+        
         <td class="text-center b-c-gray" style="vertical-align: inherit;">
           <button
             class="btn btn-danger" 
@@ -142,28 +132,16 @@ function generateTemplateItems(idItem, nameItem, dataSubItems)
             onClick="$('#subitem-${v.id}').remove(); return false;"
           >X</button>
         </td>
-      </tr>
-    `;
 
-    realCost += `
-      <tr>
-        <td class="pl-3"><input class="form-control" value="${v.name}" disabled /></td>
-        <td><input type="number" name="unit[${v.id}][]" class="form-control" /></td>
-        <td><input type="number" name="quantity[${v.id}][]" class="form-control" /></td>
-        <td><input type="number" name="unit_cost[${v.id}][]" class="form-control" readonly /></td>
-        <td><input type="number" name="subtotal[${v.id}][]" class="form-control" readonly /></td>
-        <td><input type="number" name="tax[${v.id}][]" class="form-control" readonly /></td>
-        <td><input type="number" name="total[${v.id}][]" class="form-control" readonly /></td>
-        <td><input type="number" name="total[${v.id}][]" class="form-control" readonly /></td>
       </tr>
     `;
   });
   
   $('#content-items tbody').append(items);
-  $('#content-real-cost tbody').append(realCost);
 
-  calculateSubTotal();
+  calculateTotales();
   removeItem();
+  validateNumberDecimal();
 }
 
 function setSelectedOptions()
@@ -173,25 +151,15 @@ function setSelectedOptions()
   $('.selectpicker').selectpicker('refresh');
 }
 
-function calculateSubTotal(){
+function calculateTotales(){
   $(".calculate-subtotal").keyup(function(){
-    let id = $(this).data('idsubiteam');
+    let idSubItem = $(this).data('idsubiteam');
+    let idItem    = $('#subitem-'+idSubItem).data('iditeam');
 
-    let valCalculate = ( $('#quantity_'+id).val() * $('#unit_cost_'+id).val());
+    let totalCalculate  = ( $('#quantity_'+idSubItem).val() * $('#unit_cost_'+idSubItem).val());
 
-    $('#subtotal_'+id).val(valCalculate);
-    $('#total_'+id).val(valCalculate);
-  });
-}
-
-function calculateSubTotal(){
-  $(".calculate-subtotal").keyup(function(){
-    let id = $(this).data('idsubiteam');
-
-    let valCalculate = ( $('#quantity_'+id).val() * $('#unit_cost_'+id).val());
-
-    $('#subtotal_'+id).val(valCalculate);
-    $('#total_'+id).val(valCalculate);
+    $('#subtotal_'+idSubItem).val(totalCalculate);
+    $('#total_'+idSubItem).val(totalCalculate);
   });
 }
 
@@ -210,5 +178,50 @@ function removeItem()
     });
     
     return false;
+  });
+}
+
+function validateNumberDecimal(){
+  $(".validate-number-decimal").on({
+    "focus": function(event) {
+      $(event.target).select();
+    },
+    "keyup": function(event) {
+      $(event.target).val(function(index, value) {
+        return (value.replace(/\D/g, "")
+          .replace(/([0-9])([0-9]{2})$/, '$1.$2')
+          .replace(/\B(?=(\d{3})+(?!\d)\.?)/g, "."));
+      });
+    }
+  });
+}
+
+function calculateGlobalItem(){
+  let itemsContent    = $('.items_content');
+  let globalSubtotal  = 0;
+  let globalTotal  = 0;
+
+  $.each(itemsContent, function(i, v){
+    let idItem    = $(this).data('id');
+    let subTotal  = $(`input[name=item_subtotal_calc_${idItem}]`).val();
+    let total     = $(`input[name=item_total_calc_${idItem}]`).val();
+
+    $(this).find('input[name="item_subtotal"]').val(subTotal);
+    $(this).find('input[name="item_total"]').val(total);
+
+    globalSubtotal  += parseFloat(subTotal);
+    globalTotal     += parseFloat(total);
+  });
+
+  $('input[name="global_subtotal"]').val(globalSubtotal);
+  $('input[name="global_total"]').val(globalTotal);
+
+  $.each(itemsContent, function(i, v){
+    let idItem      = $(this).data('id');
+    let totalGlobal = $('input[name="global_total"]').val();
+    let totalItem   = $(`input[name=item_total_calc_${idItem}]`).val();
+    let incidence   = ( parseFloat(totalItem) / parseFloat(totalGlobal) ) * 100;
+
+    $(this).find('input[name="item_incidence"]').val(incidence.toFixed(2));
   });
 }

@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use App\Helpers;
 use App\Project;
 use App\ProjectDocument;
+use App\ProjectBudget;
 use App\Client;
 use App\Item;
 use App\SubItem;
@@ -83,10 +84,34 @@ class ProjectController extends Controller
             $project->address_number= $request->get('address_number');
             $project->cp            = $request->get('cp');
             $project->piso_depto    = $request->get('piso_depto');
+            // $project->is_open_budget= $request->get('is_open_budget');
+            $project->is_open_budget= '1';
             $project->is_active     = $request->get('is_active');
             $project->link_google_drive = $request->get('link_google_drive');
             $project->link_dropbox      = $request->get('link_dropbox');
-            $project->save();
+           $project->save();
+
+            // save budgets
+            if($project->getIsOpenBudget())
+            {
+                if($request->get('budget'))
+                {
+                    foreach($request->get('budget') as $key => $val)
+                    {
+                        $projectBudget = new ProjectBudget;
+                        $projectBudget->id_project  = $project->id;
+                        $projectBudget->id_item     = $val['id_item'];
+                        $projectBudget->id_subitem  = $key;
+                        $projectBudget->unit        = $val['unit'];
+                        $projectBudget->quantity    = $val['quantity'];
+                        $projectBudget->unit_cost   = $val['unit_cost'];
+                        $projectBudget->subtotal    = $val['subtotal'];
+                        $projectBudget->tax         = $val['tax'];
+                        $projectBudget->total       = $val['total'];
+                        $projectBudget->save();
+                    }
+                }
+            }
 
             //save ProductDocument
             Project::uploadDocuments($request, 'files', $project->id);
@@ -143,11 +168,20 @@ class ProjectController extends Controller
             ];
         }
         
+        $collectionProjectBudget = [];
+        $projectBudget = ProjectBudget::where('id_project', $id)->get();
+
+        foreach ($projectBudget as $value) {
+            $collectionProjectBudget[$value->id_item][] = $value;
+        }
+        
         $clients = Client::select('clients.id', 'users.last_name', 'users.name')->join('users', 'clients.id_user', 'users.id')->where('users.is_active', '1')->get();
+        
         return view('backend.project.edit', [
             'project'           => Project::find($id),
             'clients'           => $clients,
             'items'             => $items,
+            'project_budgets'   => $collectionProjectBudget,
             'project_documents' => ProjectDocument::where('id_project', $id)->get()
         ]);
     }
@@ -184,6 +218,40 @@ class ProjectController extends Controller
 
             //save ProductDocument
             Project::uploadDocuments($request, 'files', $project->id);
+
+            if($project->getIsOpenBudget())
+            {
+                if($request->get('budget'))
+                {
+                    foreach($request->get('budget') as $key => $val)
+                    {
+                        if($val['id'])
+                        {
+                            $projectBudget = ProjectBudget::find($val['id']);
+                            $projectBudget->id_subitem  = $key;
+                            $projectBudget->unit        = $val['unit'];
+                            $projectBudget->quantity    = $val['quantity'];
+                            $projectBudget->unit_cost   = $val['unit_cost'];
+                            $projectBudget->subtotal    = $val['subtotal'];
+                            $projectBudget->tax         = $val['tax'];
+                            $projectBudget->total       = $val['total'];
+                            $projectBudget->save();
+                        } else {
+                            $projectBudget = new ProjectBudget;
+                            $projectBudget->id_project  = $project->id;
+                            $projectBudget->id_item     = $val['id_item'];
+                            $projectBudget->id_subitem  = $key;
+                            $projectBudget->unit        = $val['unit'];
+                            $projectBudget->quantity    = $val['quantity'];
+                            $projectBudget->unit_cost   = $val['unit_cost'];
+                            $projectBudget->subtotal    = $val['subtotal'];
+                            $projectBudget->tax         = $val['tax'];
+                            $projectBudget->total       = $val['total'];
+                            $projectBudget->save();
+                        }
+                    }
+                }
+            }
 
             return redirect('/projects')->with('message', 'Proyecto editado con exito!');
 

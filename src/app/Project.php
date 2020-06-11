@@ -61,4 +61,30 @@ class Project extends Model
         }
       }
     }
+
+    public function getIsOpenBudget()
+    {
+      return ((int) $this->is_open_budget);
+    }
+
+    public function setIsOpenBudget($val)
+    {
+      try {
+        $this->is_open_budget = $val;
+        $this->save();
+         
+        return true;
+      } catch (\Exception $err) {
+        return false;
+      }
+    }
+
+    static public function isOpenBudget($idProject)
+    {
+      $project = Project::find($idProject);
+      
+      if($project){
+        return ( (int) $project->is_open_budget ? true : false);
+      }
+    }
 }

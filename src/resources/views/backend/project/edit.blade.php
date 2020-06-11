@@ -205,6 +205,7 @@
 
               <div class="tab-pane" id="module_two">
                 <h5 class="info-text"> Presupuesto </h5>
+                @include('backend.project.components.edit.budgets')
               </div>
 
               <div class="tab-pane" id="module_three">

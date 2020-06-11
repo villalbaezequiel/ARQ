@@ -29,6 +29,6 @@ class ProjectDocuments extends Migration
      */
     public function down()
     {
-        //
+        Schema::dropIfExists('project_documents');
     }
 }
