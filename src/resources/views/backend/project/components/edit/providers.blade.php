@@ -1,3 +1,4 @@
+@if((int) !$project->is_open_budget)
 <div class="col-md-12 row">
     <div class="form-group">
       <div class="input-group-prepend">
@@ -29,6 +30,7 @@
       </div>
     </div>
 </div>
+@endif
 
 <div class="table-responsive">
     <div class="table-repsonsive">
@@ -42,20 +44,30 @@
             </tr>
         </thead>
         <tbody>
-            @foreach($project_providers as $itemProvider)
-            <tr>
-                <td>{{ \App\ProjectRealCost::getNameSubItem($itemProvider->id_project_real_cost) }}</td>
-                <td>{{ \App\Provider::getName($itemProvider->id_provider) }}</td>        
-                <td class="text-center b-c-gray" style="vertical-align: inherit;">
-                    <button
-                        class="btn btn-danger removeProjectProvider" 
-                        data-id="{{ $itemProvider->id }}"
-                        style="padding: 0px 5px;"
-                    >X</button>
-                </td>
-            </tr>
-            @endforeach
+            @if((int) !$project->is_open_budget)
+                @foreach($project_providers as $itemProvider)
+                <tr>
+                    <td>{{ \App\ProjectRealCost::getNameSubItem($itemProvider->id_project_real_cost) }}</td>
+                    <td>{{ \App\Provider::getName($itemProvider->id_provider) }}</td>        
+                    <td class="text-center b-c-gray" style="vertical-align: inherit;">
+                        <button
+                            class="btn btn-danger removeProjectProvider" 
+                            data-id="{{ $itemProvider->id }}"
+                            style="padding: 0px 5px;"
+                        >X</button>
+                    </td>
+                </tr>
+                @endforeach
+            @endif
         </tbody>
       </table>
     </div>
 </div>
+
+@if((int) $project->is_open_budget)
+<div class="card">
+    <div class="card-header">
+        <p class="card-title text-center">Debes Aprobar el Presupuesto para generar la Plantilla de Costo Real</p>
+    </div>
+</div>
+@endif
