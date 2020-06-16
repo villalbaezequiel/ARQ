@@ -51,11 +51,16 @@ $(document).ready(function() {
     calculateTotales();
     removeItem();
     validateNumberDecimal();
-    calculateGlobalItem();
+    calculateBudgetGlobalItems();
+    calculateCostRealGlobalItems();
     deleteBudgetItem();
     deleteBudgetSubitem();
     setOpenBudget();
     isOpenBudget();
+    deleteCostRealItem();
+    deleteCostRealSubItem();
+    getProvidersFromSubRubro();
+    deleteProjectProvider();
 
 });
 
@@ -91,7 +96,14 @@ function addGroupItems(e)
 
       setSelectedOptions();
     } else {
-      console.log("ya existe!");
+      Swal.fire({
+        title: 'Rubro Existente en la Planilla!',
+        type: 'info',
+        showCancelButton: false,
+        confirmButtonColor: '#3085d6',
+        cancelButtonColor: '#d33',
+        confirmButtonText: 'Aceptar'
+      });
     }
 }
 
@@ -201,10 +213,10 @@ function validateNumberDecimal(){
   });
 }
 
-function calculateGlobalItem(){
+function calculateBudgetGlobalItems(){
   let itemsContent    = $('.items_content');
-  let globalSubtotal  = 0;
-  let globalTotal  = 0;
+  let globalSubtotal  = 0,
+      globalTotal     = 0;
 
   $.each(itemsContent, function(i, v){
     let idItem    = $(this).data('id');
@@ -229,6 +241,38 @@ function calculateGlobalItem(){
 
     $(this).find('input[name="item_incidence"]').val(incidence.toFixed(2));
   });
+}
+
+function calculateCostRealGlobalItems(){
+  let itemsContent      = $('.costreal-item');
+  let globalbudgetTotal = 0,
+      globalpaid        = 0,
+      globalbalancePaid = 0,
+      globalbalanceItem = 0;
+
+  $.each(itemsContent, function(i, v){
+    let idItem        = $(this).data('id');
+    let budgetTotal   = $(`input[name=costreal_budget_total_calc_${idItem}]`).val();
+    let paid          = $(`input[name=costreal_paid_calc_${idItem}]`).val();
+    let balancePaid   = $(`input[name=costreal_balance_paid_calc_${idItem}]`).val();
+    let balanceItem   = $(`input[name=costreal_balance_item_calc_${idItem}]`).val();
+
+    $(this).find('input[name="costreal_budget_total"]').val(budgetTotal);
+    $(this).find('input[name="costreal_paid"]').val(paid);
+    $(this).find('input[name="costreal_balance_paid"]').val(balancePaid);
+    $(this).find('input[name="costreal_balance_item"]').val(balanceItem);
+
+    globalbudgetTotal += parseFloat(budgetTotal);
+    globalpaid        += parseFloat(paid);
+    globalbalancePaid += parseFloat(balancePaid);
+    globalbalanceItem += parseFloat(balanceItem);
+  });
+
+  $('input[name="global_costreal_budgetTotal"]').val(globalbudgetTotal);
+  $('input[name="global_costreal_paid"]').val(globalpaid);
+  $('input[name="global_costreal_balancePaid"]').val(globalbalancePaid);
+  $('input[name="global_costreal_balanceItem"]').val(globalbalanceItem);
+
 }
 
 function deleteBudgetItem()
@@ -261,6 +305,8 @@ function deleteBudgetItem()
       }
     });
 
+    return false;
+
   });
 }
 
@@ -277,6 +323,89 @@ function deleteBudgetSubitem()
     $.ajax({
       type: 'GET',
       url: '/json/budgets/delete-subitem',
+      data: data,
+      success: function(data){
+        if(data.status){
+          Swal.fire({
+            title: 'Sub Rubro eliminado con Exito!',
+            type: 'info',
+            showCancelButton: false,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Aceptar'
+          });
+        }
+      },
+      error: function(xhr, status){
+        console.log('Error: '+xhr);
+      }
+    });
+
+    return false;
+
+  });
+}
+
+function deleteCostRealItem()
+{
+  $('.removeCostRealItemAjax').click(function(){
+
+    let iditem          = $(this).data('iditem');
+    let costrealSubitem = $('.costreal-subitem');
+
+    let data = {
+      id_item: iditem,
+      id_project: $(this).data('idproject')
+    }
+
+    $.ajax({
+      type: 'GET',
+      url: '/json/costreal/delete-item',
+      data: data,
+      success: function(data){
+        if(data.status){
+          Swal.fire({
+            title: 'Rubro eliminado con Exito!',
+            type: 'info',
+            showCancelButton: false,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Aceptar'
+          });
+
+          $('#costreal-item-'+iditem).remove();
+
+          $.each(costrealSubitem, function(i, v){
+            if($(this).data('iditem') == iditem) {
+              $(this).remove();
+            }
+          });
+        
+        }
+      },
+      error: function(xhr, status){
+        console.log('Error: '+xhr);
+      }
+    });
+
+    return false;
+
+  });
+}
+
+function deleteCostRealSubItem()
+{
+  $('.removeCostRealSubItemAjax').click(function(){
+    
+    $('#costreal-subitem-'+$(this).data('id')).remove();
+
+    let data = {
+      id: $(this).data('id')
+    }
+
+    $.ajax({
+      type: 'GET',
+      url: '/json/costreal/delete-subitem',
       data: data,
       success: function(data){
         if(data.status){
@@ -341,11 +470,134 @@ function isOpenBudget()
 {
   let isOpenBudget = $('input[name=open_budget]').val();
 
-  console.log(isOpenBudget);
-
   if(isOpenBudget == 0)
   {
     $('#content-items input').prop('disabled', true);
     $('#content-items .btn-danger').remove();
   }
+}
+
+function getProvidersFromSubRubro()
+{
+  $('select[name=sub_items_realcost]').change(function(){
+
+    let providers = $('select[name=providers]');
+
+    if(!$(this).val()) {
+      providers.empty();
+      return false;
+    }
+
+    $.ajax({
+      type: 'GET',
+      url: '/json/providers/sub-rubro/'+$(this).val(),
+      dataType: 'json',
+      success: function(result){
+        
+        let data      = result.data;
+          
+        providers.empty();
+
+        if(data.length >= 1)
+        {
+            providers.append("<option value=''>Seleccionar</option>");
+            $.each(data, function(i,v){
+              providers.append("<option value='"+v.id+"'>"+v.name+"</option>");
+            });
+
+            $('.selectpicker').selectpicker('refresh');
+        
+        } else {
+          Swal.fire({
+            title: 'No hay Proveedores para el Rubro seleccionado!',
+            type: 'info',
+            showCancelButton: false,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Aceptar'
+          });
+        }
+      },
+      error: function(xhr, status){
+        Swal.fire({
+          title: 'Hubo un error al Consultar los Proveedores!',
+          type: 'warning',
+          showCancelButton: false,
+          confirmButtonColor: '#3085d6',
+          cancelButtonColor: '#d33',
+          confirmButtonText: 'Aceptar'
+        });
+      }
+    });
+
+    $('.selectpicker').selectpicker('refresh');
+
+  });
+}
+
+function addProviders(e)
+{
+    e.preventDefault();
+
+    let contentProviders = $("#content-providers tbody");
+    
+    let costRealId     = $("select[name=sub_items_realcost]").find(':selected').data('id');
+    let subItemName    = $("select[name=sub_items_realcost]").find(':selected').text();
+
+    let providerId     = $("select[name=providers]").find(':selected').val();
+    let providerName    = $("select[name=providers]").find(':selected').text();
+
+    if(costRealId && providerId)
+    {
+      contentProviders.append(`
+      <tr>
+        <td>${subItemName}</td>
+        <td>${providerName}</td>        
+        <td class="text-center b-c-gray" style="vertical-align: inherit;">
+          <button 
+            class="btn btn-danger"
+            style="padding: 0px 5px;"
+            onClick="$(this).parents('tr').remove(); return false;"
+          >X</button>
+        </td>
+        <input type="hidden" name="project_providers[${costRealId}][]" value="${providerId}" /></td>
+      </tr>`);
+    }
+  
+}
+
+function deleteProjectProvider()
+{
+  $('.removeProjectProvider').click(function(){
+
+    $(this).parents('tr').remove();
+
+    let data = {
+      id: $(this).data('id')
+    }
+
+    $.ajax({
+      type: 'GET',
+      url: '/json/project-provider',
+      data: data,
+      success: function(data){
+        if(data.status){
+          Swal.fire({
+            title: 'Proveedor eliminado con Exito!',
+            type: 'info',
+            showCancelButton: false,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Aceptar'
+          });
+        }
+      },
+      error: function(xhr, status){
+        console.log('Error: '+xhr);
+      }
+    });
+
+    return false;
+
+  });
 }

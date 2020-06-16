@@ -224,7 +224,10 @@ table.dataTable > tbody > tr.child ul.dtr-details {
   font-size: 11.5px!important;
 }
 
-#content-items td, #content-real-cost td, #content-items th, #content-real-cost th {
+#content-items td, #content-items th,
+#content-real-cost td, #content-real-cost th,
+#content-providers td, #content-providers th
+{
   font-size: 11.5px!important;
 }
 

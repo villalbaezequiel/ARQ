@@ -8,6 +8,8 @@ use App\Helpers;
 use App\Project;
 use App\ProjectDocument;
 use App\ProjectBudget;
+use App\ProjectRealCost;
+use App\ProjectProvider;
 use App\Client;
 use App\Item;
 use App\SubItem;
@@ -152,6 +154,7 @@ class ProjectController extends Controller
      */
     public function edit($id)
     {
+        // collection Items(Rubros) and SubItems(SubRubros)
         $items      = [];
         $itemsParent= Item::select('id', 'name')->where('is_active', '1')->get();
 
@@ -168,21 +171,39 @@ class ProjectController extends Controller
             ];
         }
         
-        $collectionProjectBudget = [];
-        $projectBudget = ProjectBudget::where('id_project', $id)->get();
+        // collection Budgets (presupuesto) from Project
+        $collectionProjectBudget= [];
+        $projectBudget          = ProjectBudget::where('id_project', $id)->get();
 
         foreach ($projectBudget as $value) {
             $collectionProjectBudget[$value->id_item][] = $value;
         }
+
+        // collection ProjectRealCost
+        $collectionProjectRealCost  = [];
+        $projectRealCost            = ProjectRealCost::where('id_project', $id)->get();
+
+        foreach ($projectRealCost as $value) {
+            $collectionProjectRealCost[$value->id_item][] = $value;
+        }
+
+        // collection Documents from Project
+        $documents              = ProjectDocument::where('id_project', $id)->get();
         
-        $clients = Client::select('clients.id', 'users.last_name', 'users.name')->join('users', 'clients.id_user', 'users.id')->where('users.is_active', '1')->get();
-        
+        // collection clients
+        $clients                = Client::select('clients.id', 'users.last_name', 'users.name')->join('users', 'clients.id_user', 'users.id')->where('users.is_active', '1')->get();
+
+        // collection ProjectProviders
+        $collectionProjecProviders  = ProjectProvider::where('id_project', $id)->get();
+
         return view('backend.project.edit', [
             'project'           => Project::find($id),
             'clients'           => $clients,
             'items'             => $items,
+            'project_real_costs'=> $collectionProjectRealCost,
             'project_budgets'   => $collectionProjectBudget,
-            'project_documents' => ProjectDocument::where('id_project', $id)->get()
+            'project_documents' => $documents,
+            'project_providers' => $collectionProjecProviders
         ]);
     }
 
@@ -248,6 +269,30 @@ class ProjectController extends Controller
                             $projectBudget->tax         = $val['tax'];
                             $projectBudget->total       = $val['total'];
                             $projectBudget->save();
+                        }
+                    }
+                }
+            }
+
+            $projectProviders = $request->get('project_providers');
+
+            if($projectProviders)
+            {
+                foreach($projectProviders as $id_project_real_cost => $providers)
+                {
+                    foreach($providers as $id_provider)
+                    {
+                        $checkProjectProviders = ProjectProvider::where('id_project_real_cost', $id_project_real_cost)
+                                                                ->where('id_project', $project->id)
+                                                                ->where('id_provider', $id_provider)
+                                                                ->count();
+                        if($checkProjectProviders == 0)
+                        {
+                            $projectProvider = new ProjectProvider;
+                            $projectProvider->id_project            = $project->id;
+                            $projectProvider->id_project_real_cost  = $id_project_real_cost;
+                            $projectProvider->id_provider           = $id_provider;
+                            $projectProvider->save();
                         }
                     }
                 }

@@ -28,4 +28,17 @@ class Provider extends Model
       $list = array('Caja de ahorro $', 'Cuenta Corriente $');
       return $list;
     }
+
+    static public function getName($id)
+    {
+      $provider = Provider::select('users.name')
+              ->join('users', 'users.id', '=', 'providers.id_user')
+              ->where('providers.id', $id)
+              ->first();
+              
+      if($provider)
+      {
+        return $provider->name;
+      }
+    }
 }

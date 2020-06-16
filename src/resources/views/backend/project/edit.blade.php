@@ -224,6 +224,7 @@
 
               <div class="tab-pane" id="module_six">
                 <h5 class="info-text"> Proveedores </h5>
+                @include('backend.project.components.edit.providers')
               </div>           
 
             </div>

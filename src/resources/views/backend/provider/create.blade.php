@@ -48,7 +48,7 @@
               <label class="col-md-2 col-form-label">Rubro <span class="required-red">*</span></label>
               <div class="col-md-8">
                 <div class="form-group">
-                  <select class="form-control selectpicker" data-style="btn btn-link" name="id_category[]" multiple required>
+                  <select class="form-control selectpicker" data-style="btn btn-link" data-live-search="true" name="id_category[]" multiple required>
                     <option value="">Seleccionar</option>
                     @foreach($sub_items as $subitem)
                       <option value="{{ $subitem->id }}">{{ $subitem->name }}</option>

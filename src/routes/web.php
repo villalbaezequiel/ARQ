@@ -40,6 +40,14 @@ Route::group(['middleware' => ['auth']], function () {
     Route::get('/json/budgets/delete-item', 'Backend\JsonController@deleteBudgetItem');
     Route::get('/json/budgets/delete-subitem', 'Backend\JsonController@deleteBudgetSubitem');
     Route::get('/json/budgets/open', 'Backend\JsonController@setOpenBudget');
+    
+    Route::get('/json/costreal/delete-item', 'Backend\JsonController@deleteRealCostItem');
+    Route::get('/json/costreal/delete-subitem', 'Backend\JsonController@deleteRealCostSubitem');
+
+    Route::get('/json/providers/sub-rubro/{idsubitem}', 'Backend\JsonController@getProvidersFromSubRubro');
+    
+    Route::get('/json/project-provider', 'Backend\JsonController@deleteProjectProvider');
+    
 });
 
 Route::get('/registro-proveedor', function(){
