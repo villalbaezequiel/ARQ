@@ -170,7 +170,14 @@ class ClientController extends Controller
      */
     public function show($id)
     {
-        //
+      $client = Client::find($id);
+      $user   = User::find($client->id_user);
+      
+      return view('backend.client.show', [
+        'user'        => $user,
+        'client'      => $client,
+        'user_files'  => UserFile::where('user_id', $client->id_user)->get()
+      ]);
     }
 
     /**

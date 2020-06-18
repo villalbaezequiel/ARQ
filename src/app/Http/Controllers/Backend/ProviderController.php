@@ -217,7 +217,13 @@ class ProviderController extends Controller
     */
     public function show($id)
     {
-      //
+      $provider = Provider::find($id);
+      return view('backend.provider.show', [
+        'provider' => $provider,
+        'user_files' => UserFile::where('user_id', $provider->id_user)->get(),
+        'user' => User::where('id', $provider->id_user)->first(),
+        'sub_items' => SubItem::where('is_active', '1')->get()
+      ]);
     }
 
      /**
