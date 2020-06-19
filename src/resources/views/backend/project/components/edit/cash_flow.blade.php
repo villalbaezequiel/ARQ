@@ -15,9 +15,13 @@
         <div class="form-group">
             <div class="input-group-prepend">
             <span class="input-group-text">
-                Ingreso<span class="required-red" style="margin-right: 4px;">*</span> $
+            Forma de Pago<span class="required-red">*</span>
             </span>
-                <input type="text" class="form-control validate-number-decimal-not-ps" name="entry" maxlength="10">
+            <select class="selectpicker" data-live-search="true" data-style="select-with-transition" name="type_pay">
+                <option value="">Ingreso</option>
+                <option value="">Egreso</option>
+                <option value="">Pago directo</option>
+            </select>
             </div>
         </div>
     </div>
@@ -26,9 +30,9 @@
         <div class="form-group">
             <div class="input-group-prepend">
             <span class="input-group-text">
-                Egreso<span class="required-red" style="margin-right: 4px;">*</span> $
+                Monto<span class="required-red" style="margin-right: 4px;">*</span> $
             </span>
-                <input type="text" class="form-control validate-number-decimal-not-ps" name="egress" maxlength="10">
+                <input type="text" class="form-control validate-number-decimal-not-ps" name="amount" maxlength="10">
             </div>
         </div>
     </div>
@@ -40,17 +44,6 @@
                 Impuesto<span class="required-red" style="margin-right: 4px;">*</span> %
             </span>
                 <input type="text" class="form-control validate-number-decimal-not-ps" name="tax" maxlength="6">
-            </div>
-        </div>
-    </div>
-
-    <div class="col-md-6">
-        <div class="form-group">
-            <div class="input-group-prepend">
-            <span class="input-group-text">
-                Saldo<span class="required-red" style="margin-right: 4px;">*</span> $
-            </span>
-                <input type="text" class="form-control validate-number-decimal-not-ps" name="balance" maxlength="10">
             </div>
         </div>
     </div>
@@ -78,7 +71,14 @@
             </span>
             <select class="selectpicker" data-live-search="true" data-style="select-with-transition" name="item">
                 <option value="">Seleccionar</option>
-            </select>
+                @foreach($project_real_costs as $key => $item)
+                <optgroup label="{{ \App\Item::getName($key) }}">
+                    @foreach($item as $subitem)
+                        <option value="{{ $subitem->id_subitem }}" data-id="{{ $subitem->id }}">{{ \App\SubItem::getName($subitem->id_subitem) }}</option>
+                    @endforeach
+                </optgroup>
+                @endforeach
+            </select>   
             </div>
         </div>
     </div>
@@ -138,7 +138,7 @@
                 Usuario<span class="required-red">*</span>
             </span>
             <select class="selectpicker" data-live-search="true" data-style="select-with-transition" name="id_user">
-                <option value="">Seleccionar</option>
+                <option value="{{ Auth::user()->id }}">{{ Auth::user()->getFullNameAttribute() }}</option>
             </select>
             </div>
         </div>
@@ -150,22 +150,13 @@
             <span class="input-group-text">
                 Cliente<span class="required-red">*</span>
             </span>
-            <select class="selectpicker" data-live-search="true" data-style="select-with-transition" name="id_client">
+            <select class="selectpicker" data-live-search="true" data-style="select-with-transition" name="">
                 <option value="">Seleccionar</option>
-            </select>
-            </div>
-        </div>
-    </div>
-
-    <div class="col-md-6">
-        <div class="form-group">
-            <div class="input-group-prepend">
-            <span class="input-group-text">
-                Pago directo<span class="required-red">*</span>
-            </span>
-            <select class="selectpicker" data-live-search="true" data-style="select-with-transition" name="direct_payment">
-                <option value="">Si</option>
-                <option value="">No</option>
+                @foreach($clients as $client)
+                    <option value="{{ $client->id }}">
+                        {{ $client->last_name .' '. $client->name }}
+                    </option>
+                @endforeach
             </select>
             </div>
         </div>

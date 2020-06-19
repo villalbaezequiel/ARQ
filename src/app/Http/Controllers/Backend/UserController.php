@@ -26,7 +26,10 @@ class UserController extends Controller
     public function index()
     {
         return view('backend.user.index', [
-            'users' => User::orderBy('id', 'DESC')->get()
+            'users' => User::orderBy('id', 'DESC')
+                      ->where('is_client', null)
+                      ->where('is_provider', null)
+                      ->get()
         ]);
     }
 

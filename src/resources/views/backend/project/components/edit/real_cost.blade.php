@@ -25,10 +25,10 @@
             </tr>
             <tr class="b-c-gray">
                 <th colspan="4">TOTAL</th>
-                <th><input type="number" name="global_costreal_budgetTotal"   class="form-control validate-number-decimal" readonly></th>
-                <th><input type="number" name="global_costreal_paid"          class="form-control validate-number-decimal" readonly></th>
-                <th><input type="number" name="global_costreal_balancePaid"   class="form-control validate-number-decimal" readonly></th>
-                <th><input type="number" name="global_costreal_balanceItem"   class="form-control validate-number-decimal" readonly></th>
+                <th><input type="number" name="global_costreal_budgetTotal"   class="form-control validate-number-decimal" disabled></th>
+                <th><input type="number" name="global_costreal_paid"          class="form-control validate-number-decimal" disabled></th>
+                <th><input type="number" name="global_costreal_balancePaid"   class="form-control validate-number-decimal" disabled></th>
+                <th><input type="number" name="global_costreal_balanceItem"   class="form-control validate-number-decimal" disabled></th>
                 <th></th>
                 <th></th>
                 <th></th>
@@ -38,10 +38,10 @@
                 @foreach($project_real_costs as $key => $collectionSubitem)
                     <tr class="b-c-gray costreal-item" id="costreal-item-{{ $key }}" data-id="{{ $key }}">
                         <th colspan="4" class="text-left pl-3">{{ \App\Item::getName($key) }}</th>
-                        <th><input type="number" name="costreal_budget_total"   class="form-control validate-number-decimal" readonly></th>
-                        <th><input type="number" name="costreal_paid"           class="form-control validate-number-decimal" readonly></th>
-                        <th><input type="number" name="costreal_balance_paid"   class="form-control validate-number-decimal" readonly></th>
-                        <th><input type="number" name="costreal_balance_item"   class="form-control validate-number-decimal" readonly></th>
+                        <th><input type="number" name="costreal_budget_total"   class="form-control validate-number-decimal" disabled></th>
+                        <th><input type="number" name="costreal_paid"           class="form-control validate-number-decimal" disabled></th>
+                        <th><input type="number" name="costreal_balance_paid"   class="form-control validate-number-decimal" disabled></th>
+                        <th><input type="number" name="costreal_balance_item"   class="form-control validate-number-decimal" disabled></th>
                         <th></th>
                         <th></th>
                         <th>
@@ -106,7 +106,7 @@
 @if((int) $project->is_open_budget)
 <div class="card">
     <div class="card-header">
-        <p class="card-title text-center">Debes Aprobar el Presupuesto para generar la Plantilla de Costo Real</p>
+        <p class="card-title text-center">Debes Aprobar el Presupuesto para generar la Plantilla de Seguimiento</p>
     </div>
 </div>
 @endif

@@ -41,7 +41,7 @@
               </li>
               <li class="nav-item" style="width: 50%;">
                 <a class="nav-link" href="#module_three" data-toggle="tab" role="tab">
-                  Costo real
+                  Seguimiento
                 </a>
               </li>
               <li class="nav-item" style="width: 50%;">
@@ -201,7 +201,7 @@
               </div>
 
               <div class="tab-pane" id="module_three">
-                <h5 class="info-text"> Estado / Costo Real </h5>
+                <h5 class="info-text"> Seguimiento </h5>
                 @include('backend.project.components.create.real_cost')
               </div>
 

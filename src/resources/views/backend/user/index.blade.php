@@ -44,28 +44,11 @@
                 <td>{{ $user->getRole() }}</td>
                 <td>{{ \App\User::getActive($user->id) }}</td>
                 <td class="text-right">
-
-                @if((bool) $user->is_client)
-                  <?php $idClient = $user->getIDClient();  ?>
-                  {!! Form::open(['route' => ['clients.destroy', $idClient], 'method' => 'DELETE', 'class'=> 'alert-confirm-delete']) !!}
-                    <a href="{{ url('/clients/'.$idClient) }}" class="btn btn-link btn-warning btn-just-icon show" title="Ver"><i class="material-icons">description</i></a>
-                    <a href="{{ url('/clients/'.$idClient.'/edit') }}" class="btn btn-link btn-warning btn-just-icon edit" title="Editar"><i class="material-icons">dvr</i></a>
-                    <button type="submit" class="btn btn-link btn-danger btn-just-icon remove" title="Eliminar"><i class="material-icons">close</i></button>
-                  {!! Form::close() !!}
-                @elseif((bool) $user->is_provider)
-                  <?php $idProvider = $user->getIDProvider();  ?>
-                  {!! Form::open(['route' => ['providers.destroy', $idProvider], 'method' => 'DELETE', 'class'=> 'alert-confirm-delete']) !!}
-                    <a href="{{ url('/providers/'.$idProvider) }}" class="btn btn-link btn-warning btn-just-icon show" title="Ver"><i class="material-icons">description</i></a>
-                    <a href="{{ url('/providers/'.$idProvider.'/edit') }}" class="btn btn-link btn-warning btn-just-icon edit" title="Editar"><i class="material-icons">dvr</i></a>
-                    <button type="submit" class="btn btn-link btn-danger btn-just-icon remove" title="Eliminar"><i class="material-icons">close</i></button>
-                  {!! Form::close() !!}
-                @else
                   {!! Form::open(['route' => ['users.destroy', $user->id], 'method' => 'DELETE', 'class'=> 'alert-confirm-delete']) !!}
-                    <a href="{{ url('/users/'.$user->id) }}" class="btn btn-link btn-warning btn-just-icon show" title="Ver"><i class="material-icons">description</i></a>
+                    <a href="{{ url('/users/'.$user->id) }}" class="btn btn-link btn-warning btn-just-icon show" title="Ver"><i class="material-icons">visibility</i></a>
                     <a href="{{ url('/users/'.$user->id.'/edit') }}" class="btn btn-link btn-warning btn-just-icon edit" title="Editar"><i class="material-icons">dvr</i></a>
                     <button type="submit" class="btn btn-link btn-danger btn-just-icon remove" title="Eliminar"><i class="material-icons">close</i></button>
                   {!! Form::close() !!}
-                @endif()
                 </td>
               </tr>
               @endforeach

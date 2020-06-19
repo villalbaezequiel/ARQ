@@ -86,12 +86,12 @@ class ProjectController extends Controller
             $project->address_number= $request->get('address_number');
             $project->cp            = $request->get('cp');
             $project->piso_depto    = $request->get('piso_depto');
-            // $project->is_open_budget= $request->get('is_open_budget');
             $project->is_open_budget= '1';
             $project->is_active     = $request->get('is_active');
             $project->link_google_drive = $request->get('link_google_drive');
-            $project->link_dropbox      = $request->get('link_dropbox');
-           $project->save();
+            $project->link_dropbox  = $request->get('link_dropbox');
+            $project->name_budget   = $request->get('name_budget');
+            $project->save();
 
             // save budgets
             if($project->getIsOpenBudget())
@@ -235,6 +235,7 @@ class ProjectController extends Controller
             $project->is_active     = $request->get('is_active');
             $project->link_google_drive = $request->get('link_google_drive');
             $project->link_dropbox      = $request->get('link_dropbox');
+            $project->name_budget   = $request->get('name_budget');
             $project->save();
 
             //save ProductDocument

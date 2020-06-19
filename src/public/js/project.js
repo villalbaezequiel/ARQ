@@ -112,10 +112,10 @@ function generateTemplateItems(idItem, nameItem, dataSubItems)
   let items = `
     <tr class="b-c-gray" id="item-${idItem}">
       <th colspan="4" class="text-left pl-3">${nameItem}</th>
-      <th><input type="number" name="item_subtotal" class="form-control validate-number-decimal" readonly></th>
+      <th><input type="text" name="item_subtotal" class="form-control validate-number-decimal" disabled></th>
       <th></th>
-      <th><input type="number" name="item_total" class="form-control validate-number-decimal" readonly></th>
-      <th><input type="number" name="item_incidence" class="form-control validate-number-decimal" maxlength="6" readonly></th>
+      <th><input type="text" name="item_total" class="form-control validate-number-decimal" disabled></th>
+      <th><input type="text" name="item_incidence" class="form-control validate-number-decimal" maxlength="6" disabled></th>
       <th>
         <button
           class="btn btn-danger removeItem" 
@@ -134,11 +134,11 @@ function generateTemplateItems(idItem, nameItem, dataSubItems)
 
         <td class="pl-3"><input class="form-control" value="${v.name}" disabled /></td>
         <td><input type="text"    name="budget[${v.id}][unit]"      class="form-control" required /></td>
-        <td><input type="number"  name="budget[${v.id}][quantity]"  maxlength="11"  id="quantity_${v.id}" data-idsubiteam="${v.id}" class="form-control calculate-subtotal" required /></td>
-        <td><input type="number"  name="budget[${v.id}][unit_cost]" maxlength="10"  id="unit_cost_${v.id}" data-idsubiteam="${v.id}" class="form-control calculate-subtotal" required /></td>
-        <td><input type="number"  name="budget[${v.id}][subtotal]"  maxlength="10"  id="subtotal_${v.id}" class="form-control" readonly required /></td>
+        <td><input type="text"  name="budget[${v.id}][quantity]"  maxlength="11"  id="quantity_${v.id}" data-idsubiteam="${v.id}" class="form-control calculate-subtotal validate-number-decimal" required /></td>
+        <td><input type="text"  name="budget[${v.id}][unit_cost]" maxlength="10"  id="unit_cost_${v.id}" data-idsubiteam="${v.id}" class="form-control calculate-subtotal validate-number-decimal" required /></td>
+        <td><input type="text"  name="budget[${v.id}][subtotal]"  maxlength="10"  id="subtotal_${v.id}" class="form-control validate-number-decimal" readonly required /></td>
         <td><input type="text"    name="budget[${v.id}][tax]"       maxlength="6"   id="tax_${v.id}" value="0" data-idsubiteam="${v.id}" class="form-control validate-number-decimal calculate-subtotal" required /></td>
-        <td><input type="number"  name="budget[${v.id}][total]"     maxlength="10"  id="total_${v.id}" class="form-control" readonly required /></td>
+        <td><input type="text"  name="budget[${v.id}][total]"     maxlength="10"  id="total_${v.id}" class="form-control validate-number-decimal" readonly required /></td>
         <td></td>
         
         <td class="text-center b-c-gray" style="vertical-align: inherit;">
@@ -600,4 +600,28 @@ function deleteProjectProvider()
     return false;
 
   });
+}
+
+function addNewBudget(e)
+{
+    e.preventDefault();
+
+    if($('input[name=name_budget]').val())
+    {
+      
+      $(".budget-event-hidden").addClass('hidden');
+      $(".budget-event-show").removeClass('hidden');
+
+      $('input[name=name_budget]').parent('div').removeClass('col-md-5').addClass('col-md-11');
+
+    } else {
+      Swal.fire({
+        title: 'Debes ingresar un Nombre para el Presupuesto!',
+        type: 'info',
+        showCancelButton: false,
+        confirmButtonColor: '#3085d6',
+        cancelButtonColor: '#d33',
+        confirmButtonText: 'Aceptar'
+      });
+    }
 }

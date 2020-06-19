@@ -139,7 +139,7 @@ $(document).ready(function(){
     showMonthAfterYear: false,
     yearSuffix: '',
     changeYear: true,
-    yearRange: "-50:+50",
+    yearRange: "-60:+60",
   };
   $.datepicker.setDefaults($.datepicker.regional['es']);
 

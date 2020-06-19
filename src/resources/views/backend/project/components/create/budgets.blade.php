@@ -1,7 +1,29 @@
 <div class="col-md-12 row">
     <div class="form-group">
       <div class="input-group-prepend">
-        <span class="input-group-text col-md-2">
+        <span class="input-group-text">
+            Nombre
+        </span>
+        <div class="col-md-5">
+            <input type="text" class="form-control" name="name_budget" value="{{ old('name_budget') }}" maxlength="125" required>
+        </div>
+
+        <div class="col-md-4 text-center budget-event-hidden">
+            <button class="btn btn-success" onclick="addNewBudget(event); return false;">Nuevo Presupuesto</button>
+        </div>
+
+        <div class="col-md-4 text-center budget-event-hidden">
+            <a href="javascript:void(0);" class="btn btn-default">Aprobar</a>
+        </div>
+
+      </div>
+    </div>
+</div>
+
+<div class="col-md-12 row budget-event-show hidden">
+    <div class="form-group">
+      <div class="input-group-prepend">
+        <span class="input-group-text">
             Rubros
         </span>
         <div class="col-md-10">
@@ -22,7 +44,7 @@
             </div>
         @endforeach
 
-        <div class="col-md-4 text-center">
+        <div class="col-md-6 text-center">
             <button class="btn btn-success" onclick="addGroupItems(event); return false;">Agregar</button>
         </div>
 
@@ -30,7 +52,7 @@
     </div>
 </div>
 
-<div class="table-responsive">
+<div class="table-responsive budget-event-show hidden">
     <div class="table-repsonsive">
       <table class="table table-bordered table-condensed" id="content-items">
         
@@ -59,10 +81,10 @@
                 <th></th>
                 <th></th>
                 <th></th>
-                <th><input type="number" name="global_subtotal"  value="0" class="form-control" readonly></th>
+                <th><input type="number" name="global_subtotal"  value="0" class="form-control" disabled></th>
                 <th></th>
-                <th><input type="number" name="global_total"     value="0" class="form-control" readonly></th>
-                <th><input type="number" name="global_incidence" value="0"class="form-control" readonly></th>
+                <th><input type="number" name="global_total"     value="0" class="form-control" disabled></th>
+                <th><input type="number" name="global_incidence" value="0"class="form-control" disabled></th>
                 <th></th>
             </tr>
         </tbody>

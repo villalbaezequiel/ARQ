@@ -23,7 +23,7 @@
         <div class="collapse" id="collapseExample">
           <ul class="nav">
             <li class="nav-item nav-check-url">
-              <a class="nav-link" href="{{ url('/') }}">
+              <a class="nav-link" href="{{ url('/users').'/'.Auth::user()->id.'/edit' }}">
                 <span class="sidebar-mini"> EP </span>
                 <span class="sidebar-normal"> Editar Perfil </span>
               </a>
