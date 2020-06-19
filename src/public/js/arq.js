@@ -111,14 +111,13 @@ $(document).ready(function(){
       $(this).addClass('active');
     }
   });
-
   let todayDatepicker = new Date();
 
   if($(".datepicker").hasClass('validate-year'))
   {
-    todayDatepicker = `${todayDatepicker.getDate()}/${todayDatepicker.getMonth()}/${todayDatepicker.getFullYear()-70}`;
+    todayDatepicker = `${todayDatepicker.getDate()}/${todayDatepicker.getMonth()+1}/${todayDatepicker.getFullYear()-70}`;
   } else {
-    todayDatepicker = `${todayDatepicker.getDate()}/${todayDatepicker.getMonth()}/${todayDatepicker.getFullYear()}`;
+    todayDatepicker = `${todayDatepicker.getDate()}/${todayDatepicker.getMonth()+1}/${todayDatepicker.getFullYear()}`;
   }
 
   // jQuery UI -> Datepicker
@@ -140,7 +139,7 @@ $(document).ready(function(){
     showMonthAfterYear: false,
     yearSuffix: '',
     changeYear: true,
-    yearRange: "-100:+0",
+    yearRange: "-50:+50",
   };
   $.datepicker.setDefaults($.datepicker.regional['es']);
 
@@ -165,20 +164,6 @@ $(document).ready(function(){
             // alert("Tienes que ser mayor a 18 años");
         };
       }
-    }
-  });
-
-  $(".datepicker_crew").datepicker({
-    onSelect: function(){
-      var days = 0;
-      var startDay = $("input[name=start_date_contract]").datepicker('getDate');
-      var endDay = $("input[name=finish_date_contract]").datepicker('getDate');
-
-      if (startDay && endDay) {
-        days = Math.floor((endDay.getTime() - startDay.getTime()) / 86400000); // ms per day
-      }
-
-      $("input[name=days_crew]").val((days+1));
     }
   });
 
