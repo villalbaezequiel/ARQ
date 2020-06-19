@@ -36,6 +36,7 @@ Route::group(['middleware' => ['auth']], function () {
     Route::resource('/user_files', 'Backend\UserFileController');
     Route::resource('/items', 'Backend\ItemController');
     Route::resource('/sub_items', 'Backend\SubItemController');
+    Route::resource('/users', 'Backend\UserController');
 
     Route::get('/json/budgets/delete-item', 'Backend\JsonController@deleteBudgetItem');
     Route::get('/json/budgets/delete-subitem', 'Backend\JsonController@deleteBudgetSubitem');

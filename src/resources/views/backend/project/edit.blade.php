@@ -220,6 +220,7 @@
 
               <div class="tab-pane" id="module_five">
                 <h5 class="info-text"> Flujo de Caja </h5>
+                @include('backend.project.components.edit.cash_flow')
               </div>
 
               <div class="tab-pane" id="module_six">

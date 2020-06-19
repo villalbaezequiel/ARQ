@@ -101,7 +101,7 @@ class ProviderController extends Controller
           
           $user->email          = ($email > 0 ? $request->get('cuit') : $request->get('contact_email'));
           $user->password       = Hash::make('arq_'.$request->get('cuit'));
-          $user->is_provider    = 1;
+          $user->is_provider    = "1";
           $user->is_active      = $request->get('is_active');
           $user->save();
 
@@ -272,7 +272,7 @@ class ProviderController extends Controller
           $user->piso_depto     = $request->get('piso_depto');
 
           $user->email          = ($email > 0 ? $request->get('cuit') : $request->get('contact_email'));
-          $user->is_provider    = 1;
+          $user->is_provider    = "1";
           $user->is_active      = $request->get('is_active');
           $user->save();
           

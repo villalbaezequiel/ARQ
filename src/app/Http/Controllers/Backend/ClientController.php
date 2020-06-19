@@ -91,7 +91,7 @@ class ClientController extends Controller
           $user->is_active    = $request->get('is_active');
 
           $user->password     = Hash::make('arq_'.$request->get('dni'));
-          $user->is_client    = 1;
+          $user->is_client    = "1";
           $user->save();
 
           // new Client
@@ -225,7 +225,7 @@ class ClientController extends Controller
           $user->other_telephone = $request->get('other_telephone');
           $user->is_active    = $request->get('is_active');
 
-          $user->is_client    = 1;
+          $user->is_client    = "1";
           $user->save();
 
           // Updated Client

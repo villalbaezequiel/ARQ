@@ -236,6 +236,47 @@ class Helpers extends Model
       ];
       
       return $list;  
-   }
+  }
+
+  static public function getTypesDocumentationPerson()
+  {
+    $list = array('dni'=>'DNI', 'le'=>'LE', 'CI'=>'CI');
+    return $list;
+  }
    
+  static public function getGendersPerson()
+  {
+    $list = array('male'=>'Masculino', 'female'=>'Femenino');
+    return $list;
+  }
+
+  static public function getGenderEs($gender)
+  {
+    if($gender == "male") {
+      return "Masculino";
+    } elseif ($gender == "female") {
+      return "Femenino";
+    }
+  }
+
+  static public function getCivilStatus()
+  {
+    $list = array('soltero'=>'Soltero', 'casado'=>'Casado', 'concuvino'=>'Concuvino',
+                  'divorciado'=>'Divorciado', 'viudo'=>'Viudo');
+    return $list;
+  }
+
+  function setDateFormat($date, $explodeString = '/')
+  {
+      $substrDate = substr($date, 0, 10);
+      $separartor = '-';
+      $format = explode($explodeString, $substrDate);
+
+      if($format[2]){
+        return $format[2].$separartor.$format[1].$separartor.$format[0];
+      } else {
+        return "1990".$separartor."01".$separartor."01";
+      }
+  }
+  
 }

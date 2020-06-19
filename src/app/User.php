@@ -9,6 +9,8 @@ use Illuminate\Notifications\Notifiable;
 use Illuminate\Http\Request;
 use App\Helpers;
 use App\UserFile;
+use App\Client;
+use App\Provider;
 
 class User extends Authenticatable
 {
@@ -41,6 +43,11 @@ class User extends Authenticatable
         'email_verified_at' => 'datetime',
     ];
 
+    public function getFullNameAttribute()
+    {
+      return "{$this->last_name} {$this->name}";
+    }
+    
     static function getFullName($id)
     {
       $user = User::find($id);
@@ -98,5 +105,55 @@ class User extends Authenticatable
     public function sendPasswordResetNotification($token)
     {
       $this->notify(new MyResetPassword($token));
+    }
+
+    public function getRole()
+    {
+      $role = 'admin';
+
+      if((bool) $this->is_client) {
+        $role = 'cliente';
+      }
+
+      if((bool) $this->is_provider) {
+        $role = 'proveedor';
+      }
+
+      return $role;
+    }
+
+    public function getIDClient()
+    {
+      $id = null;
+
+      if((bool) $this->is_client) {
+        $client = Client::select('id')->where('id_user', $this->id)->first();
+        $id       = $client->id;
+      }
+
+      return $id;
+    }
+
+    public function getIDProvider()
+    {
+      $id = null;
+
+      if((bool) $this->is_provider)
+      {
+        $provider = Provider::select('id')->where('id_user', $this->id)->first();
+        $id       = $provider->id;
+      }
+
+      return $id;
+    }
+
+    static public function getRoles()
+    {
+      $roles = [
+        'admin'   => 'Administrador',
+        'invite'  => 'Invitado'
+      ];
+
+      return $roles;
     }
 }

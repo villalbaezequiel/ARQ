@@ -46,7 +46,7 @@
                 <td>{{ \App\User::getActive($client->id_user) }}</td>
                 <td class="text-right">
                   {!! Form::open(['route' => ['clients.destroy', $client->id], 'method' => 'DELETE', 'class'=> 'alert-confirm-delete']) !!}
-                    <a href="{{ url('/clients/'.$client->id) }}" class="btn btn-link btn-warning btn-just-icon show" title="Ver"><i class="material-icons">dvr</i></a>
+                    <a href="{{ url('/clients/'.$client->id) }}" class="btn btn-link btn-warning btn-just-icon show" title="Ver"><i class="material-icons">description</i></a>
                     <a href="{{ url('/clients/'.$client->id.'/edit') }}" class="btn btn-link btn-warning btn-just-icon edit" title="Editar"><i class="material-icons">dvr</i></a>
                     <button type="submit" class="btn btn-link btn-danger btn-just-icon remove" title="Eliminar"><i class="material-icons">close</i></button>
                   {!! Form::close() !!}

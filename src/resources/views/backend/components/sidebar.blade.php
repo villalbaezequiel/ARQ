@@ -101,7 +101,7 @@
         <div class="collapse" id="users-nav-menu">
           <ul class="nav">
             <li class="nav-item nav-check-url ">
-              <a class="nav-link" href="{{ url('/') }}">
+              <a class="nav-link" href="{{ url('/users') }}">
                 <span class="sidebar-mini"> U </span>
                 <span class="sidebar-normal"> Usuarios </span>
               </a>
