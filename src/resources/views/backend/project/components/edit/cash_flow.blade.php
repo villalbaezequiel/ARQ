@@ -15,7 +15,7 @@
         <div class="form-group">
             <div class="input-group-prepend">
             <span class="input-group-text">
-            Forma de Pago<span class="required-red">*</span>
+                Tipo<span class="required-red">*</span>
             </span>
             <select class="selectpicker" data-live-search="true" data-style="select-with-transition" name="type_pay">
                 <option value="">Ingreso</option>
@@ -174,10 +174,9 @@
         <thead>
             <tr class="b-c-gray">
                 <th class="font-weight-bold-600">Fecha</th>
-                <th class="font-weight-bold-600">Ingreso</th>
-                <th class="font-weight-bold-600">Egreso</th>
+                <th class="font-weight-bold-600">Tipo</th>
+                <th class="font-weight-bold-600">Monto</th>
                 <th class="font-weight-bold-600">Impuesto</th>
-                <th class="font-weight-bold-600">Saldo</th>
                 <th class="font-weight-bold-600">Forma de pago</th>
                 <th class="font-weight-bold-600">Rubro</th>
                 <th class="font-weight-bold-600">Sub-Rubro</th>
@@ -186,7 +185,6 @@
                 <th class="font-weight-bold-600">Aclaración</th>
                 <th class="font-weight-bold-600">Usuario</th>
                 <th class="font-weight-bold-600">Cliente</th>
-                <th class="font-weight-bold-600">Pago directo</th>
             </tr>
         </thead>
         <tbody>
