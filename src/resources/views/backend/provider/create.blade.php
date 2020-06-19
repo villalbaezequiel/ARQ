@@ -50,8 +50,8 @@
                 <div class="form-group">
                   <select class="form-control selectpicker" data-style="btn btn-link" data-live-search="true" name="id_category[]" multiple required>
                     <option value="">Seleccionar</option>
-                    @foreach($sub_items as $subitem)
-                      <option value="{{ $subitem->id }}">{{ $subitem->name }}</option>
+                    @foreach($items as $item)
+                      <option value="{{ $item->id }}">{{ $item->name }}</option>
                     @endforeach
                   </select>
                 </div>
