@@ -53,12 +53,12 @@
                 <div class="form-group">
                   <select class="form-control selectpicker" data-style="btn btn-link" data-live-search="true" name="id_category[]" multiple required>
                     <option value="">Seleccionar</option>
-                    @foreach($sub_items as $subitem)
-                    <option value="{{ $subitem->id }}"
+                    @foreach($items as $item)
+                    <option value="{{ $item->id }}"
                        <?php foreach(json_decode($provider->id_category) as $key => $val) {
-                          if($val == $subitem->id){ echo "selected"; }
+                          if($val == $item->id){ echo "selected"; }
                         }?>>
-                       {{ $subitem->name }}
+                       {{ $item->name }}
                      </option>
                     @endforeach
                   </select>
