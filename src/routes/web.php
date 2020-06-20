@@ -45,7 +45,7 @@ Route::group(['middleware' => ['auth']], function () {
     Route::get('/json/costreal/delete-subitem', 'Backend\JsonController@deleteRealCostSubitem');
     Route::get('/json/providers/sub-rubro/{idsubitem}', 'Backend\JsonController@getProvidersFromSubRubro');
     Route::get('/json/project-provider', 'Backend\JsonController@deleteProjectProvider');
-    Route::post('/json/items/sub_items', 'Backend\JsonController@getSubItemsFromItems');
+    Route::get('/json/items/sub_items', 'Backend\JsonController@getSubItemsFromItems');
     
 });
 

@@ -501,7 +501,7 @@ let arqJs = {
         }
 
         $.ajax({
-          type: 'POST',
+          type: 'GET',
           url: '/json/items/sub_items/',
           dataType: 'json',
           data: { items: $(items).val() },
