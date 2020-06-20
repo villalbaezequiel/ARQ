@@ -12,4 +12,9 @@ class SubItem extends Model
         
         return ($item ? $item->name : 'Sin Sub Rubro'); 
     }
+
+    public function getNumber()
+    {
+        return ($this ? "{$this->number_parent}.{$this->number}" : 0); 
+    }
 }

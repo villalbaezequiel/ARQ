@@ -36,6 +36,15 @@
             </div>
 
             <div class="row">
+              <label class="col-md-2 col-form-label">Numero/ID <span class="required-red">*</span></label>
+              <div class="col-md-7">
+                <div class="form-group">
+                  <input class="form-control" type="number" name="number" value="{{ $sub_item->number_parent . '.' . $sub_item->number }}" maxlength="10" disabled>
+                </div>
+              </div>
+            </div>
+
+            <div class="row">
               <label class="col-md-2 col-form-label">Rubro <span class="required-red">*</span></label>
               <div class="col-md-7">
                 <div class="form-group">

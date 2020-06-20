@@ -12,4 +12,17 @@ class Item extends Model
         
         return ($item ? $item->name : 'Sin Rubro'); 
     }
+
+    static public function getNumberFromId($id)
+    {
+        $item = Item::find($id);
+        
+        return ($item ? $item->number : 0); 
+    }
+
+    public function getNumber()
+    {
+        return ($this ? $this->number : 0); 
+    }
+    
 }

@@ -34,7 +34,7 @@
                 </div>
               </div>
             </div>
-
+            
             <div class="row">
               <label class="col-md-2 col-form-label">Rubro <span class="required-red">*</span></label>
               <div class="col-md-7">

@@ -43,11 +43,17 @@ class SubItemController extends Controller
     public function store(Request $request)
     {
         try {
+            $itemID             = $request->get('id_item');
+            $getNumberItem      = Item::getNumberFromId($itemID);
+            $lastNumberSubItem  = SubItem::select('number')->where('id_item', $itemID)->orderBy('number', 'DESC')->first();
+
             // New SubItem
-            $sub_item           = new SubItem;
-            $sub_item->id_item  = $request->get('id_item');
-            $sub_item->name     = $request->get('name');
-            $sub_item->is_active= $request->get('is_active');
+            $sub_item               = new SubItem;
+            $sub_item->name         = $request->get('name');
+            $sub_item->id_item      = $itemID;
+            $sub_item->number_parent= $getNumberItem;
+            $sub_item->number       = ($lastNumberSubItem->number + 1);
+            $sub_item->is_active    = $request->get('is_active');
             $sub_item->save();
 
             return redirect('/sub_items')->with('message', 'Sub Rubro creado con exito!');
@@ -104,8 +110,20 @@ class SubItemController extends Controller
         try {
             // Updated SubItem
             $sub_item           = SubItem::find($id);
-            $sub_item->id_item  = $request->get('id_item');
             $sub_item->name     = $request->get('name');
+
+            $itemID = $request->get('id_item');
+
+          if((int)$sub_item->id_item != (int)$itemID)
+          {
+            $getNumberItem      = Item::getNumberFromId($itemID);
+            $lastNumberSubItem  = SubItem::select('number')->where('id_item', $itemID)->orderBy('number', 'DESC')->first();
+
+            $sub_item->id_item          = $itemID;
+            $sub_item->number_parent    = $getNumberItem;
+            $sub_item->number           = ($lastNumberSubItem->number + 1);
+          }
+
             $sub_item->is_active= $request->get('is_active');
             $sub_item->save();
 

@@ -40,14 +40,21 @@ class ItemController extends Controller
     public function store(Request $request)
     {
         try {
-            // New Item
-            $item           = new Item;
-            $item->name     = $request->get('name');
-            $item->is_active= $request->get('is_active');
-            $item->save();
+            $validateNumber = Item::where('number', $request->get('number'))->count();
+     
+            if($validateNumber == 0)
+            {
+                // New Item
+                $item           = new Item;
+                $item->name     = $request->get('name');
+                $item->number   = $request->get('number');
+                $item->is_active= $request->get('is_active');
+                $item->save();
 
-            return redirect('/items')->with('message', 'Rubro creado con exito!');
-
+                return redirect('/items')->with('message', 'Rubro creado con exito!');
+            } else {
+                return back()->withInput()->with('message', 'El Numero/ID ingresado ya se encuentra en uso. Seleccione otro!');
+            }
         } catch(\Exception $e) {
             if(\Config::get('app.debug')):
               $message = 'ERROR('.$e->getLine().'): '.$e->getMessage();
@@ -97,14 +104,21 @@ class ItemController extends Controller
     public function update(Request $request, $id)
     {
         try {
-            // Updated Item
-            $item           = Item::find($id);
-            $item->name     = $request->get('name');
-            $item->is_active= $request->get('is_active');
-            $item->save();
+            $validateNumber = Item::where('number', $request->get('number'))->where('id', '!=', $id)->count();
+     
+            if($validateNumber == 0)
+            {
+                // Updated Item
+                $item           = Item::find($id);
+                $item->name     = $request->get('name');
+                $item->number   = $request->get('number');
+                $item->is_active= $request->get('is_active');
+                $item->save();
 
-            return redirect('/items')->with('message', 'Rubro editado con exito!');
-
+                return redirect('/items')->with('message', 'Rubro editado con exito!');
+            } else {
+                return back()->withInput()->with('message', 'El Numero/ID ingresado ya se encuentra en uso. Seleccione otro!');
+            }
         } catch(\Exception $e) {
             if(\Config::get('app.debug')):
               $message = 'ERROR('.$e->getLine().'): '.$e->getMessage();

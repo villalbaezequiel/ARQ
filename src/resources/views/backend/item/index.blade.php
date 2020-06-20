@@ -32,6 +32,7 @@
           <table id="datatables" class="table table-hover table-striped table-bordered nowrap" style="width:100%">
             <thead>
               <tr>
+                <th class="font-weight-bold-600">#Numero/ID</th>
                 <th>Nombre</th>
                 <th>Activo</th>
                 <th class="text-right">Acciones</th>
@@ -40,6 +41,7 @@
             <tbody>
               @foreach($items as $item)
               <tr class="item-alert-confirm-delete">
+                <td class="font-weight-bold-600">{{ $item->getNumber() }}</td>
                 <td>{{ $item->name }}</td>
                 <td>{{ \App\Helpers::getActive($item->is_active) }}</td>
                 <td class="text-right">
