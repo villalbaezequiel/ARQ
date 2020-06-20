@@ -48,12 +48,21 @@
               <label class="col-md-2 col-form-label">Rubro <span class="required-red">*</span></label>
               <div class="col-md-8">
                 <div class="form-group">
-                  <select class="form-control selectpicker" data-style="btn btn-link" data-live-search="true" name="id_category[]" multiple required>
+                <select class="form-control selectpicker" onchange="arqJs.getSubItemsFromItems(this, 'id_subitems')" name="id_items[]" data-style="btn btn-link" data-live-search="true" multiple required>
                     <option value="">Seleccionar</option>
                     @foreach($items as $item)
                       <option value="{{ $item->id }}">{{ $item->name }}</option>
                     @endforeach
                   </select>
+                </div>
+              </div>
+            </div>
+
+            <div class="row">
+              <label class="col-md-2 col-form-label">Sub Rubro <span class="required-red">*</span></label>
+              <div class="col-md-8">
+                <div class="form-group">
+                  <select class="form-control selectpicker" data-style="btn btn-link" data-live-search="true" id="id_subitems" name="id_subitems[]" multiple required></select>
                 </div>
               </div>
             </div>

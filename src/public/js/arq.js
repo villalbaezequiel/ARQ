@@ -489,6 +489,68 @@ let arqJs = {
         $("#name_files_content").removeClass("hidden");
         output.innerHTML = "<ul class='list-group'>"+children+'</ul>';
       }
+    },
+
+    getSubItemsFromItems: (items, nameSelectSubItems) => {
+
+        var subItems = $(`#${nameSelectSubItems}`);
+
+        if(!$(items).val()) {
+          subItems.empty();
+          return false;
+        }
+
+        $.ajax({
+          type: 'POST',
+          url: '/json/items/sub_items/',
+          dataType: 'json',
+          data: { items: $(items).val() },
+          success: function(result){
+            
+            let data = result.data;
+              
+            subItems.empty();
+
+            if(!$.isEmptyObject(data))
+            {
+                $.each(data, function(i, v)
+                {
+                  var idOptgroup = $.trim(i).normalize('NFD').replace(/[\u0300-\u036f]/g,"");
+                  subItems.append(`<optgroup label="${i}" id="${idOptgroup}" data-min-options="1"></optgroup>`);
+                  
+                  if(v.length > 0) {
+                    $.each(v, function(){
+                      $(`#${i}`).append(`<option value='${this.id}'>${this.name}</option>`);
+                    });
+                  }
+                });
+
+                $('.selectpicker').selectpicker('refresh');
+
+            } else {
+              Swal.fire({
+                title: 'No hay Sub Rubros para el Rubro seleccionado!',
+                type: 'info',
+                showCancelButton: false,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'Aceptar'
+              });
+            }
+          },
+          error: function(xhr, status){
+            Swal.fire({
+              title: 'Hubo un error al Consultar los Sub Rubros!',
+              type: 'warning',
+              showCancelButton: false,
+              confirmButtonColor: '#3085d6',
+              cancelButtonColor: '#d33',
+              confirmButtonText: 'Aceptar'
+            });
+          }
+        });
+
+        $('.selectpicker').selectpicker('refresh');
     }
 
 }

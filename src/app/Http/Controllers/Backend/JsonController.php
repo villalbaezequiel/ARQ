@@ -10,6 +10,8 @@ use App\Project;
 use App\ProjectBudget;
 use App\ProjectRealCost;
 use App\ProjectProvider;
+use App\Item;
+use App\SubItem;
 
 class JsonController extends Controller
 {
@@ -192,6 +194,28 @@ class JsonController extends Controller
             }
         } else {
             return response()->json(['status' => $status]);
+        }
+    }
+
+    public function getSubItemsFromItems(Request $request)
+    {
+        if($request->get('items'))
+        {
+            try {
+                $data = [];
+
+                foreach ($request->get('items') as $item)
+                {
+                    $data[Item::getName($item)] = SubItem::where('id_item', $item)->get()->toArray();
+                }
+                
+                return response()->json(['data' => $data]);
+
+            } catch (\Exception $err) {
+                return response()->json([ 'data' => null ]);
+            }
+        } else {
+            return response()->json(['data' => null]);
         }
     }
 

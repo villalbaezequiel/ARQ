@@ -51,16 +51,42 @@
               <label class="col-md-2 col-form-label">Rubro <span class="required-red">*</span></label>
               <div class="col-md-8">
                 <div class="form-group">
-                  <select class="form-control selectpicker" data-style="btn btn-link" data-live-search="true" name="id_category[]" multiple required>
+                  <select class="form-control selectpicker" onchange="arqJs.getSubItemsFromItems(this, 'id_subitems')" name="id_items[]" data-style="btn btn-link" data-live-search="true" multiple required>
                     <option value="">Seleccionar</option>
                     @foreach($items as $item)
                     <option value="{{ $item->id }}"
-                       <?php foreach(json_decode($provider->id_category) as $key => $val) {
-                          if($val == $item->id){ echo "selected"; }
-                        }?>>
+                       <?php
+                        foreach(json_decode($provider->id_items) as $val)
+                        {
+                          if((int)$val == (int)$item->id){ echo "selected"; }
+                        }
+                        ?>>
                        {{ $item->name }}
                      </option>
                     @endforeach
+                  </select>
+                </div>
+              </div>
+            </div>
+
+            <div class="row">
+              <label class="col-md-2 col-form-label">Sub Rubro <span class="required-red">*</span></label>
+              <div class="col-md-8">
+                <div class="form-group">
+                  <select class="form-control selectpicker" data-style="btn btn-link" data-live-search="true" id="id_subitems" name="id_subitems[]" multiple required>
+                    @foreach(json_decode($provider->id_items, true) as $val)
+                        <optgroup label="{{ \App\Item::getName($val) }}">
+                          @foreach(\App\Item::getSubItems($val) as $subitem)
+                            <option value="{{ $subitem->id }}"
+                              <?php 
+                                foreach (json_decode($provider->id_subitems, true) as $subid) {
+                                  if((int)$subid == (int)$subitem->id){ echo "selected"; }
+                                }
+                              ?>
+                            >{{ $subitem->name }}</option>
+                          @endforeach     
+                        </optgroup>
+                    @endforeach     
                   </select>
                 </div>
               </div>

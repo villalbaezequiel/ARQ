@@ -3,6 +3,7 @@
 namespace App;
 
 use Illuminate\Database\Eloquent\Model;
+use App\SubItem;
 
 class Item extends Model
 {
@@ -23,6 +24,11 @@ class Item extends Model
     public function getNumber()
     {
         return ($this ? $this->number : 0); 
+    }
+
+    static public function getSubItems($id)
+    {
+        return SubItem::where('id_item', $id)->get();
     }
     
 }

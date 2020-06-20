@@ -108,7 +108,8 @@ class ProviderController extends Controller
           // New Provider
           $provider                   = new Provider;
           $provider->id_user          = $user->id;
-          $provider->id_category      = json_encode($request->get('id_category'));
+          $provider->id_items         = json_encode($request->get('id_items'));
+          $provider->id_subitems      = json_encode($request->get('id_subitems'));
           $provider->condition_iva    = $request->get('condition_iva');
           $provider->invoice_type     = $request->get('invoice_type');
           $provider->retains_gross_income           = $request->get('retains_gross_income');
@@ -235,6 +236,7 @@ class ProviderController extends Controller
     public function edit($id)
     {
       $provider = Provider::find($id);
+     
       return view('backend.provider.edit', [
         'provider' => $provider,
         'user_files' => UserFile::where('user_id', $provider->id_user)->get(),
@@ -264,7 +266,7 @@ class ProviderController extends Controller
           $user->name           = $request->get('name');
           $user->cuit           = $request->get('cuit');
           $user->id_country     = $request->get('id_country');
-          $user->id_province     = $request->get('id_province');
+          $user->id_province    = $request->get('id_province');
           $user->location       = $request->get('location');
           $user->address        = $request->get('address');
           $user->address_number = $request->get('address_number');
@@ -279,7 +281,8 @@ class ProviderController extends Controller
           // Update Provider
           $provider = Provider::find($id);
           $provider->id_user          = $user->id;
-          $provider->id_category      = json_encode($request->get('id_category'));
+          $provider->id_items         = json_encode($request->get('id_items'));
+          $provider->id_subitems      = json_encode($request->get('id_subitems'));
           $provider->condition_iva    = $request->get('condition_iva');
           $provider->invoice_type     = $request->get('invoice_type');
           $provider->retains_gross_income           = $request->get('retains_gross_income');
