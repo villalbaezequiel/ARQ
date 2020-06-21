@@ -36,9 +36,7 @@ class Provider extends Model
               ->where('providers.id', $id)
               ->first();
               
-      if($provider)
-      {
-        return $provider->name;
-      }
+      return ($provider ? $provider->last_name.' '.$provider->name : '-');
+
     }
 }

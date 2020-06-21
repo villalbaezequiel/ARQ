@@ -238,6 +238,7 @@
 
               <textarea name="observations" class="hidden">{{ $project->observations }}</textarea>
 
+              <input type="hidden" name="id_project" value="{{ $project->id }}">
               <input type="button" class="btn btn-next btn-fill btn-primary btn-wd" name="next" value="Siguiente">
               <input type="submit" class="btn btn-finish btn-fill btn-primary btn-wd show-content-observation" name="finish" value="Guardar" style="display: none;" />
             </div>

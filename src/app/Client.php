@@ -9,7 +9,7 @@ class Client extends Model
     static public function getName($id)
     {
       $client = Client::select('users.last_name', 'users.name')->join('users', 'clients.id_user', 'users.id')->where('clients.id', $id)->first();
-      return ($client ? $client->last_name." ".$client->name : "Sin Cliente");
+      return ($client ? $client->last_name." ".$client->name : "-");
     }
 
     static public function getAllClients($status = '1')

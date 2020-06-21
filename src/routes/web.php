@@ -37,13 +37,14 @@ Route::group(['middleware' => ['auth']], function () {
     Route::resource('/items', 'Backend\ItemController');
     Route::resource('/sub_items', 'Backend\SubItemController');
     Route::resource('/users', 'Backend\UserController');
+    Route::resource('/project_cash_flow', 'Backend\ProjectCashFlowController');
 
     Route::get('/json/budgets/delete-item', 'Backend\JsonController@deleteBudgetItem');
     Route::get('/json/budgets/delete-subitem', 'Backend\JsonController@deleteBudgetSubitem');
     Route::get('/json/budgets/open', 'Backend\JsonController@setOpenBudget');
     Route::get('/json/costreal/delete-item', 'Backend\JsonController@deleteRealCostItem');
     Route::get('/json/costreal/delete-subitem', 'Backend\JsonController@deleteRealCostSubitem');
-    Route::get('/json/providers/sub-rubro/{idsubitem}', 'Backend\JsonController@getProvidersFromSubRubro');
+    Route::get('/json/providers/item/{iditem}', 'Backend\JsonController@getProvidersFromItem');
     Route::get('/json/project-provider', 'Backend\JsonController@deleteProjectProvider');
     Route::get('/json/items/sub_items', 'Backend\JsonController@getSubItemsFromItems');
     

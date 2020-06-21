@@ -9,7 +9,7 @@ use App\Project;
 use App\ProjectDocument;
 use App\ProjectBudget;
 use App\ProjectRealCost;
-use App\ProjectProvider;
+use App\ProjectCashFlow;
 use App\Client;
 use App\Item;
 use App\SubItem;
@@ -154,6 +154,9 @@ class ProjectController extends Controller
      */
     public function edit($id)
     {
+        // this Project
+        $project    = Project::find($id);
+
         // collection Items(Rubros) and SubItems(SubRubros)
         $items      = [];
         $itemsParent= Item::select('id', 'name')->where('is_active', '1')->get();
@@ -171,7 +174,7 @@ class ProjectController extends Controller
             ];
         }
         
-        // collection Budgets (presupuesto) from Project
+        // collection ProjectBudget (presupuesto)
         $collectionProjectBudget= [];
         $projectBudget          = ProjectBudget::where('id_project', $id)->get();
 
@@ -179,31 +182,45 @@ class ProjectController extends Controller
             $collectionProjectBudget[$value->id_item][] = $value;
         }
 
-        // collection ProjectRealCost
+        // collection ProjectItems (flujo de caja -> Rubros)
+        $collectionProjectItems  = [];
+
+        // collection ProjectRealCost (seguimiento)
         $collectionProjectRealCost  = [];
         $projectRealCost            = ProjectRealCost::where('id_project', $id)->get();
 
-        foreach ($projectRealCost as $value) {
-            $collectionProjectRealCost[$value->id_item][] = $value;
+        foreach ($projectRealCost as $value)
+        {
+            $collectionProjectRealCost[$value->id_item][]   = $value;
+            $collectionProjectItems[$value->id_item]        = Item::getName($value->id_item);
         }
 
-        // collection Documents from Project
-        $documents              = ProjectDocument::where('id_project', $id)->get();
+        // collection ProjectDocument (documentos)
+        $collectionDocuments        = ProjectDocument::where('id_project', $id)->get();
         
         // collection clients
-        $clients                = Client::select('clients.id', 'users.last_name', 'users.name')->join('users', 'clients.id_user', 'users.id')->where('users.is_active', '1')->get();
+        $collectionClients          = Client::select('clients.id', 'users.last_name', 'users.name')
+                                        ->join('users', 'clients.id_user', 'users.id')
+                                        ->where('users.is_active', '1')->get();
 
-        // collection ProjectProviders
-        $collectionProjecProviders  = ProjectProvider::where('id_project', $id)->get();
+        // collection ProjectClients (flujo de caja -> clientes del proyecto)
+        $collectionProjectClients   = Client::select('clients.id', 'users.last_name', 'users.name')
+                                        ->join('users', 'clients.id_user', 'users.id')
+                                        ->whereIn('clients.id', json_decode($project->id_client, true))->get();
+
+        // collection ProjectCashFlow (flujo de caja)
+        $collectionProjectCashFlow  = ProjectCashFlow::where('id_project', $id)->get();
 
         return view('backend.project.edit', [
-            'project'           => Project::find($id),
-            'clients'           => $clients,
+            'project'           => $project,
+            'clients'           => $collectionClients,
             'items'             => $items,
+            'project_clients'   => $collectionProjectClients,
+            'project_items'     => $collectionProjectItems,
             'project_real_costs'=> $collectionProjectRealCost,
             'project_budgets'   => $collectionProjectBudget,
-            'project_documents' => $documents,
-            'project_providers' => $collectionProjecProviders
+            'project_documents' => $collectionDocuments,
+            'project_cash_flow' => $collectionProjectCashFlow
         ]);
     }
 
@@ -270,30 +287,6 @@ class ProjectController extends Controller
                             $projectBudget->tax         = $val['tax'];
                             $projectBudget->total       = $val['total'];
                             $projectBudget->save();
-                        }
-                    }
-                }
-            }
-
-            $projectProviders = $request->get('project_providers');
-
-            if($projectProviders)
-            {
-                foreach($projectProviders as $id_project_real_cost => $providers)
-                {
-                    foreach($providers as $id_provider)
-                    {
-                        $checkProjectProviders = ProjectProvider::where('id_project_real_cost', $id_project_real_cost)
-                                                                ->where('id_project', $project->id)
-                                                                ->where('id_provider', $id_provider)
-                                                                ->count();
-                        if($checkProjectProviders == 0)
-                        {
-                            $projectProvider = new ProjectProvider;
-                            $projectProvider->id_project            = $project->id;
-                            $projectProvider->id_project_real_cost  = $id_project_real_cost;
-                            $projectProvider->id_provider           = $id_provider;
-                            $projectProvider->save();
                         }
                     }
                 }

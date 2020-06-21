@@ -10,7 +10,7 @@ class SubItem extends Model
     {
         $item = SubItem::find($id);
         
-        return ($item ? $item->name : 'Sin Sub Rubro'); 
+        return ($item ? $item->name : '-'); 
     }
 
     public function getNumber()

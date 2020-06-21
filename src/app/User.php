@@ -51,9 +51,8 @@ class User extends Authenticatable
     static function getFullName($id)
     {
       $user = User::find($id);
-      if($user) {
-        return $user->last_name.' '.$user->name;
-      }
+      
+      return ($user ? $user->last_name.' '.$user->name : '-');
     }
 
     static function getActive($id)

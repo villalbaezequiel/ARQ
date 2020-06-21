@@ -278,5 +278,18 @@ class Helpers extends Model
         return "1990".$separartor."01".$separartor."01";
       }
   }
+
+  static public function getFormatSalary($salary)
+  {
+    $signo_peso = str_replace(array("$"), array(""), $salary);
+    $explode_salary = explode(".", "$salary");
+    $decimales = (isset($explode_salary[1]) ? $explode_salary[1] : '00');
+
+    if(strlen($explode_salary[0]) > 3){
+      return "$".substr($explode_salary[0], 0, -3).".".substr($explode_salary[0], -3).",".$decimales;
+    } else {
+      return "$".$signo_peso;
+    }
+  }
   
 }

@@ -11,7 +11,7 @@ class Item extends Model
     {
         $item = Item::find($id);
         
-        return ($item ? $item->name : 'Sin Rubro'); 
+        return ($item ? $item->name : '-'); 
     }
 
     static public function getNumberFromId($id)

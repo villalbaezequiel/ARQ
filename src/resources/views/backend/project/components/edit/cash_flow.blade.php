@@ -1,4 +1,4 @@
-<div class="row justify-content-center">
+<div class="row justify-content-center cash_flow_form">
 
     <div class="col-md-6">
         <div class="form-group">
@@ -6,7 +6,7 @@
             <span class="input-group-text">
                 Fecha<span class="required-red">*</span>
             </span>
-            <input class="form-control datepicker" type="text" name="date">
+            <input class="form-control datepicker" type="text" name="cash_flow_date">
             </div>
         </div>
     </div>
@@ -17,10 +17,10 @@
             <span class="input-group-text">
                 Tipo<span class="required-red">*</span>
             </span>
-            <select class="selectpicker" data-live-search="true" data-style="select-with-transition" name="type_pay">
-                <option value="">Ingreso</option>
-                <option value="">Egreso</option>
-                <option value="">Pago directo</option>
+            <select class="selectpicker" data-live-search="true" data-style="select-with-transition" name="cash_flow_type">
+                @foreach(\App\ProjectCashFlow::getTypes() as $key => $val)
+                    <option value="{{ $key }}">{{ $val }}</option>
+                @endforeach
             </select>
             </div>
         </div>
@@ -32,7 +32,7 @@
             <span class="input-group-text">
                 Monto<span class="required-red" style="margin-right: 4px;">*</span> $
             </span>
-                <input type="text" class="form-control validate-number-decimal-not-ps" name="amount" maxlength="10">
+                <input type="text" class="form-control validate-number-decimal-not-ps" name="cash_flow_amount" maxlength="12">
             </div>
         </div>
     </div>
@@ -41,9 +41,9 @@
         <div class="form-group">
             <div class="input-group-prepend">
             <span class="input-group-text">
-                Impuesto<span class="required-red" style="margin-right: 4px;">*</span> %
+                Impuesto %
             </span>
-                <input type="text" class="form-control validate-number-decimal-not-ps" name="tax" maxlength="6">
+                <input type="text" class="form-control validate-number-decimal-not-ps" name="cash_flow_tax" maxlength="6">
             </div>
         </div>
     </div>
@@ -52,12 +52,12 @@
         <div class="form-group">
             <div class="input-group-prepend">
             <span class="input-group-text">
-            Forma de Pago<span class="required-red">*</span>
+                Forma de Pago
             </span>
-            <select class="selectpicker" data-live-search="true" data-style="select-with-transition" name="way_to_pay">
-                <option value="">Seleccionar</option>
-                <option value="">Efectivo</option>
-                <option value="">Transferencia</option>
+            <select class="selectpicker" data-live-search="true" data-style="select-with-transition" name="cash_flow_payment_type">
+                @foreach(\App\ProjectCashFlow::getPaymentTypes() as $key => $val)
+                    <option value="{{ $key }}">{{ $val }}</option>
+                @endforeach
             </select>
             </div>
         </div>
@@ -67,9 +67,25 @@
         <div class="form-group">
             <div class="input-group-prepend">
             <span class="input-group-text">
-            Rubro<span class="required-red">*</span>
+                Rubro
             </span>
-            <select class="selectpicker" data-live-search="true" data-style="select-with-transition" name="item">
+            <select class="selectpicker" data-live-search="true" data-style="select-with-transition" onchange="projectJS.getProvidersFromItem(this, 'cash_flow_id_provider')" name="cash_flow_id_item">
+                <option value="">Seleccionar</option>
+                @foreach($project_items as $key => $val)
+                    <option value="{{ $key }}">{{ $val }}</option>
+                @endforeach
+            </select>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-6">
+        <div class="form-group">
+            <div class="input-group-prepend">
+            <span class="input-group-text">
+                Sub-Rubro
+            </span>
+            <select class="selectpicker" data-live-search="true" data-style="select-with-transition" name="cash_flow_id_subitem">
                 <option value="">Seleccionar</option>
                 @foreach($project_real_costs as $key => $item)
                 <optgroup label="{{ \App\Item::getName($key) }}">
@@ -78,7 +94,7 @@
                     @endforeach
                 </optgroup>
                 @endforeach
-            </select>   
+            </select>
             </div>
         </div>
     </div>
@@ -87,9 +103,24 @@
         <div class="form-group">
             <div class="input-group-prepend">
             <span class="input-group-text">
-            Sub-Rubro<span class="required-red">*</span>
+                Detalle
             </span>
-            <select class="selectpicker" data-live-search="true" data-style="select-with-transition" name="sub_item">
+            <select class="selectpicker" data-live-search="true" data-style="select-with-transition" name="cash_flow_detail">
+                @foreach(\App\ProjectCashFlow::getDetails() as $key => $val)
+                    <option value="{{ $key }}">{{ $val }}</option>
+                @endforeach
+            </select>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-6">
+        <div class="form-group">
+            <div class="input-group-prepend">
+            <span class="input-group-text">
+                Proveedor
+            </span>
+            <select class="selectpicker" data-live-search="true" data-style="select-with-transition" name="cash_flow_id_provider">
                 <option value="">Seleccionar</option>
             </select>
             </div>
@@ -100,33 +131,9 @@
         <div class="form-group">
             <div class="input-group-prepend">
             <span class="input-group-text">
-                Detalle<span class="required-red">*</span>
+                Aclaracion
             </span>
-            <input type="text" class="form-control" name="detail" maxlength="125">
-            </div>
-        </div>
-    </div>
-
-    <div class="col-md-6">
-        <div class="form-group">
-            <div class="input-group-prepend">
-            <span class="input-group-text">
-                Proveedor<span class="required-red">*</span>
-            </span>
-            <select class="selectpicker" data-live-search="true" data-style="select-with-transition" name="id_provider">
-                <option value="">Seleccionar</option>
-            </select>
-            </div>
-        </div>
-    </div>
-
-    <div class="col-md-6">
-        <div class="form-group">
-            <div class="input-group-prepend">
-            <span class="input-group-text">
-                Aclaracion<span class="required-red">*</span>
-            </span>
-            <input type="text" class="form-control" name="clarification" maxlength="125">
+            <input type="text" class="form-control" name="cash_flow_clarification" maxlength="125">
             </div>
         </div>
     </div>
@@ -137,7 +144,7 @@
             <span class="input-group-text">
                 Usuario<span class="required-red">*</span>
             </span>
-            <select class="selectpicker" data-live-search="true" data-style="select-with-transition" name="id_user">
+            <select class="selectpicker" data-live-search="true" data-style="select-with-transition" name="cash_flow_id_user">
                 <option value="{{ Auth::user()->id }}">{{ Auth::user()->getFullNameAttribute() }}</option>
             </select>
             </div>
@@ -148,9 +155,9 @@
         <div class="form-group">
             <div class="input-group-prepend">
             <span class="input-group-text">
-                Cliente<span class="required-red">*</span>
+                Cliente
             </span>
-            <select class="selectpicker" data-live-search="true" data-style="select-with-transition" name="">
+            <select class="selectpicker" data-live-search="true" data-style="select-with-transition" name="cash_flow_id_client">
                 <option value="">Seleccionar</option>
                 @foreach($clients as $client)
                     <option value="{{ $client->id }}">
@@ -163,7 +170,11 @@
     </div>
 
     <div class="col-md-12 text-center" style="padding: 20px;">
-        <button id="" type="button" class="btn btn-primary">Agregar</button>
+        @if(!(int) $project->is_open_budget)
+            <button type="button" class="btn btn-primary" onclick="addCashFlow(event); return false;">Agregar</button>
+        @else
+            <a href="javascript:void(0);" class="btn btn-default">Agregar</a>
+        @endif
     </div>
 </div>
 
@@ -188,6 +199,24 @@
             </tr>
         </thead>
         <tbody>
+        @if(!(int) $project->is_open_budget)
+          @foreach($project_cash_flow as $cashFlow)
+            <tr>
+                <td>{{ \App\Helpers::getDateParseFormat($cashFlow->date) }}</td>
+                <td>{{ \App\ProjectCashFlow::getType($cashFlow->type) }}</td>
+                <td>{{ \App\Helpers::getFormatSalary($cashFlow->amount) }}</td>
+                <td>%{{ $cashFlow->tax }}</td>
+                <td>{{ \App\ProjectCashFlow::getPaymentType($cashFlow->payment_type) }}</td>
+                <td>{{ \App\Item::getName($cashFlow->id_item) }}</td>
+                <td>{{ \App\SubItem::getName($cashFlow->id_subitem) }}</td>
+                <td>{{ \App\ProjectCashFlow::getDetail($cashFlow->detail) }}</td>
+                <td>{{ \App\Provider::getName($cashFlow->id_provider) }}</td>
+                <td>{{ $cashFlow->clarification }}</td>
+                <td>{{ \App\User::getFullName($cashFlow->id_user) }}</td>
+                <td>{{ \App\Client::getName($cashFlow->id_client) }}</td>
+            </tr>
+          @endforeach
+        @endif
         </tbody>
       </table>
     </div>

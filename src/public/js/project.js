@@ -59,7 +59,6 @@ $(document).ready(function() {
     isOpenBudget();
     deleteCostRealItem();
     deleteCostRealSubItem();
-    getProvidersFromSubRubro();
     deleteProjectProvider();
 
 });
@@ -477,65 +476,7 @@ function isOpenBudget()
   }
 }
 
-function getProvidersFromSubRubro()
-{
-  $('select[name=sub_items_realcost]').change(function(){
-
-    let providers = $('select[name=providers]');
-
-    if(!$(this).val()) {
-      providers.empty();
-      return false;
-    }
-
-    $.ajax({
-      type: 'GET',
-      url: '/json/providers/sub-rubro/'+$(this).val(),
-      dataType: 'json',
-      success: function(result){
-        
-        let data      = result.data;
-          
-        providers.empty();
-
-        if(data.length >= 1)
-        {
-            providers.append("<option value=''>Seleccionar</option>");
-            $.each(data, function(i,v){
-              providers.append("<option value='"+v.id+"'>"+v.name+"</option>");
-            });
-
-            $('.selectpicker').selectpicker('refresh');
-        
-        } else {
-          Swal.fire({
-            title: 'No hay Proveedores para el Rubro seleccionado!',
-            type: 'info',
-            showCancelButton: false,
-            confirmButtonColor: '#3085d6',
-            cancelButtonColor: '#d33',
-            confirmButtonText: 'Aceptar'
-          });
-        }
-      },
-      error: function(xhr, status){
-        Swal.fire({
-          title: 'Hubo un error al Consultar los Proveedores!',
-          type: 'warning',
-          showCancelButton: false,
-          confirmButtonColor: '#3085d6',
-          cancelButtonColor: '#d33',
-          confirmButtonText: 'Aceptar'
-        });
-      }
-    });
-
-    $('.selectpicker').selectpicker('refresh');
-
-  });
-}
-
-function addProviders(e)
+function searchProviders(e)
 {
     e.preventDefault();
 
@@ -624,4 +565,154 @@ function addNewBudget(e)
         confirmButtonText: 'Aceptar'
       });
     }
+}
+
+function addCashFlow(e)
+{
+    e.preventDefault();
+
+    let data  = {};
+    let type  = $('select[name=cash_flow_type]').find(':selected').val();
+
+    if(type == "entry")
+    {
+      data = {
+          id_project    : $('input[name=id_project]').val(),
+          date          : $('input[name=cash_flow_date]').val(),
+          type          : $('select[name=cash_flow_type]').find(':selected').val(),
+          amount        : $('input[name=cash_flow_amount]').val(),
+          tax           : "0",
+          payment_type  : $('select[name=cash_flow_payment_type]').find(':selected').val(),
+          id_item       : "0",
+          id_subitem    : "0",
+          detail        : $('select[name=cash_flow_detail]').find(':selected').val(),
+          id_provider   : "0",
+          clarification : $('input[name=cash_flow_clarification]').val(),
+          id_user       : $('select[name=cash_flow_id_user]').find(':selected').val(),
+          id_client     : $('select[name=cash_flow_id_client]').find(':selected').val()  
+      }
+    } else if(type == "egress" || type == "direct_payment") {
+
+      data = {
+        id_project    : $('input[name=id_project]').val(),
+        date          : $('input[name=cash_flow_date]').val(),
+        type          : $('select[name=cash_flow_type]').find(':selected').val(),
+        amount        : $('input[name=cash_flow_amount]').val(),
+        tax           : "0",
+        payment_type  : $('select[name=cash_flow_payment_type]').find(':selected').val(),
+        id_item       : $('select[name=cash_flow_id_item]').find(':selected').val(),
+        id_subitem    : $('select[name=cash_flow_id_subitem]').find(':selected').val(),
+        detail        : $('select[name=cash_flow_detail]').find(':selected').val(),
+        id_provider   : $('select[name=cash_flow_id_provider]').find(':selected').val(),
+        clarification : $('input[name=cash_flow_clarification]').val(),
+        id_user       : $('select[name=cash_flow_id_user]').find(':selected').val(),
+        id_client     : "0"
+      }
+    }
+
+    if(validateObjectValues(data))
+    {
+      $.ajax({
+        type: 'POST',
+        url: '/project_cash_flow',
+        data: data,
+        success: function(data){
+          if(data.status){
+            Swal.fire({
+              title: 'Flujo de Caja agregado con Exito!',
+              type: 'info',
+              showCancelButton: false,
+              confirmButtonColor: '#3085d6',
+              cancelButtonColor: '#d33',
+              confirmButtonText: 'Aceptar'
+            })
+            .then((result) => {
+              location.reload()
+            });
+          }
+        },
+        error: function(xhr, status){
+          console.log('Error: '+xhr);
+        }
+      });
+    } else {
+      Swal.fire({
+        title: 'Debes completar los Campos Requeridos!',
+        type: 'info',
+        showCancelButton: false,
+        confirmButtonColor: '#3085d6',
+        cancelButtonColor: '#d33',
+        confirmButtonText: 'Aceptar'
+      })
+    }
+
+    return;
+}
+
+function validateObjectValues(obj)
+{
+  for(var o in obj)
+      if(!obj[o]) return false;
+    
+  return true;
+}
+
+let projectJS = {
+
+  getProvidersFromItem: (item, selectProviders) => {
+
+    let providers = $(`select[name=${selectProviders}]`);
+
+    if(!$(item).val()) {
+      providers.empty();
+      return false;
+    }
+
+    $.ajax({
+      type: 'GET',
+      url: '/json/providers/item/'+$(item).val(),
+      dataType: 'json',
+      success: function(result){
+        
+        let data      = result.data;
+          
+        providers.empty();
+
+        if(data.length >= 1)
+        {
+            providers.append("<option value=''>Seleccionar</option>");
+            $.each(data, function(i,v){
+              providers.append(`<option value="${v.id}">${v.name}</option>`);
+            });
+
+            $('.selectpicker').selectpicker('refresh');
+        
+        } else {
+          providers.empty();
+          Swal.fire({
+            title: 'No hay Proveedores para el Rubro seleccionado!',
+            type: 'info',
+            showCancelButton: false,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Aceptar'
+          });
+          $('.selectpicker').selectpicker('refresh');
+        }
+      },
+      error: function(xhr, status){
+        providers.empty();
+        Swal.fire({
+          title: 'Hubo un error al Consultar los Proveedores!',
+          type: 'warning',
+          showCancelButton: false,
+          confirmButtonColor: '#3085d6',
+          cancelButtonColor: '#d33',
+          confirmButtonText: 'Aceptar'
+        });
+        $('.selectpicker').selectpicker('refresh');
+      }
+    });
+
+  }
 }

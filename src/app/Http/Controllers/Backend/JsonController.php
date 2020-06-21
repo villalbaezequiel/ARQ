@@ -154,13 +154,13 @@ class JsonController extends Controller
         }
     }
 
-    public function getProvidersFromSubRubro($idSubRubro)
+    public function getProvidersFromItem($idItem)
     {
-        if($idSubRubro)
+        if($idItem)
         {
             try {
                 $data = Provider::select('providers.id', 'users.name')
-                            ->where('id_category', 'like', "%$idSubRubro%")
+                            ->where('id_items', 'like', "%$idItem%")
                             ->join('users', 'users.id', '=', 'providers.id_user')
                             ->get()->toArray();
                 
