@@ -6,9 +6,8 @@
 <div class="container-fluid">
 
     <a href="{{ url('/projects/create') }}" class="btn btn-primary">Nuevo Proyecto</a>
-    <a href='{{ url("/") }}' class="btn btn-primary">Descargar Lista</a>
+    <!-- <a href='{{ url("/") }}' class="btn btn-primary">Descargar Lista</a> -->
   
-
   <div class="row">
     <div class="col-md-12">
       <div class="card">
@@ -61,7 +60,7 @@
                 <td>{{ $project->name }}</td>
                 <td>{{ $clients }}</td>
                 <td>{{ $start_date[2].'/'.$start_date[1].'/'.$start_date[0] }} - {{ $finish_date[2].'/'.$finish_date[1].'/'.$finish_date[0] }}</td>
-                <td>{{ \App\Helpers::getActive($project->active) }}</td>
+                <td>{{ \App\Helpers::getActive($project->is_active) }}</td>
                 <td class="text-right">
                   {!! Form::open(['route' => ['projects.destroy', $project->id], 'method' => 'DELETE', 'class'=> 'alert-confirm-delete', 'style'=> 'text-align: center;']) !!}
                     <a href="{{ url('/projects/'.$project->id.'/edit') }}" class="btn btn-link btn-warning btn-just-icon edit" title="Editar"><i class="material-icons">dvr</i></a>

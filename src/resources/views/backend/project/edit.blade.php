@@ -198,7 +198,21 @@
                         </div>
                       </div>
                     </div>
-                  </div>  
+                  </div> 
+
+                  <div class="col-md-10">
+                    <div class="form-group">
+                      <div class="input-group-prepend">
+                        <span class="input-group-text">
+                          Proyecto Activo
+                        </span>
+                        <select class="form-control selectpicker" data-style="btn btn-link" name="is_active">
+                          <option value="1" <?php if($project->is_active == "1"){ echo "selected='selected'"; } ?>>Si</option>
+                          <option value="0" <?php if($project->is_active == "0"){ echo "selected='selected'"; } ?>>No</option>
+                        </select>
+                      </div>
+                    </div>
+                  </div>
                           
                 </div>
               </div>
