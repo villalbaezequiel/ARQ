@@ -476,37 +476,6 @@ function isOpenBudget()
   }
 }
 
-function searchProviders(e)
-{
-    e.preventDefault();
-
-    let contentProviders = $("#content-providers tbody");
-    
-    let costRealId     = $("select[name=sub_items_realcost]").find(':selected').data('id');
-    let subItemName    = $("select[name=sub_items_realcost]").find(':selected').text();
-
-    let providerId     = $("select[name=providers]").find(':selected').val();
-    let providerName    = $("select[name=providers]").find(':selected').text();
-
-    if(costRealId && providerId)
-    {
-      contentProviders.append(`
-      <tr>
-        <td>${subItemName}</td>
-        <td>${providerName}</td>        
-        <td class="text-center b-c-gray" style="vertical-align: inherit;">
-          <button 
-            class="btn btn-danger"
-            style="padding: 0px 5px;"
-            onClick="$(this).parents('tr').remove(); return false;"
-          >X</button>
-        </td>
-        <input type="hidden" name="project_providers[${costRealId}][]" value="${providerId}" /></td>
-      </tr>`);
-    }
-  
-}
-
 function deleteProjectProvider()
 {
   $('.removeProjectProvider').click(function(){
@@ -657,6 +626,42 @@ function validateObjectValues(obj)
   return true;
 }
 
+function getTemplateHistoryProvider(){
+  let formSwal = `<div class="table-responsive"><table class="table table-striped">
+                    <thead>
+                        <tr class="b-c-gray">
+                          <th class="font-weight-bold-600">Fecha</th>
+                          <th class="font-weight-bold-600">Monto</th>
+                          <th class="font-weight-bold-600">Impuesto</th>
+                          <th class="font-weight-bold-600">Forma de pago</th>
+                          <th class="font-weight-bold-600">Rubro</th>
+                          <th class="font-weight-bold-600">Sub-Rubro</th>
+                          <th class="font-weight-bold-600">Detalle</th>
+                          <th class="font-weight-bold-600">Aclaración</th>
+                        </tr>
+                    </thead>
+                    <tbody class="content-history-provider">
+                     </tbody>
+                  </table></div>
+                  <div class="row">
+                    <div class="col-md-12">
+                      <p class="text-left">Total Avanzado: <span class="total-history-provider"></span></p>
+                      <p class="text-left">Recibi la suma de Pesos ........ en concepto de avance N* ........</p>
+                    </div>
+                    <div class="col-md-12">
+                      <form action="#">
+                        <input type="hidden" name="_token" value="">
+                        <input type="hidden" name="id_project" value="">
+                        <input type="hidden" name="id_provider" value="">
+                        <input type="submit" class="btn btn-primary" value="Descargar Historial Proveedor">
+                      </form>
+                    </div>
+                  </div>
+                  `;
+
+  return formSwal;
+}
+
 let projectJS = {
 
   getProvidersFromItem: (item, selectProviders) => {
@@ -713,6 +718,174 @@ let projectJS = {
         $('.selectpicker').selectpicker('refresh');
       }
     });
+  }, 
+  
+  searchProviders: (e, selectItem, contentProvidersList) => {
 
+    e.preventDefault();
+
+    let contentProviders = $(`.${contentProvidersList}`);
+    
+    let idProject   = $('input[name=id_project]').val();
+    let itemId      = $(`select[name=${selectItem}]`).find(':selected').val();
+
+    if(itemId)
+    {
+      $.ajax({
+        type: 'GET',
+        url: `/json/project_providers/item/${idProject}/${itemId}`,
+        dataType: 'json',
+        success: function(result){
+          
+          let data      = result.data;
+            
+          contentProviders.empty();
+  
+          if(data.length >= 1)
+          {
+            $.each(data, function(i,v){
+
+              contentProviders.append(`
+                <tr>
+                  <td class="font-weight-bold-600">${v.id}</td>
+                  <td>${v.name}</td>
+                  <td class="font-weight-bold-600">$${v.amount}</td>        
+                  <td class="text-center" style="vertical-align: inherit;">
+                    <button class="btn btn-link btn-warning btn-just-icon show" onclick="projectJS.getHistoryProvider(event, ${idProject}, ${v.id_provider}, '${v.name}')">
+                      <i class="material-icons">visibility</i>
+                    </button>
+                  </td>
+                </tr>`);
+            });        
+          } else {
+            Swal.fire({
+              title: 'No hay Proveedores para el Rubro seleccionado!',
+              type: 'info',
+              showCancelButton: false,
+              confirmButtonColor: '#3085d6',
+              cancelButtonColor: '#d33',
+              confirmButtonText: 'Aceptar'
+            });
+            contentProviders.empty();
+          }
+        },
+        error: function(xhr, status){
+          providers.empty();
+          Swal.fire({
+            title: 'Hubo un error al Consultar los Proveedores!',
+            type: 'warning',
+            showCancelButton: false,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Aceptar'
+          });
+        }
+      });
+    } else {
+      Swal.fire({
+        title: 'Debes seleccionar un Rubro!',
+        type: 'info',
+        showCancelButton: false,
+        confirmButtonColor: '#3085d6',
+        cancelButtonColor: '#d33',
+        confirmButtonText: 'Aceptar'
+      });
+    }
+  
+    return;
+  },
+
+  getHistoryProvider: (e, idProject, idProvider, nameProvider) => {
+      
+    e.preventDefault();
+
+    if(idProject && idProvider)
+    {
+      $.ajax({
+        type: 'GET',
+        url: `/json/project_provider_history/${idProject}/${idProvider}`,
+        dataType: 'json',
+        success: function(result){
+          
+          let data      = result.data;
+          let total     = result.total;
+          
+          if(data.length > 0)
+          {
+            Swal.fire({
+              title: `Proveedor: ${nameProvider}`,
+              html: getTemplateHistoryProvider(),
+              confirmButtonClass: "btn btn-success",
+              showCancelButton: false,
+              customClass: 'swal-wide',
+              buttonsStyling: !1,
+              onBeforeOpen: () => {
+  
+                // let dataExport = [];
+
+                $(".total-history-provider").text(total);
+                
+                $.each(data, function(i,v){
+  
+                  $(".content-history-provider").append(`<tr>
+                                    <td>${v.date}</td>
+                                    <td>${v.amount}</td>
+                                    <td>${v.tax}</td>
+                                    <td>${v.payment_type}</td>
+                                    <td>${v.id_item}</td>
+                                    <td>${v.id_subitem}</td>
+                                    <td>${v.detail}</td>
+                                    <td>${v.clarification}</td>
+                                </tr>`);
+  
+                // let valorTotalHoraHsExtra = ( parseFloat(calculateHsExtras(countHour, v.agreed_hours)).toFixed(3) * valorHoraHsExtra );
+  
+                //   dataExport.push({
+                //     fecha: getDatePickerFormat(v.start, true),
+                //     rol: v.rol,
+                //     inicio: parseDate(start.getHours())+':'+parseDate(start.getMinutes()),
+                //     final: parseDate(finish.getHours())+':'+parseDate(finish.getMinutes()),
+                //     horas_pactadas: v.agreed_hours,
+                //     horas_extras: (countHour - v.agreed_hours),
+                //     valor_hora: "$" + valorHoraHsExtra.toFixed(2),
+                //     valor_total: "$" + valorTotalHoraHsExtra.toFixed(2)
+                //   });
+  
+              });
+  
+                // $("#form_hs_extras input[name=_token]").val($("#logic_project input[name=_token]").val());
+                // $("#form_hs_extras input[name=name_team]").val(nameTeam);
+                // $("#form_hs_extras input[name=id_project_provider]").val(id);
+                // $("#form_hs_extras input[name=hs_extras]").val(JSON.stringify(dataExport));
+  
+              }
+            }); 
+          }
+
+        },
+        error: function(xhr, status){
+          Swal.fire({
+            title: 'Hubo un error al Consultar Historial del Proveedor!',
+            type: 'warning',
+            showCancelButton: false,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Aceptar'
+          });  
+        }
+      });
+    } else {
+      Swal.fire({
+        title: 'Hubo un error al Consultar Historial del Proveedor!',
+        type: 'warning',
+        showCancelButton: false,
+        confirmButtonColor: '#3085d6',
+        cancelButtonColor: '#d33',
+        confirmButtonText: 'Aceptar'
+      });
+    }
+  
+    return;
   }
+
 }

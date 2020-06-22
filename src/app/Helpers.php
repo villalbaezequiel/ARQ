@@ -285,8 +285,15 @@ class Helpers extends Model
     $explode_salary = explode(".", "$salary");
     $decimales = (isset($explode_salary[1]) ? $explode_salary[1] : '00');
 
-    if(strlen($explode_salary[0]) > 3){
+    if(strlen($explode_salary[0]) > 3 && strlen($explode_salary[0]) < 7)
+    {
+    
       return "$".substr($explode_salary[0], 0, -3).".".substr($explode_salary[0], -3).",".$decimales;
+    
+    } elseif(strlen($explode_salary[0]) == 7) {
+      return "$".substr($explode_salary[0], 0, 1).".".substr($explode_salary[0], 1, -3).".".substr($explode_salary[0], -3).",".$decimales;
+    } elseif(strlen($explode_salary[0]) == 8) {
+      return "$".substr($explode_salary[0], 0, 2).".".substr($explode_salary[0], 2, -3).".".substr($explode_salary[0], -3).",".$decimales;
     } else {
       return "$".$signo_peso;
     }

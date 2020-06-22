@@ -6,20 +6,16 @@
             Rubros / Proveedores
         </span>
         <div class="col-md-10">
-            <select class="form-control selectpicker" data-style="btn btn-link" data-live-search="true">
+            <select class="form-control selectpicker" data-style="btn btn-link" name="providers_item" data-live-search="true">
                 <option value="">Seleccionar</option>
-                @foreach($project_real_costs as $key => $item)
-                    <optgroup label="{{ \App\Item::getName($key) }}">
-                        @foreach($item as $subitem)
-                            <option value="{{ $subitem->id_subitem }}" data-id="{{ $subitem->id }}">{{ \App\SubItem::getName($subitem->id_subitem) }}</option>
-                        @endforeach
-                    </optgroup>
+                @foreach($project_items as $key => $val)
+                    <option value="{{ $key }}">{{ $val }}</option>
                 @endforeach
             </select>
         </div>
 
         <div class="col-md-5 text-center">
-            <button class="btn btn-success" onclick="searchProviders(event); return false;">Buscar</button>
+            <button class="btn btn-success" onclick="projectJS.searchProviders(event, 'providers_item', 'content_providers_item')">Buscar</button>
         </div>
 
       </div>
@@ -33,17 +29,15 @@
         
         <thead>
             <tr class="b-c-gray">
-                <th class="font-weight-bold-600">ID</th>
-                <th class="font-weight-bold-600">Nombre / Razon Social</th>
+                <th class="font-weight-bold-600">#ID</th>
+                <th class="font-weight-bold-600">Nombre/Razon Social</th>
                 <th class="font-weight-bold-600">Monto</th>
                 <th class="font-weight-bold-600">Acciones</th>
             </tr>
         </thead>
-        <tbody>
-            @if((int) !$project->is_open_budget)
-
-            @endif
-        </tbody>
+        @if((int) !$project->is_open_budget)
+            <tbody class="content_providers_item"></tbody>
+        @endif
       </table>
     </div>
 </div>

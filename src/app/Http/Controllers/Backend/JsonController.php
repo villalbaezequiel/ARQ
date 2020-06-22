@@ -10,8 +10,10 @@ use App\Project;
 use App\ProjectBudget;
 use App\ProjectRealCost;
 use App\ProjectProvider;
+use App\ProjectCashFlow;
 use App\Item;
 use App\SubItem;
+use DB;
 
 class JsonController extends Controller
 {
@@ -210,6 +212,70 @@ class JsonController extends Controller
                 }
                 
                 return response()->json(['data' => $data]);
+
+            } catch (\Exception $err) {
+                return response()->json([ 'data' => null ]);
+            }
+        } else {
+            return response()->json(['data' => null]);
+        }
+    }
+
+    public function searchProviders($idProject, $idItem)
+    {
+        if($idProject && $idItem)
+        {
+            try {
+                $providersHistory = ProjectCashFlow::select('project_cash_flows.id', 'project_cash_flows.id_provider', DB::raw('SUM(project_cash_flows.amount) as amount'), 'users.name')
+                                                    ->join('providers', 'providers.id', '=', 'project_cash_flows.id_provider')
+                                                    ->join('users', 'users.id', '=', 'providers.id_user')
+                                                    ->where('project_cash_flows.id_project', $idProject)
+                                                    ->where('project_cash_flows.id_item', $idItem)
+                                                    ->where('project_cash_flows.type', '!=', 'entry')
+                                                    ->groupBy('project_cash_flows.id_provider')
+                                                    ->orderBy('project_cash_flows.id', 'DESC')
+                                                    ->get();
+                
+                return response()->json(['data' => $providersHistory]);
+
+            } catch (\Exception $err) {
+                return response()->json([ 'data' => null ]);
+            }
+        } else {
+            return response()->json(['data' => null]);
+        }
+    }
+
+    public function getHistoryProvider($idProject, $idProvider)
+    {
+        if($idProject && $idProvider)
+        {
+            try {
+                
+                $total = 0;
+
+                $providerHistory = ProjectCashFlow::select('project_cash_flows.*', 'users.name')
+                                                    ->join('providers', 'providers.id', '=', 'project_cash_flows.id_provider')
+                                                    ->join('users', 'users.id', '=', 'providers.id_user')
+                                                    ->where('project_cash_flows.id_project', $idProject)
+                                                    ->where('project_cash_flows.id_provider', $idProvider)
+                                                    ->where('project_cash_flows.type', '!=', 'entry')
+                                                    ->get();
+                
+                foreach($providerHistory as &$provider)
+                {
+                    $total += $provider->amount;
+
+                    $provider->date     = Helpers::getDateParseFormat($provider->date);
+                    $provider->amount   = Helpers::getFormatSalary($provider->amount);
+                    $provider->tax      = "%".$provider->tax;
+                    $provider->payment_type = ProjectCashFlow::getPaymentType($provider->payment_type);
+                    $provider->id_item  = Item::getName($provider->id_item);
+                    $provider->id_subitem   = SubItem::getName($provider->id_subitem);
+                    $provider->detail   = ProjectCashFlow::getDetail($provider->detail);
+                }
+                
+                return response()->json(['data' => $providerHistory, 'total' => Helpers::getFormatSalary($total)]);
 
             } catch (\Exception $err) {
                 return response()->json([ 'data' => null ]);

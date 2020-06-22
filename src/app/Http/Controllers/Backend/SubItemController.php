@@ -52,7 +52,7 @@ class SubItemController extends Controller
             $sub_item->name         = $request->get('name');
             $sub_item->id_item      = $itemID;
             $sub_item->number_parent= $getNumberItem;
-            $sub_item->number       = ($lastNumberSubItem->number + 1);
+            $sub_item->number       = ($lastNumberSubItem ? $lastNumberSubItem->number + 1 : 1);
             $sub_item->is_active    = $request->get('is_active');
             $sub_item->save();
 
@@ -121,7 +121,7 @@ class SubItemController extends Controller
 
             $sub_item->id_item          = $itemID;
             $sub_item->number_parent    = $getNumberItem;
-            $sub_item->number           = ($lastNumberSubItem->number + 1);
+            $sub_item->number           = ($lastNumberSubItem ? $lastNumberSubItem->number + 1 : 1);
           }
 
             $sub_item->is_active= $request->get('is_active');
