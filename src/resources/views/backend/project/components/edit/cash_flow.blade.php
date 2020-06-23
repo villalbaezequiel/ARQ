@@ -186,6 +186,7 @@
             <tr class="b-c-gray">
                 <th class="font-weight-bold-600">Fecha</th>
                 <th class="font-weight-bold-600">Tipo</th>
+                <th class="font-weight-bold-600">Saldo</th>
                 <th class="font-weight-bold-600">Monto</th>
                 <th class="font-weight-bold-600">Impuesto</th>
                 <th class="font-weight-bold-600">Forma de pago</th>
@@ -202,18 +203,19 @@
         @if(!(int) $project->is_open_budget)
           @foreach($project_cash_flow as $cashFlow)
             <tr>
-                <td>{{ \App\Helpers::getDateParseFormat($cashFlow->date) }}</td>
-                <td>{{ \App\ProjectCashFlow::getType($cashFlow->type) }}</td>
-                <td>{{ \App\Helpers::getFormatSalary($cashFlow->amount) }}</td>
-                <td>%{{ $cashFlow->tax }}</td>
-                <td>{{ \App\ProjectCashFlow::getPaymentType($cashFlow->payment_type) }}</td>
-                <td>{{ \App\Item::getName($cashFlow->id_item) }}</td>
-                <td>{{ \App\SubItem::getName($cashFlow->id_subitem) }}</td>
-                <td>{{ \App\ProjectCashFlow::getDetail($cashFlow->detail) }}</td>
-                <td>{{ \App\Provider::getName($cashFlow->id_provider) }}</td>
+                <td>{{ $cashFlow->date }}</td>
+                <td>{{ $cashFlow->type }}</td>
+                <td>{{ $cashFlow->balance }}</td>
+                <td>{{ $cashFlow->amount }}</td>
+                <td>{{ $cashFlow->tax }}</td>
+                <td>{{ $cashFlow->payment_type }}</td>
+                <td>{{ $cashFlow->id_item }}</td>
+                <td>{{ $cashFlow->id_subitem }}</td>
+                <td>{{ $cashFlow->detail }}</td>
+                <td>{{ $cashFlow->id_provider }}</td>
                 <td>{{ $cashFlow->clarification }}</td>
-                <td>{{ \App\User::getFullName($cashFlow->id_user) }}</td>
-                <td>{{ \App\Client::getName($cashFlow->id_client) }}</td>
+                <td>{{ $cashFlow->id_user }}</td>
+                <td>{{ $cashFlow->id_client }}</td>
             </tr>
           @endforeach
         @endif

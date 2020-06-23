@@ -630,6 +630,7 @@ function getTemplateHistoryProvider(){
   let formSwal = `<div class="table-responsive"><table class="table table-striped">
                     <thead>
                         <tr class="b-c-gray">
+                          <th class="font-weight-bold-600">Avance</th>
                           <th class="font-weight-bold-600">Fecha</th>
                           <th class="font-weight-bold-600">Monto</th>
                           <th class="font-weight-bold-600">Impuesto</th>
@@ -749,7 +750,7 @@ let projectJS = {
                 <tr>
                   <td class="font-weight-bold-600">${v.id}</td>
                   <td>${v.name}</td>
-                  <td class="font-weight-bold-600">$${v.amount}</td>        
+                  <td class="font-weight-bold-600">${v.amount}</td>        
                   <td class="text-center" style="vertical-align: inherit;">
                     <button class="btn btn-link btn-warning btn-just-icon show" onclick="projectJS.getHistoryProvider(event, ${idProject}, ${v.id_provider}, '${v.name}')">
                       <i class="material-icons">visibility</i>
@@ -825,9 +826,11 @@ let projectJS = {
 
                 $(".total-history-provider").text(total);
                 
+                
                 $.each(data, function(i,v){
   
                   $(".content-history-provider").append(`<tr>
+                                    <td class="font-weight-bold-600">${i+1}</td>
                                     <td>${v.date}</td>
                                     <td>${v.amount}</td>
                                     <td>${v.tax}</td>

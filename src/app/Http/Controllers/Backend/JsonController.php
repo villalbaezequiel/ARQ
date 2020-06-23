@@ -235,6 +235,10 @@ class JsonController extends Controller
                                                     ->groupBy('project_cash_flows.id_provider')
                                                     ->orderBy('project_cash_flows.id', 'DESC')
                                                     ->get();
+
+                foreach ($providersHistory as &$value) {
+                    $value->amount = Helpers::getFormatSalary($value->amount);
+                }
                 
                 return response()->json(['data' => $providersHistory]);
 
@@ -260,6 +264,7 @@ class JsonController extends Controller
                                                     ->where('project_cash_flows.id_project', $idProject)
                                                     ->where('project_cash_flows.id_provider', $idProvider)
                                                     ->where('project_cash_flows.type', '!=', 'entry')
+                                                    ->orderBy('project_cash_flows.created_at', 'ASC')
                                                     ->get();
                 
                 foreach($providerHistory as &$provider)

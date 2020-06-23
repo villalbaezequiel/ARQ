@@ -294,6 +294,8 @@ class Helpers extends Model
       return "$".substr($explode_salary[0], 0, 1).".".substr($explode_salary[0], 1, -3).".".substr($explode_salary[0], -3).",".$decimales;
     } elseif(strlen($explode_salary[0]) == 8) {
       return "$".substr($explode_salary[0], 0, 2).".".substr($explode_salary[0], 2, -3).".".substr($explode_salary[0], -3).",".$decimales;
+    } elseif(strlen($explode_salary[0]) == 9) {
+      return "$".substr($explode_salary[0], 0, 3).".".substr($explode_salary[0], 3, -3).".".substr($explode_salary[0], -3).",".$decimales;
     } else {
       return "$".$signo_peso;
     }

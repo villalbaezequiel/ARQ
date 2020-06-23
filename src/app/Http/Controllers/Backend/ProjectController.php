@@ -11,6 +11,8 @@ use App\ProjectBudget;
 use App\ProjectRealCost;
 use App\ProjectCashFlow;
 use App\Client;
+use App\User;
+use App\Provider;
 use App\Item;
 use App\SubItem;
 
@@ -210,6 +212,30 @@ class ProjectController extends Controller
 
         // collection ProjectCashFlow (flujo de caja)
         $collectionProjectCashFlow  = ProjectCashFlow::where('id_project', $id)->get();
+
+        $balance = 0;
+
+        foreach ($collectionProjectCashFlow as &$value)
+        {
+            if($value->type == "entry") {
+                $balance += $value->amount;
+            } elseif($value->type == "egress") {
+                $balance -= $value->amount;
+            }
+
+            $value->date    = Helpers::getDateParseFormat($value->date);
+            $value->type    = ProjectCashFlow::getType($value->type);
+            $value->balance = Helpers::getFormatSalary($balance);
+            $value->amount  = Helpers::getFormatSalary($value->amount);
+            $value->tax     = "%".$value->tax;
+            $value->payment_type = ProjectCashFlow::getPaymentType($value->payment_type);
+            $value->id_item = Item::getName($value->id_item);
+            $value->id_subitem  = SubItem::getName($value->id_subitem);
+            $value->detail  = ProjectCashFlow::getDetail($value->detail);
+            $value->id_provider = Provider::getName($value->id_provider);
+            $value->id_user     = User::getFullName($value->id_user);
+            $value->id_client   = Client::getName($value->id_client);
+        }
 
         return view('backend.project.edit', [
             'project'           => $project,
