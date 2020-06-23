@@ -515,12 +515,14 @@ let arqJs = {
             {
                 $.each(data, function(i, v)
                 {
-                  var idOptgroup = $.trim(i).normalize('NFD').replace(/[\u0300-\u036f]/g,"");
+                  var idOptgroup  = i.normalize('NFD').replace(/[\u0300-\u036f]/g,"");
+                  idOptgroup      = idOptgroup.replace(/ /g, '_'); 
+
                   subItems.append(`<optgroup label="${i}" id="${idOptgroup}" data-min-options="1"></optgroup>`);
                   
                   if(v.length > 0) {
                     $.each(v, function(){
-                      $(`#${i}`).append(`<option value='${this.id}'>${this.name}</option>`);
+                      $(`#${idOptgroup}`).append(`<option value='${this.id}'>${this.name}</option>`);
                     });
                   }
                 });
