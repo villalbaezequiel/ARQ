@@ -69,7 +69,7 @@
             <span class="input-group-text">
                 Rubro
             </span>
-            <select class="selectpicker" data-live-search="true" data-style="select-with-transition" onchange="projectJS.getProvidersFromItem(this, 'cash_flow_id_provider')" name="cash_flow_id_item">
+            <select class="selectpicker" data-live-search="true" data-style="select-with-transition" onchange="projectJS.getProvidersFromItem(this, 'cash_flow_id_provider', 'cash_flow_id_subitem')" name="cash_flow_id_item">
                 <option value="">Seleccionar</option>
                 @foreach($project_items as $key => $val)
                     <option value="{{ $key }}">{{ $val }}</option>
@@ -87,14 +87,18 @@
             </span>
             <select class="selectpicker" data-live-search="true" data-style="select-with-transition" name="cash_flow_id_subitem">
                 <option value="">Seleccionar</option>
-                @foreach($project_real_costs as $key => $item)
-                <optgroup label="{{ \App\Item::getName($key) }}">
+            </select>
+
+            <div class="hidden cash_flow_id_subitem_collection">
+              @foreach($project_real_costs as $key => $item)
+                <optgroup data-id="{{ $key }}" label="{{ \App\Item::getName($key) }}">
                     @foreach($item as $subitem)
                         <option value="{{ $subitem->id_subitem }}" data-id="{{ $subitem->id }}">{{ \App\SubItem::getName($subitem->id_subitem) }}</option>
                     @endforeach
                 </optgroup>
-                @endforeach
-            </select>
+              @endforeach
+            </div>
+
             </div>
         </div>
     </div>
@@ -150,15 +154,16 @@
             </div>
         </div>
     </div>
+    
+    <div class="col-md-6"></div>
 
-    <div class="col-md-6">
+    <div class="hidden col-md-6">
         <div class="form-group">
             <div class="input-group-prepend">
             <span class="input-group-text">
                 Cliente
             </span>
             <select class="selectpicker" data-live-search="true" data-style="select-with-transition" name="cash_flow_id_client">
-                <option value="">Seleccionar</option>
                 @foreach($clients as $client)
                     <option value="{{ $client->id }}">
                         {{ $client->last_name .' '. $client->name }}
@@ -196,7 +201,7 @@
                 <th class="font-weight-bold-600">Proveedor</th>
                 <th class="font-weight-bold-600">Aclaración</th>
                 <th class="font-weight-bold-600">Usuario</th>
-                <th class="font-weight-bold-600">Cliente</th>
+                <!-- <th class="font-weight-bold-600">Cliente</th> -->
             </tr>
         </thead>
         <tbody>
@@ -215,7 +220,7 @@
                 <td>{{ $cashFlow->id_provider }}</td>
                 <td>{{ $cashFlow->clarification }}</td>
                 <td>{{ $cashFlow->id_user }}</td>
-                <td>{{ $cashFlow->id_client }}</td>
+                <!-- <td>$cashFlow->id_client</td> -->
             </tr>
           @endforeach
         @endif

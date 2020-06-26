@@ -665,9 +665,20 @@ function getTemplateHistoryProvider(){
 
 let projectJS = {
 
-  getProvidersFromItem: (item, selectProviders) => {
+  getProvidersFromItem: (item, selectProviders, toggleSubItem) => {
 
     let providers = $(`select[name=${selectProviders}]`);
+    let selectSubItem = $(`select[name=${toggleSubItem}]`);
+    let selectSubItemCollection = $(`.cash_flow_id_subitem_collection`).children('optgroup');
+
+    selectSubItem.empty();
+    
+    $.each(selectSubItemCollection, function() {
+      if($(this).data('id') == $(item).val())
+      {
+        selectSubItem.append($(this).html());
+      }
+    });
 
     if(!$(item).val()) {
       providers.empty();
