@@ -4,7 +4,7 @@
         <div class="form-group">
             <div class="input-group-prepend">
             <span class="input-group-text">
-                Fecha<span class="required-red">*</span>
+                Fecha<span class="default-required required-red">*</span>
             </span>
             <input class="form-control datepicker" type="text" name="cash_flow_date">
             </div>
@@ -15,9 +15,9 @@
         <div class="form-group">
             <div class="input-group-prepend">
             <span class="input-group-text">
-                Tipo<span class="required-red">*</span>
+                Tipo<span class="default-required required-red">*</span>
             </span>
-            <select class="selectpicker" data-live-search="true" data-style="select-with-transition" name="cash_flow_type">
+            <select class="selectpicker" data-live-search="true" data-style="select-with-transition" onchange="projectJS.toggleFieldRequired(this);" name="cash_flow_type">
                 @foreach(\App\ProjectCashFlow::getTypes() as $key => $val)
                     <option value="{{ $key }}">{{ $val }}</option>
                 @endforeach
@@ -30,7 +30,7 @@
         <div class="form-group">
             <div class="input-group-prepend">
             <span class="input-group-text">
-                Monto<span class="required-red" style="margin-right: 4px;">*</span> $
+                Monto<span class="default-required required-red" style="margin-right: 4px;">*</span> $
             </span>
                 <input type="text" class="form-control validate-number-decimal-not-ps" name="cash_flow_amount" maxlength="12">
             </div>
@@ -41,7 +41,7 @@
         <div class="form-group">
             <div class="input-group-prepend">
             <span class="input-group-text">
-                Impuesto %
+                Impuesto<span class="hidden required-red" style="margin-right: 4px;">*</span> %
             </span>
                 <input type="text" class="form-control validate-number-decimal-not-ps" name="cash_flow_tax" maxlength="6">
             </div>
@@ -52,7 +52,7 @@
         <div class="form-group">
             <div class="input-group-prepend">
             <span class="input-group-text">
-                Forma de Pago
+                Forma de Pago<span class="default-required required-red">*</span>
             </span>
             <select class="selectpicker" data-live-search="true" data-style="select-with-transition" name="cash_flow_payment_type">
                 @foreach(\App\ProjectCashFlow::getPaymentTypes() as $key => $val)
@@ -67,7 +67,7 @@
         <div class="form-group">
             <div class="input-group-prepend">
             <span class="input-group-text">
-                Rubro
+                Rubro<span class="hidden egress-required direct_payment-required required-red">*</span>
             </span>
             <select class="selectpicker" data-live-search="true" data-style="select-with-transition" onchange="projectJS.getProvidersFromItem(this, 'cash_flow_id_provider', 'cash_flow_id_subitem')" name="cash_flow_id_item">
                 <option value="">Seleccionar</option>
@@ -83,7 +83,7 @@
         <div class="form-group">
             <div class="input-group-prepend">
             <span class="input-group-text">
-                Sub-Rubro
+                Sub-Rubro<span class="hidden egress-required direct_payment-required required-red">*</span>
             </span>
             <select class="selectpicker" data-live-search="true" data-style="select-with-transition" name="cash_flow_id_subitem">
                 <option value="">Seleccionar</option>
@@ -107,7 +107,7 @@
         <div class="form-group">
             <div class="input-group-prepend">
             <span class="input-group-text">
-                Detalle
+                Detalle<span class="default-required required-red">*</span>
             </span>
             <select class="selectpicker" data-live-search="true" data-style="select-with-transition" name="cash_flow_detail">
                 @foreach(\App\ProjectCashFlow::getDetails() as $key => $val)
@@ -122,7 +122,7 @@
         <div class="form-group">
             <div class="input-group-prepend">
             <span class="input-group-text">
-                Proveedor
+                Proveedor<span class="hidden egress-required required-red">*</span>
             </span>
             <select class="selectpicker" data-live-search="true" data-style="select-with-transition" name="cash_flow_id_provider">
                 <option value="">Seleccionar</option>
@@ -135,7 +135,7 @@
         <div class="form-group">
             <div class="input-group-prepend">
             <span class="input-group-text">
-                Aclaracion
+                Aclaracion<span class="default-required required-red">*</span>
             </span>
             <input type="text" class="form-control" name="cash_flow_clarification" maxlength="125">
             </div>
@@ -146,7 +146,7 @@
         <div class="form-group">
             <div class="input-group-prepend">
             <span class="input-group-text">
-                Usuario<span class="required-red">*</span>
+                Usuario<span class="default-required required-red">*</span>
             </span>
             <select class="selectpicker" data-live-search="true" data-style="select-with-transition" name="cash_flow_id_user">
                 <option value="{{ Auth::user()->id }}">{{ Auth::user()->getFullNameAttribute() }}</option>

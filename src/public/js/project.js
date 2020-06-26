@@ -560,6 +560,7 @@ function addCashFlow(e)
           id_user       : $('select[name=cash_flow_id_user]').find(':selected').val(),
           id_client     : $('select[name=cash_flow_id_client]').find(':selected').val()  
       }
+
     } else if(type == "egress") {
 
       data = {
@@ -917,6 +918,25 @@ let projectJS = {
     }
   
     return;
-  }
+  },
 
-}
+  toggleFieldRequired: (ty) => {
+    let type  = $(ty).find(':selected').val();
+
+    if(type == "entry")
+    {      
+      $('.egress-required').addClass('hidden');
+      $('.direct_payment-required').addClass('hidden');
+    } else if(type == "egress") {
+      $('.egress-required').removeClass('hidden');
+    } else if(type == "direct_payment") {
+      $('.egress-required').addClass('hidden');
+      $('.direct_payment-required').removeClass('hidden');
+    }
+
+    $('.default-required').removeClass('hidden');
+
+  },
+
+};
+
