@@ -560,7 +560,7 @@ function addCashFlow(e)
           id_user       : $('select[name=cash_flow_id_user]').find(':selected').val(),
           id_client     : $('select[name=cash_flow_id_client]').find(':selected').val()  
       }
-    } else if(type == "egress" || type == "direct_payment") {
+    } else if(type == "egress") {
 
       data = {
         id_project    : $('input[name=id_project]').val(),
@@ -573,6 +573,23 @@ function addCashFlow(e)
         id_subitem    : $('select[name=cash_flow_id_subitem]').find(':selected').val(),
         detail        : $('select[name=cash_flow_detail]').find(':selected').val(),
         id_provider   : $('select[name=cash_flow_id_provider]').find(':selected').val(),
+        clarification : $('input[name=cash_flow_clarification]').val(),
+        id_user       : $('select[name=cash_flow_id_user]').find(':selected').val(),
+        id_client     : "0"
+      }
+
+    } else if(type == "direct_payment") {
+      data = {
+        id_project    : $('input[name=id_project]').val(),
+        date          : $('input[name=cash_flow_date]').val(),
+        type          : $('select[name=cash_flow_type]').find(':selected').val(),
+        amount        : $('input[name=cash_flow_amount]').val(),
+        tax           : "0",
+        payment_type  : $('select[name=cash_flow_payment_type]').find(':selected').val(),
+        id_item       : $('select[name=cash_flow_id_item]').find(':selected').val(),
+        id_subitem    : $('select[name=cash_flow_id_subitem]').find(':selected').val(),
+        detail        : $('select[name=cash_flow_detail]').find(':selected').val(),
+        id_provider   : "0",
         clarification : $('input[name=cash_flow_clarification]').val(),
         id_user       : $('select[name=cash_flow_id_user]').find(':selected').val(),
         id_client     : "0"

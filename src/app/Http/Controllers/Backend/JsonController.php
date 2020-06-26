@@ -231,7 +231,7 @@ class JsonController extends Controller
                                                     ->join('users', 'users.id', '=', 'providers.id_user')
                                                     ->where('project_cash_flows.id_project', $idProject)
                                                     ->where('project_cash_flows.id_item', $idItem)
-                                                    ->where('project_cash_flows.type', '!=', 'entry')
+                                                    ->where('project_cash_flows.type', 'egress')
                                                     ->groupBy('project_cash_flows.id_provider')
                                                     ->orderBy('project_cash_flows.id', 'DESC')
                                                     ->get();
@@ -263,7 +263,7 @@ class JsonController extends Controller
                                                     ->join('users', 'users.id', '=', 'providers.id_user')
                                                     ->where('project_cash_flows.id_project', $idProject)
                                                     ->where('project_cash_flows.id_provider', $idProvider)
-                                                    ->where('project_cash_flows.type', '!=', 'entry')
+                                                    ->where('project_cash_flows.type', 'egress')
                                                     ->orderBy('project_cash_flows.created_at', 'ASC')
                                                     ->get();
                 
