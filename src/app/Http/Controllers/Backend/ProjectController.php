@@ -344,8 +344,21 @@ class ProjectController extends Controller
      */
     public function destroy($id)
     {
+        // delete Project
         $project = Project::find($id);
         $project->delete();
+
+        // delete ProjectBudget
+        $projectBudget = ProjectBudget::where('id_project' ,$id);
+        $projectBudget->delete();
+
+        // delete ProjectRealCost
+        $projectRealCost = ProjectRealCost::where('id_project' ,$id);
+        $projectRealCost->delete();
+
+        // delete ProjectCashFlow
+        $projectCashFlow = ProjectCashFlow::where('id_project' ,$id);
+        $projectCashFlow->delete();
      
         return response(array('message' => 'Proyecto eliminado con exito!'));
     }
