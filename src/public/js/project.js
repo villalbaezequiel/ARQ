@@ -59,7 +59,6 @@ $(document).ready(function() {
     isOpenBudget();
     deleteCostRealItem();
     deleteCostRealSubItem();
-    deleteProjectProvider();
 
 });
 
@@ -474,42 +473,6 @@ function isOpenBudget()
     $('#content-items input').prop('disabled', true);
     $('#content-items .btn-danger').remove();
   }
-}
-
-function deleteProjectProvider()
-{
-  $('.removeProjectProvider').click(function(){
-
-    $(this).parents('tr').remove();
-
-    let data = {
-      id: $(this).data('id')
-    }
-
-    $.ajax({
-      type: 'GET',
-      url: '/json/project-provider',
-      data: data,
-      success: function(data){
-        if(data.status){
-          Swal.fire({
-            title: 'Proveedor eliminado con Exito!',
-            type: 'info',
-            showCancelButton: false,
-            confirmButtonColor: '#3085d6',
-            cancelButtonColor: '#d33',
-            confirmButtonText: 'Aceptar'
-          });
-        }
-      },
-      error: function(xhr, status){
-        console.log('Error: '+xhr);
-      }
-    });
-
-    return false;
-
-  });
 }
 
 function addNewBudget(e)

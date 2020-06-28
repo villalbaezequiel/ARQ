@@ -45,7 +45,6 @@ Route::group(['middleware' => ['auth']], function () {
     Route::get('/json/costreal/delete-item', 'Backend\JsonController@deleteRealCostItem');
     Route::get('/json/costreal/delete-subitem', 'Backend\JsonController@deleteRealCostSubitem');
     Route::get('/json/providers/item/{iditem}', 'Backend\JsonController@getProvidersFromItem');
-    Route::get('/json/project-provider', 'Backend\JsonController@deleteProjectProvider');
     Route::get('/json/items/sub_items', 'Backend\JsonController@getSubItemsFromItems');
     Route::get('/json/project_providers/item/{idProject}/{idItem}', 'Backend\JsonController@searchProviders');
     Route::get('/json/project_provider_history/{idProject}/{idProvider}', 'Backend\JsonController@getHistoryProvider');

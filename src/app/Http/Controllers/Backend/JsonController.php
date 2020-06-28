@@ -9,7 +9,6 @@ use App\Provider;
 use App\Project;
 use App\ProjectBudget;
 use App\ProjectRealCost;
-use App\ProjectProvider;
 use App\ProjectCashFlow;
 use App\Item;
 use App\SubItem;
@@ -173,29 +172,6 @@ class JsonController extends Controller
             }
         } else {
             return response()->json(['data' => null]);
-        }
-    }
-
-    // remove subitem from ProjectProvider ID
-    public function deleteProjectProvider(Request $request)
-    {
-        $status = false;
-        
-        if($request->get('id'))
-        {
-            try {
-
-                $projectProvider = ProjectProvider::find($request->get('id'));
-                $projectProvider->delete();
-                
-                $status = true;
-                return response()->json(['status' => $status]);
-
-            } catch (\Exception $err) {
-                return response()->json([ 'status' => $status, 'message' => $err->getMessage() ]);
-            }
-        } else {
-            return response()->json(['status' => $status]);
         }
     }
 
