@@ -191,8 +191,8 @@
             <tr class="b-c-gray">
                 <th class="font-weight-bold-600">Fecha</th>
                 <th class="font-weight-bold-600">Tipo</th>
-                <th class="font-weight-bold-600">Saldo</th>
                 <th class="font-weight-bold-600">Monto</th>
+                <th class="font-weight-bold-600">Saldo</th>
                 <th class="font-weight-bold-600">Impuesto</th>
                 <th class="font-weight-bold-600">Forma de pago</th>
                 <th class="font-weight-bold-600">Rubro</th>
@@ -210,8 +210,8 @@
             <tr>
                 <td>{{ $cashFlow->date }}</td>
                 <td>{{ $cashFlow->type }}</td>
-                <td>{{ $cashFlow->balance }}</td>
                 <td>{{ $cashFlow->amount }}</td>
+                <td>{{ $cashFlow->balance }}</td>
                 <td>{{ $cashFlow->tax }}</td>
                 <td>{{ $cashFlow->payment_type }}</td>
                 <td>{{ $cashFlow->id_item }}</td>
