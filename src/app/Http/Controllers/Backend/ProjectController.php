@@ -225,7 +225,7 @@ class ProjectController extends Controller
 
             $value->date    = Helpers::getDateParseFormat($value->date);
             $value->type    = ProjectCashFlow::getType($value->type);
-            $value->balance = Helpers::getFormatSalary($balance);
+            $value->balance = Helpers::getFormatSalary(round($balance, 2));
             $value->amount  = Helpers::getFormatSalary($value->amount);
             $value->tax     = "%".$value->tax;
             $value->payment_type = ProjectCashFlow::getPaymentType($value->payment_type);
@@ -246,7 +246,8 @@ class ProjectController extends Controller
             'project_real_costs'=> $collectionProjectRealCost,
             'project_budgets'   => $collectionProjectBudget,
             'project_documents' => $collectionDocuments,
-            'project_cash_flow' => $collectionProjectCashFlow
+            'project_cash_flow' => $collectionProjectCashFlow,
+            'project_cash_flow_balance_total' => $balance
         ]);
     }
 

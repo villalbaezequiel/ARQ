@@ -226,5 +226,6 @@
         @endif
         </tbody>
       </table>
+      <input type="hidden" name="balance-cash-flow" value="{{ $project_cash_flow_balance_total }}">
     </div>
 </div>

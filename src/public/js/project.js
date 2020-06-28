@@ -599,29 +599,22 @@ function addCashFlow(e)
 
     if(validateObjectValues(data))
     {
-      $.ajax({
-        type: 'POST',
-        url: '/project_cash_flow',
-        data: data,
-        success: function(data){
-          if(data.status){
-            Swal.fire({
-              title: 'Flujo de Caja agregado con Exito!',
-              type: 'info',
-              showCancelButton: false,
-              confirmButtonColor: '#3085d6',
-              cancelButtonColor: '#d33',
-              confirmButtonText: 'Aceptar'
-            })
-            .then((result) => {
-              location.reload()
-            });
-          }
-        },
-        error: function(xhr, status){
-          console.log('Error: '+xhr);
-        }
-      });
+      let balanceCashFlow = parseFloat($('input[name=balance-cash-flow]').val());
+      let amountCashFlow  = parseFloat(data.amount.toString().replace(/\./g, "").replace(",", "."));
+
+      if(type == "egress" && balanceCashFlow < amountCashFlow)
+      {
+        Swal.fire({
+          title: 'El Monto a registrar supera el Saldo de Caja!',
+          type: 'info',
+          showCancelButton: true,
+          confirmButtonColor: '#3085d6',
+          cancelButtonColor: '#d33',
+          confirmButtonText: 'Aceptar'
+        })
+      } else {
+        addCashFlowAjax(data);
+      }
     } else {
       Swal.fire({
         title: 'Debes completar los Campos Requeridos!',
@@ -634,6 +627,33 @@ function addCashFlow(e)
     }
 
     return;
+}
+
+function addCashFlowAjax(data)
+{
+  $.ajax({
+    type: 'POST',
+    url: '/project_cash_flow',
+    data: data,
+    success: function(result){
+      if(result.status){
+        Swal.fire({
+          title: 'Flujo de Caja agregado con Exito!',
+          type: 'info',
+          showCancelButton: false,
+          confirmButtonColor: '#3085d6',
+          cancelButtonColor: '#d33',
+          confirmButtonText: 'Aceptar'
+        })
+        .then((result) => {
+          location.reload()
+        });
+      }
+    },
+    error: function(xhr, status){
+      console.log('Error: '+xhr);
+    }
+  });
 }
 
 function validateObjectValues(obj)
