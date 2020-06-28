@@ -356,6 +356,10 @@ class ProjectController extends Controller
         $projectRealCost = ProjectRealCost::where('id_project' ,$id);
         $projectRealCost->delete();
 
+        // delete ProjectDocument
+        $projectDocument = ProjectDocument::where('id_project', $id);
+        $projectDocument->delete();
+
         // delete ProjectCashFlow
         $projectCashFlow = ProjectCashFlow::where('id_project' ,$id);
         $projectCashFlow->delete();
