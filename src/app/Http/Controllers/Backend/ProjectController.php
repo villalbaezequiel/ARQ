@@ -317,6 +317,41 @@ class ProjectController extends Controller
                         }
                     }
                 }
+            } else {
+                if($request->get('real_cost'))
+                {
+                    foreach($request->get('real_cost') as $key => $val)
+                    {
+                        if(isset($val['id']))
+                        {
+                            $projectRealCost = ProjectRealCost::find($val['id']);
+                            $projectRealCost->id_subitem   = $key;
+                            $projectRealCost->quantity     = $val['quantity'];
+                            $projectRealCost->unit_cost    = Project::setParseFormatPrice($val['unit_cost']);
+                            $projectRealCost->tax          = $val['tax'];
+                            $projectRealCost->budget_total = Project::setParseFormatPrice($val['budget_total']);
+                            $projectRealCost->balance_item = Project::setParseFormatPrice($val['balance_item']);
+                            $projectRealCost->budget_variation_pesos   = Project::setParseFormatPrice($val['budget_variation_pesos']);
+                            $projectRealCost->save();
+
+                        } else {
+                            $projectRealCost = new ProjectRealCost;
+                            $projectRealCost->id_project   = $project->id;
+                            $projectRealCost->id_item      = $val['id_item'];
+                            $projectRealCost->id_subitem   = $key;
+                            $projectRealCost->quantity     = $val['quantity'];
+                            $projectRealCost->unit_cost    = Project::setParseFormatPrice($val['unit_cost']);
+                            $projectRealCost->tax          = $val['tax'];
+                            $projectRealCost->budget_total = Project::setParseFormatPrice($val['budget_total']);
+                            $projectRealCost->paid         = 0;
+                            $projectRealCost->balance_paid = 0;
+                            $projectRealCost->balance_item = Project::setParseFormatPrice($val['balance_item']);
+                            $projectRealCost->budget_variation_pesos   = Project::setParseFormatPrice($val['budget_variation_pesos']);
+                            $projectRealCost->budget_variation_tax     = 0;
+                            $projectRealCost->save();
+                        }
+                    }
+                }
             }
 
             return redirect('/projects')->with('message', 'Proyecto editado con exito!');

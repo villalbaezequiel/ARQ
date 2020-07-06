@@ -1,43 +1,50 @@
 <div class="col-md-12 row">
-    <div class="form-group">
+    <div class="form-group is_open_budget">
       <div class="input-group-prepend">
-        <span class="input-group-text col-md-2">
-            Rubros
-        </span>
-        <div class="col-md-10">
-            <select class="form-control selectpicker" data-style="btn btn-link" data-live-search="true" name="items">
-            @foreach($items as $val)
-                <option value="{{ $val['id'] }}">{{ $val['name'] }}</option>
-            @endforeach
-            </select>
-        </div>
 
-        @foreach($items as $val)
-            <div class="col-md-5 hidden select-subitems" id="select-subitems-{{ $val['id'] }}">
-                <select class="form-control selectpicker" data-style="btn btn-link" data-live-search="true" name="sub_items" multiple>
-                    @foreach($val['data'] as $budgetSubItem)
-                        <option value="{{ $budgetSubItem->id }}">{{ $budgetSubItem->name }}</option>
-                    @endforeach
+        @if((int) $project->is_open_budget)
+            <span class="input-group-text col-md-2">
+                Rubros
+            </span>
+            <div class="col-md-10">
+                <select class="form-control selectpicker" data-style="btn btn-link" data-live-search="true" name="items">
+                @foreach($items as $val)
+                    <option value="{{ $val['id'] }}">{{ $val['name'] }}</option>
+                @endforeach
                 </select>
             </div>
-        @endforeach
 
-        <div class="col-md-4 text-center">
-            @if((int) $project->is_open_budget)
+            @foreach($items as $val)
+                <div class="col-md-5 hidden select-subitems" id="select-subitems-{{ $val['id'] }}">
+                    <select class="form-control selectpicker" data-style="btn btn-link" data-live-search="true" name="sub_items" multiple>
+                        @foreach($val['data'] as $budgetSubItem)
+                            <option value="{{ $budgetSubItem->id }}">{{ $budgetSubItem->name }}</option>
+                        @endforeach
+                    </select>
+                </div>
+            @endforeach
+        @endif
+
+        @if((int) $project->is_open_budget)
+            <div class="col-md-4 text-center">
                 <button class="btn btn-success" onclick="addGroupItems(event); return false;">Agregar</button>
-            @else
-                <a href="javascript:void(0);" class="btn btn-default">Agregar</a>
-            @endif
-        </div>
+            </div>
+        @else
+            <div class="col-md-6 text-center">
+                <a href="javascript:void(0);" class="btn btn-success">Descargar</a>
+            </div>
+        @endif
 
-        <div class="col-md-4 text-center">
-            @if((int) $project->is_open_budget)
+        @if((int) $project->is_open_budget)
+            <div class="col-md-4 text-center">
                 <a href="javascript:void(0);" class="btn btn-success open-budget" data-idproject="{{ $project->id }}">Aprobar</a>
-            @else
+            </div>
+        @else
+            <div class="col-md-6 text-center">
                 <a href="javascript:void(0);" class="btn btn-default">Aprobado</a>
-            @endif
-            <input type="hidden" name="open_budget" value="{{ (int) $project->is_open_budget }}">
-        </div>
+            </div>
+        @endif
+        <input type="hidden" name="open_budget" value="{{ (int) $project->is_open_budget }}">
 
       </div>
     </div>
@@ -141,3 +148,11 @@
       </table>
     </div>
 </div>
+
+@if(!(int) $project->is_open_budget)
+<style>
+    .is_open_budget {
+        margin: 0 auto!important;
+    }
+</style>
+@endif

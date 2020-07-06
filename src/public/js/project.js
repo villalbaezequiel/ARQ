@@ -53,7 +53,9 @@ $(document).ready(function() {
     });
 
     calculateTotales();
+    calculateTotalesRealCost();
     removeItem();
+    removeItemRealCost();
     validateNumberDecimal();
     calculateBudgetGlobalItems();
     calculateCostRealGlobalItems();
@@ -96,6 +98,49 @@ function addGroupItems(e)
       });
 
       generateTemplateItems(idItem, nameItem, dataSubItems);
+
+      setSelectedOptions();
+    } else {
+      Swal.fire({
+        title: 'Rubro Existente en la Planilla!',
+        type: 'info',
+        showCancelButton: false,
+        confirmButtonColor: '#3085d6',
+        cancelButtonColor: '#d33',
+        confirmButtonText: 'Aceptar'
+      });
+    }
+}
+
+function addGroupItemsRealCost(e)
+{
+    e.preventDefault();
+    let idItem      = $("select[name=items]").find(':selected').val();
+    let nameItem    = $("select[name=items]").find(':selected').text();
+
+    let checkItem   = $('#content-real-cost tbody tr');
+    let issetItem   = false;
+
+    if(checkItem.length){
+      $.each(checkItem, function(i, v){
+        if($(this).data('iditem') == idItem) {
+          issetItem = true;
+        }  
+      });
+    }
+
+    if(issetItem == false)
+    {
+      // add all subitems
+      let dataSubItems  = [];
+      $("#select-subitems-"+idItem+" select[name=sub_items] option").each(function(){
+          dataSubItems.push({
+            name: $(this).text(),
+            id: $(this).val()
+          });
+      });
+
+      generateTemplateItemsRealCost(idItem, nameItem, dataSubItems);
 
       setSelectedOptions();
     } else {
@@ -165,6 +210,65 @@ function generateTemplateItems(idItem, nameItem, dataSubItems)
   projectJS.validateNumberDecimalAddAttr();
 }
 
+function generateTemplateItemsRealCost(idItem, nameItem, dataSubItems)
+{
+  let items = `
+    <tr class="b-c-gray" id="costreal-item-${idItem}" data-id="${idItem}">
+    <th colspan="4" class="text-left pl-3">${nameItem}</th>
+    <th><input type="text" name="costreal_budget_total"   class="form-control" disabled></th>
+    <th><input type="text" name="costreal_paid"           class="form-control" disabled></th>
+    <th><input type="text" name="costreal_balance_paid"   class="form-control" disabled></th>
+    <th><input type="text" name="costreal_balance_item"   class="form-control" disabled></th>
+    <th></th>
+    <th></th>
+    <th>
+        <button
+          class="btn btn-danger removeItemRealCost" 
+          data-iditem="${idItem}" 
+          style="padding: 0px 5px;"
+        >X</button>
+      </th>
+    </tr>`;
+
+  $.each(dataSubItems, function(i, v){
+        
+    items += `
+      <tr id="costreal-subitem-${v.id}" data-iditem="${idItem}" class="costreal-subitem">
+      
+        <input      type="hidden" name="real_cost[${v.id}][id_item]" value="${idItem}" />
+
+        <td class="pl-3"><input class="form-control" value="${v.name}" disabled /></td>
+        <td><input type="number"  name="real_cost[${v.id}][quantity]" value="1"      id="quantity_realcost_${v.id}" maxlength="11" data-idsubiteam="${v.id}"  class="form-control calculate-subtotal-realcost" /></td>
+        <td><input type="text"    name="real_cost[${v.id}][unit_cost]" value="$1"    id="unit_cost_realcost_${v.id}"  maxlength="14" data-idsubiteam="${v.id}" class="form-control validate-number-decimal calculate-subtotal-realcost" /></td>
+        <td><input type="number"  name="real_cost[${v.id}][tax]" value="0"           id="tax_realcost_${v.id}"  maxlength="5" data-idsubiteam="${v.id}" class="form-control calculate-subtotal-realcost" pattern="/^-?\d+\.?\d*$/" onKeyPress="if(this.value.length == 3) return false;" /></td>
+        <td><input type="text"    name="real_cost[${v.id}][budget_total]" value="$1" id="budget_total_realcost_${v.id}"  maxlength="14"  class="form-control validate-number-decimal" readonly /></td>
+        <td><input type="text"    name="real_cost[${v.id}][paid]" maxlength="14"  class="form-control validate-number-decimal" readonly /></td>
+        <td><input type="text"    name="real_cost[${v.id}][balance_paid]" maxlength="14"  class="form-control validate-number-decimal" readonly/></td>
+        <td><input type="text"    name="real_cost[${v.id}][balance_item]" maxlength="14" id="balance_item_realcost_${v.id}" class="form-control validate-number-decimal" readonly /></td>
+        <td><input type="text"    name="real_cost[${v.id}][budget_variation_pesos]" id="budget_variation_pesos_realcost_${v.id}" maxlength="14"  class="form-control validate-number-decimal" readonly /></td>
+        <td><input type="number"  name="real_cost[${v.id}][budget_variation_tax]" maxlength="5"   class="form-control" pattern="/^-?\d+\.?\d*$/" onKeyPress="if(this.value.length == 3) return false;" readonly /></td>
+
+        <td class="text-center b-c-gray" style="vertical-align: inherit;">
+          <button
+            class="btn btn-danger" 
+            data-idsubitem="costreal-subitem-${v.id}" 
+            style="padding: 0px 5px;" 
+            onClick="$('#costreal-subitem-${v.id}').remove(); return false;"
+          >X</button>
+        </td>
+
+      </tr>
+    `;
+  });
+  
+  $('#content-real-cost tbody').append(items);
+
+  calculateTotalesRealCost();
+  removeItemRealCost();
+  validateNumberDecimal();
+  projectJS.validateNumberDecimalAddAttr();
+}
+
 function setSelectedOptions()
 {
   $('select[name=items] option:selected').prop("selected", false);
@@ -191,6 +295,28 @@ function calculateTotales(){
   });
 }
 
+function calculateTotalesRealCost()
+{
+  $(".calculate-subtotal-realcost").keyup(function(){
+
+    let idSubItem = $(this).data('idsubiteam');
+
+    let subTotal  = parseInt($('#quantity_realcost_'+idSubItem).val()) * projectJS.parseFloatPrices($('#unit_cost_realcost_'+idSubItem).val());
+    let total     = parseFloat( subTotal + ( (subTotal * projectJS.parseFloatPrices($('#tax_realcost_'+idSubItem).val())) / 100) );
+
+    if(!subTotal) subTotal = parseFloat(1);
+    if(!total) total = parseFloat(1);
+
+    $('#budget_total_realcost_'+idSubItem).val(total);
+    $('#balance_item_realcost_'+idSubItem).val(total);
+    $('#budget_variation_pesos_realcost_'+idSubItem).val(total);
+
+    formatCurrency($('#budget_total_realcost_'+idSubItem));
+    formatCurrency($('#balance_item_realcost_'+idSubItem));
+    formatCurrency($('#budget_variation_pesos_realcost_'+idSubItem));
+  });  
+}
+
 function removeItem()
 {
   $('.removeItem').click(function() {
@@ -198,6 +324,24 @@ function removeItem()
     let subItemsContent  = $('.sub_items_content');
 
     $('#item-'+iditem).remove();
+
+    $.each(subItemsContent, function(i, v){
+      if($(this).data('iditem') == iditem) {
+        $(this).remove();
+      }
+    });
+    
+    return false;
+  });
+}
+
+function removeItemRealCost()
+{
+  $('.removeItemRealCost').click(function() {
+    let iditem       = $(this).data('iditem');
+    let subItemsContent  = $('.costreal-subitem');
+
+    $('#costreal-item-'+iditem).remove();
 
     $.each(subItemsContent, function(i, v){
       if($(this).data('iditem') == iditem) {
@@ -223,7 +367,11 @@ function validateNumberDecimal()
 
 function formatNumber(n)
 {
-  return n.replace(/\D/g, "").replace(/\B(?=(\d{3})+(?!\d))/g, ",")
+  try {
+    return n.replace(/\D/g, "").replace(/\B(?=(\d{3})+(?!\d))/g, ",")
+  } catch (error) {
+    console.log(n.val());
+  }
 }
 
 
@@ -317,22 +465,26 @@ function calculateCostRealGlobalItems(){
     let balancePaid   = $(`input[name=costreal_balance_paid_calc_${idItem}]`).val();
     let balanceItem   = $(`input[name=costreal_balance_item_calc_${idItem}]`).val();
 
-    $(this).find('input[name="costreal_budget_total"]').val(budgetTotal);
-    $(this).find('input[name="costreal_paid"]').val(paid);
-    $(this).find('input[name="costreal_balance_paid"]').val(balancePaid);
-    $(this).find('input[name="costreal_balance_item"]').val(balanceItem);
+    $(this).find('input[name=costreal_budget_total]').val(budgetTotal);
+    $(this).find('input[name=costreal_paid]').val(paid);
+    $(this).find('input[name=costreal_balance_paid]').val(balancePaid);
+    $(this).find('input[name=costreal_balance_item]').val(balanceItem);
 
-    globalbudgetTotal += parseFloat(budgetTotal);
-    globalpaid        += parseFloat(paid);
-    globalbalancePaid += parseFloat(balancePaid);
-    globalbalanceItem += parseFloat(balanceItem);
+    globalbudgetTotal += projectJS.parseFloatPrices(budgetTotal);
+    globalpaid        += projectJS.parseFloatPrices(paid);
+    globalbalancePaid += projectJS.parseFloatPrices(balancePaid);
+    globalbalanceItem += projectJS.parseFloatPrices(balanceItem);
   });
 
-  $('input[name="global_costreal_budgetTotal"]').val(globalbudgetTotal);
-  $('input[name="global_costreal_paid"]').val(globalpaid);
-  $('input[name="global_costreal_balancePaid"]').val(globalbalancePaid);
-  $('input[name="global_costreal_balanceItem"]').val(globalbalanceItem);
+  $('input[name=global_costreal_budgetTotal]').val(globalbudgetTotal);
+  $('input[name=global_costreal_paid]').val(globalpaid);
+  $('input[name=global_costreal_balancePaid]').val(globalbalancePaid);
+  $('input[name=global_costreal_balanceItem]').val(globalbalanceItem);
 
+  formatCurrency($('input[name=global_costreal_budgetTotal]'));
+  formatCurrency($('input[name=global_costreal_paid]'));
+  formatCurrency($('input[name=global_costreal_balancePaid]'));
+  formatCurrency($('input[name=global_costreal_balanceItem]'));
 }
 
 function deleteBudgetItem()
