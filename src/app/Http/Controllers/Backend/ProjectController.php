@@ -108,10 +108,10 @@ class ProjectController extends Controller
                         $projectBudget->id_subitem  = $key;
                         $projectBudget->unit        = $val['unit'];
                         $projectBudget->quantity    = $val['quantity'];
-                        $projectBudget->unit_cost   = $val['unit_cost'];
-                        $projectBudget->subtotal    = $val['subtotal'];
+                        $projectBudget->unit_cost   = Project::setParseFormatPrice($val['unit_cost']);
+                        $projectBudget->subtotal    = Project::setParseFormatPrice($val['subtotal']);
                         $projectBudget->tax         = $val['tax'];
-                        $projectBudget->total       = $val['total'];
+                        $projectBudget->total       = Project::setParseFormatPrice($val['total']);
                         $projectBudget->save();
                     }
                 }
@@ -297,10 +297,10 @@ class ProjectController extends Controller
                             $projectBudget->id_subitem  = $key;
                             $projectBudget->unit        = $val['unit'];
                             $projectBudget->quantity    = $val['quantity'];
-                            $projectBudget->unit_cost   = $val['unit_cost'];
-                            $projectBudget->subtotal    = $val['subtotal'];
+                            $projectBudget->unit_cost   = Project::setParseFormatPrice($val['unit_cost']);
+                            $projectBudget->subtotal    = Project::setParseFormatPrice($val['subtotal']);
                             $projectBudget->tax         = $val['tax'];
-                            $projectBudget->total       = $val['total'];
+                            $projectBudget->total       = Project::setParseFormatPrice($val['total']);
                             $projectBudget->save();
                         } else {
                             $projectBudget = new ProjectBudget;
@@ -309,10 +309,10 @@ class ProjectController extends Controller
                             $projectBudget->id_subitem  = $key;
                             $projectBudget->unit        = $val['unit'];
                             $projectBudget->quantity    = $val['quantity'];
-                            $projectBudget->unit_cost   = $val['unit_cost'];
-                            $projectBudget->subtotal    = $val['subtotal'];
+                            $projectBudget->unit_cost   = Project::setParseFormatPrice($val['unit_cost']);
+                            $projectBudget->subtotal    = Project::setParseFormatPrice($val['subtotal']);
                             $projectBudget->tax         = $val['tax'];
-                            $projectBudget->total       = $val['total'];
+                            $projectBudget->total       = Project::setParseFormatPrice($val['total']);
                             $projectBudget->save();
                         }
                     }

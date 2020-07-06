@@ -87,4 +87,9 @@ class Project extends Model
         return ( (int) $project->is_open_budget ? true : false);
       }
     }
+
+    static public function setParseFormatPrice($price)
+    {
+      return (float) str_replace(array("$", ","), array("", ""), $price);
+    }
 }

@@ -50,8 +50,8 @@
         <colgroup span="8"></colgroup>
         <thead>
             <tr class="b-c-gray">
-                <th class="w-50 font-weight-bold-600" scope="col">Item Descripcion</th>
-                <th class="w-50 font-weight-bold-600" colspan="7" scope="colgroup">Cotizacion</th>
+                <th class="font-weight-bold-600" style="width: 35%!important;" scope="col">Item Descripcion</th>
+                <th class="font-weight-bold-600" style="width: 65%!important;" colspan="7" scope="colgroup">Cotizacion</th>
                 <th></th>
             </tr>
         </thead>
@@ -72,20 +72,20 @@
                 <th></th>
                 <th></th>
                 <th></th>
-                <th><input type="number" name="global_subtotal"  value="0" class="form-control" readonly></th>
+                <th><input type="text" name="global_subtotal" class="form-control" disabled></th>
                 <th></th>
-                <th><input type="number" name="global_total"     value="0" class="form-control" readonly></th>
-                <th><input type="number" name="global_incidence" value="100"class="form-control" readonly></th>
+                <th><input type="text" name="global_total"    class="form-control" disabled></th>
+                <th><input type="number" name="global_incidence"class="form-control" value="100" disabled></th>
                 <th></th>
             </tr>
 
             @foreach($project_budgets as $key => $collectionSubitem)
                 <tr class="b-c-gray items_content" id="item-{{ $key }}" data-id="{{ $key }}">
                     <th colspan="4" class="text-left pl-3">{{ \App\Item::getName($key) }}</th>
-                    <th><input type="text" name="item_subtotal" class="form-control validate-number-decimal" readonly></th>
+                    <th><input type="text"  name="item_subtotal" class="form-control validate-number-decimal" disabled></th>
                     <th></th>
-                    <th><input type="text" name="item_total" class="form-control validate-number-decimal" readonly></th>
-                    <th><input type="text" name="item_incidence" class="form-control validate-number-decimal" maxlength="6" readonly></th>
+                    <th><input type="text"  name="item_total" class="form-control validate-number-decimal" disabled></th>
+                    <th><input type="number"name="item_incidence" class="form-control" maxlength="6" disabled></th>
                     <th>
                         <button
                             class="btn btn-danger removeItem removeItemAjax" 
@@ -109,12 +109,12 @@
                     <input      type="hidden" name="budget[{{ $budgetSubItem->id_subitem }}][id_item]" value="{{ $key }}" />
 
                     <td class="pl-3"><input class="form-control" value="{{ \App\SubItem::getName($budgetSubItem->id_subitem) }}" disabled /></td>
-                    <td><input type="text"    name="budget[{{ $budgetSubItem->id_subitem }}][unit]"      value="{{ $budgetSubItem->unit }}" class="form-control" required /></td>
-                    <td><input type="text"  name="budget[{{ $budgetSubItem->id_subitem }}][quantity]"  value="{{ $budgetSubItem->quantity }}" maxlength="11"  id="quantity_{{ $budgetSubItem->id_subitem }}" data-idsubiteam="{{ $budgetSubItem->id_subitem }}" class="form-control calculate-subtotal validate-number-decimal" required /></td>
-                    <td><input type="text"  name="budget[{{ $budgetSubItem->id_subitem }}][unit_cost]" value="{{ $budgetSubItem->unit_cost }}" maxlength="10" id="unit_cost_{{ $budgetSubItem->id_subitem }}" data-idsubiteam="{{ $budgetSubItem->id_subitem }}" class="form-control calculate-subtotal validate-number-decimal" required /></td>
-                    <td><input type="text"  name="budget[{{ $budgetSubItem->id_subitem }}][subtotal]"  value="{{ $budgetSubItem->subtotal }}" maxlength="10"  id="subtotal_{{ $budgetSubItem->id_subitem }}" class="form-control validate-number-decimal" readonly required /></td>
-                    <td><input type="text"    name="budget[{{ $budgetSubItem->id_subitem }}][tax]"       value="{{ $budgetSubItem->tax }}" maxlength="6"        id="tax_{{ $budgetSubItem->id_subitem }}" data-idsubiteam="{{ $budgetSubItem->id_subitem }}" class="form-control validate-number-decimal calculate-subtotal" required /></td>
-                    <td><input type="text"  name="budget[{{ $budgetSubItem->id_subitem }}][total]"     value="{{ $budgetSubItem->total }}" maxlength="10"     id="total_{{ $budgetSubItem->id_subitem }}" class="form-control validate-number-decimal" readonly required /></td>
+                    <td><input type="text"  name="budget[{{ $budgetSubItem->id_subitem }}][unit]"      value="{{ $budgetSubItem->unit }}" class="form-control" required /></td>
+                    <td><input type="number"name="budget[{{ $budgetSubItem->id_subitem }}][quantity]"  value="{{ $budgetSubItem->quantity }}" maxlength="11"  id="quantity_{{ $budgetSubItem->id_subitem }}" data-idsubiteam="{{ $budgetSubItem->id_subitem }}" class="form-control calculate-subtotal" required /></td>
+                    <td><input type="text"  name="budget[{{ $budgetSubItem->id_subitem }}][unit_cost]" value="{{ $budgetSubItem->unit_cost }}" maxlength="14" id="unit_cost_{{ $budgetSubItem->id_subitem }}" data-idsubiteam="{{ $budgetSubItem->id_subitem }}" class="form-control calculate-subtotal validate-number-decimal" required /></td>
+                    <td><input type="text"  name="budget[{{ $budgetSubItem->id_subitem }}][subtotal]"  value="{{ $budgetSubItem->subtotal }}" maxlength="14"  id="subtotal_{{ $budgetSubItem->id_subitem }}" class="form-control validate-number-decimal" readonly required /></td>
+                    <td><input type="number"name="budget[{{ $budgetSubItem->id_subitem }}][tax]"       value="{{ $budgetSubItem->tax }}" maxlength="5"        id="tax_{{ $budgetSubItem->id_subitem }}" data-idsubiteam="{{ $budgetSubItem->id_subitem }}" class="form-control calculate-subtotal" pattern="/^-?\d+\.?\d*$/" onKeyPress="if(this.value.length == 3) return false;" required /></td>
+                    <td><input type="text"  name="budget[{{ $budgetSubItem->id_subitem }}][total]"     value="{{ $budgetSubItem->total }}" maxlength="14"     id="total_{{ $budgetSubItem->id_subitem }}" class="form-control validate-number-decimal" readonly required /></td>
                     <td></td>
                     
                     <td class="text-center b-c-gray" style="vertical-align: inherit;">
