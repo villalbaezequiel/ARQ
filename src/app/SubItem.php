@@ -17,4 +17,11 @@ class SubItem extends Model
     {
         return ($this ? "{$this->number_parent}.{$this->number}" : 0); 
     }
+
+    static public function getNumberFromId($id)
+    {
+        $subItem = SubItem::find($id);
+
+        return ($subItem ? "{$subItem->number_parent}.{$subItem->number}" : 0); 
+    }
 }

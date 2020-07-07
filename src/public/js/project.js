@@ -73,6 +73,7 @@ function addGroupItems(e)
 {
     e.preventDefault();
     let idItem      = $("select[name=items]").find(':selected').val();
+    let numberItem  = $("select[name=items]").find(':selected').data('number');
     let nameItem    = $("select[name=items]").find(':selected').text();
 
     let checkItem   = $('#content-items tbody tr');
@@ -93,11 +94,12 @@ function addGroupItems(e)
       $("#select-subitems-"+idItem+" select[name=sub_items] option").each(function(){
           dataSubItems.push({
             name: $(this).text(),
+            number: $(this).data('number'),
             id: $(this).val()
           });
       });
 
-      generateTemplateItems(idItem, nameItem, dataSubItems);
+      generateTemplateItems(idItem, numberItem, nameItem, dataSubItems);
 
       setSelectedOptions();
     } else {
@@ -155,10 +157,11 @@ function addGroupItemsRealCost(e)
     }
 }
 
-function generateTemplateItems(idItem, nameItem, dataSubItems)
+function generateTemplateItems(idItem, numberItem, nameItem, dataSubItems)
 {
   let items = `
     <tr class="b-c-gray" id="item-${idItem}">
+      <th>${numberItem}</th>
       <th colspan="4" class="text-left pl-3">${nameItem}</th>
       <th><input type="text" name="item_subtotal" class="form-control validate-number-decimal" disabled></th>
       <th></th>
@@ -180,6 +183,7 @@ function generateTemplateItems(idItem, nameItem, dataSubItems)
       
         <input      type="hidden" name="budget[${v.id}][id_item]" value="${idItem}" />
 
+        <td>${v.number}</td>
         <td class="pl-3"><input class="form-control" value="${v.name}" disabled /></td>
         <td><input type="text"    name="budget[${v.id}][unit]"      class="form-control" required /></td>
         <td><input type="number"  name="budget[${v.id}][quantity]"  maxlength="11"  id="quantity_${v.id}" value="1" data-idsubiteam="${v.id}" class="form-control calculate-subtotal" required /></td>
@@ -888,6 +892,7 @@ let projectJS = {
 
     selectSubItem.empty();
     
+    selectSubItem.append("<option value=''>Seleccionar</option>");
     $.each(selectSubItemCollection, function() {
       if($(this).data('id') == $(item).val())
       {
@@ -916,11 +921,12 @@ let projectJS = {
             $.each(data, function(i,v){
               providers.append(`<option value="${v.id}">${v.name}</option>`);
             });
-
             $('.selectpicker').selectpicker('refresh');
-        
+
         } else {
           providers.empty();
+          $('.selectpicker').selectpicker('refresh');
+  
           Swal.fire({
             title: 'No hay Proveedores para el Rubro seleccionado!',
             type: 'info',
@@ -929,11 +935,12 @@ let projectJS = {
             cancelButtonColor: '#d33',
             confirmButtonText: 'Aceptar'
           });
-          $('.selectpicker').selectpicker('refresh');
         }
       },
       error: function(xhr, status){
         providers.empty();
+        $('.selectpicker').selectpicker('refresh');
+
         Swal.fire({
           title: 'Hubo un error al Consultar los Proveedores!',
           type: 'warning',
@@ -942,7 +949,6 @@ let projectJS = {
           cancelButtonColor: '#d33',
           confirmButtonText: 'Aceptar'
         });
-        $('.selectpicker').selectpicker('refresh');
       }
     });
   }, 
