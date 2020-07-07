@@ -31,7 +31,7 @@
             </div>
         @else
             <div class="col-md-6 text-center">
-                <a href="javascript:void(0);" class="btn btn-success">Descargar</a>
+                <a href="{{ url('/export/project_budgets/'.$project->id) }}" class="btn btn-success">Descargar</a>
             </div>
         @endif
 

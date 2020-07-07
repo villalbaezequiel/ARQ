@@ -59,7 +59,6 @@ class ProjectCashFlowController extends Controller
             $projectCashFlow->save();
 
         } catch (\Exception $err) {
-            dd($err->getMessage());
             $status = false;
         }
         return response()->json(['status' => $status]);

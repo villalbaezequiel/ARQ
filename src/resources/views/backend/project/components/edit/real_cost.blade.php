@@ -28,7 +28,7 @@
         </div>
 
         <div class="col-md-4 text-center">
-            <a href="javascript:void(0);" class="btn btn-success">Descargar</a>
+            <a href="{{ url('/export/project_realcost/'.$project->id) }}" class="btn btn-success">Descargar</a>
         </div>
 
       </div>
