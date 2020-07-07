@@ -29,7 +29,7 @@
         <div class="col-md-10">
             <select class="form-control selectpicker" data-style="btn btn-link" data-live-search="true" name="items">
             @foreach($items as $val)
-                <option value="{{ $val['id'] }}">{{ $val['name'] }}</option>
+                <option value="{{ $val['id'] }}" data-number="{{ \App\Item::getNumberFromId($val['id']) }}">{{ $val['name'] }}</option>
             @endforeach
             </select>
         </div>
@@ -38,7 +38,7 @@
             <div class="col-md-5 hidden select-subitems" id="select-subitems-{{ $val['id'] }}">
                 <select class="form-control selectpicker" data-style="btn btn-link" data-live-search="true" name="sub_items" multiple>
                     @foreach($val['data'] as $subitem)
-                        <option value="{{ $subitem->id }}">{{ $subitem->name }}</option>
+                        <option value="{{ $subitem->id }}" data-number="{{ \App\SubItem::getNumberFromId($subitem->id) }}">{{ $subitem->name }}</option>
                     @endforeach
                 </select>
             </div>
@@ -59,6 +59,7 @@
         <colgroup span="8"></colgroup>
         <thead>
             <tr class="b-c-gray">
+                <th></th>
                 <th class="w-50 font-weight-bold-600" scope="col">Item Descripcion</th>
                 <th class="w-50 font-weight-bold-600" colspan="7" scope="colgroup">Cotizacion</th>
                 <th></th>
@@ -66,6 +67,7 @@
         </thead>
         <tbody>
             <tr class="b-c-gray">
+                <th></th>
                 <th></th>
                 <th>U</th>
                 <th>CAN</th>
@@ -77,6 +79,7 @@
                 <th></th>
             </tr>
             <tr class="b-c-gray">
+                <th></th>
                 <th>TOTAL</th>
                 <th></th>
                 <th></th>
