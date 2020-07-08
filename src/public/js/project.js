@@ -378,7 +378,6 @@ function formatNumber(n)
   }
 }
 
-
 function formatCurrency(input, blur)
 {
   var input_val = input.val();
@@ -705,6 +704,24 @@ function addNewBudget(e)
 
       $('input[name=name_budget]').parent('div').removeClass('col-md-5').addClass('col-md-11');
 
+      // add all items and subitems
+      $.each($("select[name=items] option"), function(){
+          let idItem      = $(this).val();
+          let numberItem  = $(this).data('number');
+          let nameItem    = $(this).text();
+
+          let dataSubItems  = [];
+          $("#select-subitems-"+idItem+" select[name=sub_items] option").each(function(){
+              dataSubItems.push({
+                name: $(this).text(),
+                number: $(this).data('number'),
+                id: $(this).val()
+              });
+          });
+    
+          generateTemplateItems(idItem, numberItem, nameItem, dataSubItems);
+      });
+      
     } else {
       Swal.fire({
         title: 'Debes ingresar un Nombre para el Presupuesto!',

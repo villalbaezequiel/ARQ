@@ -16,6 +16,6 @@
 
 <div class="card">
     <div class="card-header">
-        <p class="card-title text-center">Luego de Crear el Proyecto; Debes Aprobar el Presupuesto para generar la Plantilla de Seguimiento.</p>
+        <p class="card-title text-center">Debes Aprobar el Presupuesto para ver Movimientos de los Proveedores</p>
     </div>
 </div>
