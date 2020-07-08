@@ -43,8 +43,8 @@
         <colgroup span="11"></colgroup>
         <thead>
             <tr class="b-c-gray">
-                <th class="font-weight-bold" style="width: 35%!important;" scope="col">Item Descripcion</th>
-                <th class="font-weight-bold" style="width: 65%!important;" colspan="10" scope="colgroup">Seguimiento</th>
+                <th class="font-weight-bold" style="width: 30%!important;" scope="col">Item Descripcion</th>
+                <th class="font-weight-bold" style="width: 70%!important;" colspan="10" scope="colgroup">Seguimiento</th>
             </tr>
         </thead>
         <tbody>

@@ -60,8 +60,8 @@
         <thead>
             <tr class="b-c-gray">
                 <th></th>
-                <th class="w-50 font-weight-bold-600" scope="col">Item Descripcion</th>
-                <th class="w-50 font-weight-bold-600" colspan="7" scope="colgroup">Cotizacion</th>
+                <th class="font-weight-bold-600" style="width: 30%!important;" scope="col">Item Descripcion</th>
+                <th class="font-weight-bold-600" style="width: 70%!important;" colspan="7" scope="colgroup">Cotizacion</th>
                 <th></th>
             </tr>
         </thead>
