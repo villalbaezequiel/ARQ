@@ -45,11 +45,6 @@
                 </a>
               </li>
               <li class="nav-item" style="width: 50%;">
-                <a class="nav-link" href="#module_four" data-toggle="tab" role="tab">
-                  Documentos
-                </a>
-              </li>
-              <li class="nav-item" style="width: 50%;">
                 <a class="nav-link" href="#module_five" data-toggle="tab" role="tab">
                   Flujo de caja
                 </a>
@@ -57,6 +52,11 @@
               <li class="nav-item" style="width: 50%;">
                 <a class="nav-link" href="#module_six" data-toggle="tab" role="tab">
                   Proveedores
+                </a>
+              </li>
+              <li class="nav-item" style="width: 50%;">
+                <a class="nav-link" href="#module_four" data-toggle="tab" role="tab">
+                  Documentos
                 </a>
               </li>
             </ul>
@@ -227,11 +227,6 @@
                 @include('backend.project.components.edit.real_cost')
               </div>
 
-              <div class="tab-pane" id="module_four">
-                <h5 class="info-text"> Documentos </h5>
-                @include('backend.project.components.edit.documents')
-              </div>
-
               <div class="tab-pane" id="module_five">
                 <h5 class="info-text"> Flujo de Caja </h5>
                 @include('backend.project.components.edit.cash_flow')
@@ -240,6 +235,11 @@
               <div class="tab-pane" id="module_six">
                 <h5 class="info-text"> Proveedores </h5>
                 @include('backend.project.components.edit.providers')
+              </div>
+
+              <div class="tab-pane" id="module_four">
+                <h5 class="info-text"> Documentos </h5>
+                @include('backend.project.components.edit.documents')
               </div>           
 
             </div>
