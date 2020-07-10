@@ -166,33 +166,7 @@ $(document).ready(function(){
       }
     }
   });
-
-  $(".validate-number-decimal").on({
-    "focus": function(event) {
-      $(event.target).select();
-    },
-    "keyup": function(event) {
-      $(event.target).val(function(index, value) {
-        return "$"+(value.replace(/\D/g, "")
-          .replace(/([0-9])([0-9]{2})$/, '$1,$2')
-          .replace(/\B(?=(\d{3})+(?!\d)\.?)/g, "."));
-      });
-    }
-  });
-
-  $(".validate-number-decimal-not-ps").on({
-    "focus": function(event) {
-      $(event.target).select();
-    },
-    "keyup": function(event) {
-      $(event.target).val(function(index, value) {
-        return (value.replace(/\D/g, "")
-          .replace(/([0-9])([0-9]{2})$/, '$1,$2')
-          .replace(/\B(?=(\d{3})+(?!\d)\.?)/g, "."));
-      });
-    }
-  });
-
+  
   // validate input number for class input-type-number
   $(".input-type-number").keypress(function (e) {
     if (e.which != 8 && e.which != 0 && (e.which < 48 || e.which > 57)) {

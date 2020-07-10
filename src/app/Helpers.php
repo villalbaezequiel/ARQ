@@ -288,19 +288,19 @@ class Helpers extends Model
     if(strlen($explode_salary[0]) > 3 && strlen($explode_salary[0]) < 7)
     {
     
-      return "$".substr($explode_salary[0], 0, -3).".".substr($explode_salary[0], -3).",".$decimales;
+      return "$".substr($explode_salary[0], 0, -3).",".substr($explode_salary[0], -3).".".$decimales;
     
     } elseif(strlen($explode_salary[0]) == 7) {
 
-      return "$".substr($explode_salary[0], 0, 1).".".substr($explode_salary[0], 1, -3).".".substr($explode_salary[0], -3).",".$decimales;
+      return "$".substr($explode_salary[0], 0, 1).",".substr($explode_salary[0], 1, -3).",".substr($explode_salary[0], -3).".".$decimales;
     
     } elseif(strlen($explode_salary[0]) == 8) {
 
-      return "$".substr($explode_salary[0], 0, 2).".".substr($explode_salary[0], 2, -3).".".substr($explode_salary[0], -3).",".$decimales;
+      return "$".substr($explode_salary[0], 0, 2).",".substr($explode_salary[0], 2, -3).",".substr($explode_salary[0], -3).".".$decimales;
     
     } elseif(strlen($explode_salary[0]) == 9) {
 
-      return "$".substr($explode_salary[0], 0, 3).".".substr($explode_salary[0], 3, -3).".".substr($explode_salary[0], -3).",".$decimales;
+      return "$".substr($explode_salary[0], 0, 3).",".substr($explode_salary[0], 3, -3).",".substr($explode_salary[0], -3).".".$decimales;
     
     } else {
       return "$".$default;

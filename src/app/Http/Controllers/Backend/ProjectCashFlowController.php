@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Backend;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Helpers;
+use App\Project;
 use App\ProjectCashFlow;
 
 class ProjectCashFlowController extends Controller
@@ -46,7 +47,7 @@ class ProjectCashFlowController extends Controller
             $projectCashFlow->id_project    = $request->get('id_project');
             $projectCashFlow->date          = Helpers::setDateFormatTimestamp($request->get('date'));
             $projectCashFlow->type          = $request->get('type');
-            $projectCashFlow->amount        = (float) $amount;
+            $projectCashFlow->amount        = Project::setParseFormatPrice($request->get('amount'));
             $projectCashFlow->tax           = $request->get('tax');
             $projectCashFlow->payment_type  = $request->get('payment_type');
             $projectCashFlow->id_item       = $request->get('id_item');

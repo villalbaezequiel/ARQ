@@ -30,9 +30,9 @@
         <div class="form-group">
             <div class="input-group-prepend">
             <span class="input-group-text">
-                Monto<span class="default-required required-red" style="margin-right: 4px;">*</span> $
+                Monto<span class="default-required required-red" style="margin-right: 4px;">*</span>
             </span>
-                <input type="text" class="form-control validate-number-decimal-not-ps" name="cash_flow_amount" maxlength="12">
+                <input type="text" class="form-control validate-number-decimal" name="cash_flow_amount" pattern="^$d{1,3}(,d{3})*(.d+)?$" maxlength="14">
             </div>
         </div>
     </div>
@@ -43,7 +43,7 @@
             <span class="input-group-text">
                 Impuesto<span class="hidden required-red" style="margin-right: 4px;">*</span> %
             </span>
-                <input type="text" class="form-control validate-number-decimal-not-ps" name="cash_flow_tax" maxlength="6">
+                <input type="number" class="form-control" pattern="/^-?\d+\.?\d*$/" name="cash_flow_tax" onkeypress="if(this.value.length == 3) return false;" maxlength="5" value="0">
             </div>
         </div>
     </div>
