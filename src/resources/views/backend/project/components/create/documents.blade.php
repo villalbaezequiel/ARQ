@@ -2,7 +2,7 @@
     <div class="form-group">
         <div class="input-group-prepend">
         <span class="input-group-text">
-            Link Google Drive<span class="required-red">*</span>
+            Link Google Drive
         </span>
         <input class="form-control" type="text" name="link_google_drive" value="{{ old('link_google_drive') }}" maxlength="255">
         </div>
@@ -13,7 +13,7 @@
     <div class="form-group">
         <div class="input-group-prepend">
         <span class="input-group-text">
-            Link Dropbox<span class="required-red">*</span>
+            Link Dropbox
         </span>
         <input class="form-control" type="text" name="link_dropbox" value="{{ old('link_dropbox') }}" maxlength="255">
         </div>
