@@ -160,12 +160,25 @@ class JsonController extends Controller
         if($idItem)
         {
             try {
-                $data = Provider::select('providers.id', 'users.name')
+                $data = Provider::select('providers.id', 'users.name', 'providers.id_items')
                             ->where('id_items', 'like', "%$idItem%")
                             ->join('users', 'users.id', '=', 'providers.id_user')
                             ->get()->toArray();
-                
-                return response()->json(['data' => $data]);
+
+                $result = [];
+
+                foreach($data as $value)
+                {
+                    $remove = true;
+                    foreach(json_decode($value['id_items']) as $id_item)
+                    {      
+                        if($id_item == $idItem) $remove = false;
+                    }
+
+                    if(!$remove) $result[] = $value;
+                }
+                            
+                return response()->json(['data' => $result]);
 
             } catch (\Exception $err) {
                 return response()->json([ 'data' => null ]);
