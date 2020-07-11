@@ -487,6 +487,7 @@ function formatCurrency(input, blur)
 function calculateBudgetGlobalItems()
 {
   let itemsContent    = $('.items_content');
+  let subItemsContent    = $('.sub_items_content');
   let globalSubtotal  = 0,
       globalTotal     = 0;
 
@@ -517,6 +518,17 @@ function calculateBudgetGlobalItems()
     $(this).find('input[name="item_incidence"]').val(incidence.toFixed(2));
 
     formatTax($(this).find('input[name="item_incidence"]'));
+  });
+
+  $.each(subItemsContent, function(i, v){
+    let idItem      = $(this).data('id');
+    let totalGlobal = $('input[name="global_total"]').val();
+    let totalItem   = $(`#total_${idItem}`).val();
+    let incidence   = ( projectJS.parseFloatPrices(totalItem) / parseFloat(totalGlobal) ) * 100;
+
+    $(`#incidence_${idItem}`).val(incidence.toFixed(2));
+
+    formatTax($(`#incidence_${idItem}`));
   });
 
   formatCurrency($('input[name="global_subtotal"]'), 'blur');

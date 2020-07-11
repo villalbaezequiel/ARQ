@@ -114,7 +114,7 @@
                 ?>
 
                 @foreach($collectionSubitem as $budgetSubItem)
-                <tr id="subitem-{{ $budgetSubItem->id_subitem }}" data-iditem="{{ $key }}" class="sub_items_content">
+                <tr id="subitem-{{ $budgetSubItem->id_subitem }}" data-id="{{ $budgetSubItem->id_subitem }}" data-iditem="{{ $key }}" class="sub_items_content">
                     
                     <input      type="hidden" name="budget[{{ $budgetSubItem->id_subitem }}][id]" value="{{ $budgetSubItem->id }}" />
                     <input      type="hidden" name="budget[{{ $budgetSubItem->id_subitem }}][id_item]" value="{{ $key }}" />
