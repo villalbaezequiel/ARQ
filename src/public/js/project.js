@@ -124,6 +124,7 @@ function addGroupItemsRealCost(e)
     e.preventDefault();
     let idItem      = $("select[name=items]").find(':selected').val();
     let nameItem    = $("select[name=items]").find(':selected').text();
+    let numberItem  = $("select[name=items]").find(':selected').data('number');
 
     let checkItem   = $('#content-real-cost tbody tr');
     let issetItem   = false;
@@ -143,11 +144,12 @@ function addGroupItemsRealCost(e)
       $("#select-subitems-"+idItem+" select[name=sub_items] option").each(function(){
           dataSubItems.push({
             name: $(this).text(),
+            number: $(this).data('number'),
             id: $(this).val()
           });
       });
 
-      generateTemplateItemsRealCost(idItem, nameItem, dataSubItems);
+      generateTemplateItemsRealCost(idItem, numberItem, nameItem, dataSubItems);
 
       setSelectedOptions();
     } else {
@@ -220,23 +222,24 @@ function generateTemplateItems(idItem, numberItem, nameItem, dataSubItems)
   projectJS.validateNumberDecimalAddAttr();
 }
 
-function generateTemplateItemsRealCost(idItem, nameItem, dataSubItems)
+function generateTemplateItemsRealCost(idItem, numberItem, nameItem, dataSubItems)
 {
   let items = `
     <tr class="b-c-gray" id="costreal-item-${idItem}" data-id="${idItem}">
-    <th colspan="4" class="text-left pl-3">${nameItem}</th>
-    <th><input type="text" name="costreal_budget_total"   class="form-control" disabled></th>
-    <th><input type="text" name="costreal_paid"           class="form-control" disabled></th>
-    <th><input type="text" name="costreal_balance_paid"   class="form-control" disabled></th>
-    <th><input type="text" name="costreal_balance_item"   class="form-control" disabled></th>
-    <th></th>
-    <th></th>
-    <th>
-        <button
-          class="btn btn-danger removeItemRealCost" 
-          data-iditem="${idItem}" 
-          style="padding: 0px 5px;"
-        >X</button>
+      <th>${numberItem}</th>
+      <th colspan="4" class="text-left pl-3">${nameItem}</th>
+      <th><input type="text" name="costreal_budget_total"   class="form-control" disabled></th>
+      <th><input type="text" name="costreal_paid"           class="form-control" disabled></th>
+      <th><input type="text" name="costreal_balance_paid"   class="form-control" disabled></th>
+      <th><input type="text" name="costreal_balance_item"   class="form-control" disabled></th>
+      <th></th>
+      <th></th>
+      <th>
+          <button
+            class="btn btn-danger removeItemRealCost" 
+            data-iditem="${idItem}" 
+            style="padding: 0px 5px;"
+          >X</button>
       </th>
     </tr>`;
 
@@ -247,16 +250,17 @@ function generateTemplateItemsRealCost(idItem, nameItem, dataSubItems)
       
         <input      type="hidden" name="real_cost[${v.id}][id_item]" value="${idItem}" />
 
+        <td>${v.number}</td>
         <td class="pl-3"><input class="form-control" value="${v.name}" disabled /></td>
-        <td><input type="number"  name="real_cost[${v.id}][quantity]" value="1"      id="quantity_realcost_${v.id}" maxlength="11" data-idsubiteam="${v.id}"  class="form-control calculate-subtotal-realcost" /></td>
-        <td><input type="text"    name="real_cost[${v.id}][unit_cost]" value="$1"    id="unit_cost_realcost_${v.id}"  maxlength="14" data-idsubiteam="${v.id}" class="form-control validate-number-decimal calculate-subtotal-realcost" /></td>
-        <td><input type="number"  name="real_cost[${v.id}][tax]" value="0"           id="tax_realcost_${v.id}"  maxlength="5" data-idsubiteam="${v.id}" class="form-control calculate-subtotal-realcost" pattern="/^-?\d+\.?\d*$/" onKeyPress="if(this.value.length == 3) return false;" /></td>
-        <td><input type="text"    name="real_cost[${v.id}][budget_total]" value="$1" id="budget_total_realcost_${v.id}"  maxlength="14"  class="form-control validate-number-decimal" readonly /></td>
-        <td><input type="text"    name="real_cost[${v.id}][paid]" maxlength="14"  class="form-control validate-number-decimal" readonly /></td>
-        <td><input type="text"    name="real_cost[${v.id}][balance_paid]" maxlength="14"  class="form-control validate-number-decimal" readonly/></td>
-        <td><input type="text"    name="real_cost[${v.id}][balance_item]" maxlength="14" id="balance_item_realcost_${v.id}" class="form-control validate-number-decimal" readonly /></td>
-        <td><input type="text"    name="real_cost[${v.id}][budget_variation_pesos]" id="budget_variation_pesos_realcost_${v.id}" maxlength="14"  class="form-control validate-number-decimal" readonly /></td>
-        <td><input type="number"  name="real_cost[${v.id}][budget_variation_tax]" maxlength="5"   class="form-control" pattern="/^-?\d+\.?\d*$/" onKeyPress="if(this.value.length == 3) return false;" readonly /></td>
+        <td><input type="number"name="real_cost[${v.id}][quantity]" value="1"      id="quantity_realcost_${v.id}" maxlength="11" data-idsubiteam="${v.id}"  class="form-control text-center calculate-subtotal-realcost" /></td>
+        <td><input type="text"  name="real_cost[${v.id}][unit_cost]" value="$1"    id="unit_cost_realcost_${v.id}"  maxlength="14" data-idsubiteam="${v.id}" class="form-control text-center validate-number-decimal calculate-subtotal-realcost" /></td>
+        <td><input type="text"  name="real_cost[${v.id}][tax]" value="%0"           id="tax_realcost_${v.id}"  maxlength="6" data-idsubiteam="${v.id}" class="form-control text-center validate-tax calculate-subtotal-realcost" /></td>
+        <td><input type="text"  name="real_cost[${v.id}][budget_total]" value="$1" id="budget_total_realcost_${v.id}"  maxlength="14"  class="form-control text-center validate-number-decimal" readonly /></td>
+        <td><input type="text"  name="real_cost[${v.id}][paid]" maxlength="14"  class="form-control text-center validate-number-decimal" readonly /></td>
+        <td><input type="text"  name="real_cost[${v.id}][balance_paid]" maxlength="14"  class="form-control text-center validate-number-decimal" readonly/></td>
+        <td><input type="text"  name="real_cost[${v.id}][balance_item]" maxlength="14" id="balance_item_realcost_${v.id}" class="form-control text-center validate-number-decimal" readonly /></td>
+        <td><input type="text"  name="real_cost[${v.id}][budget_variation_pesos]" id="budget_variation_pesos_realcost_${v.id}" maxlength="14"  class="form-control text-center validate-number-decimal" readonly /></td>
+        <td><input type="text"  name="real_cost[${v.id}][budget_variation_tax]" maxlength="6"   class="form-control text-center validate-tax" readonly /></td>
 
         <td class="text-center b-c-gray" style="vertical-align: inherit;">
           <button

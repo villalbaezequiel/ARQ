@@ -195,7 +195,13 @@ class ProjectController extends Controller
 
         // collection ProjectRealCost (seguimiento)
         $collectionProjectRealCost  = [];
-        $projectRealCost            = ProjectRealCost::where('id_project', $id)->get();
+        $projectRealCost            = ProjectRealCost::select('project_real_costs.*')
+                                                    ->join('items', 'items.id', 'project_real_costs.id_item')
+                                                    ->join('sub_items', 'sub_items.id', 'project_real_costs.id_subitem')
+                                                    ->where('id_project', $id)
+                                                    ->orderBy('items.number', 'ASC')
+                                                    ->orderBy('sub_items.number', 'ASC')
+                                                    ->get();
 
         foreach ($projectRealCost as $value)
         {

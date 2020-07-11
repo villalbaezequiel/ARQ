@@ -8,7 +8,7 @@
         <div class="col-md-10">
             <select class="form-control selectpicker" data-style="btn btn-link" data-live-search="true" name="items">
             @foreach($items as $val)
-                <option value="{{ $val['id'] }}">{{ $val['name'] }}</option>
+                <option value="{{ $val['id'] }}" data-number="{{ \App\Item::getNumberFromId($val['id']) }}">{{ $val['name'] }}</option>
             @endforeach
             </select>
         </div>
@@ -17,7 +17,7 @@
             <div class="col-md-5 hidden select-subitems" id="select-subitems-{{ $val['id'] }}">
                 <select class="form-control selectpicker" data-style="btn btn-link" data-live-search="true" name="sub_items" multiple>
                     @foreach($val['data'] as $budgetSubItem)
-                        <option value="{{ $budgetSubItem->id }}">{{ $budgetSubItem->name }}</option>
+                        <option value="{{ $budgetSubItem->id }}" data-number="{{ \App\SubItem::getNumberFromId($budgetSubItem->id) }}">{{ $budgetSubItem->name }}</option>
                     @endforeach
                 </select>
             </div>
@@ -43,12 +43,14 @@
         <colgroup span="11"></colgroup>
         <thead>
             <tr class="b-c-gray">
+                <th></th>
                 <th class="font-weight-bold" style="width: 30%!important;" scope="col">Item Descripcion</th>
                 <th class="font-weight-bold" style="width: 70%!important;" colspan="10" scope="colgroup">Seguimiento</th>
             </tr>
         </thead>
         <tbody>
             <tr class="b-c-gray">
+                <th></th>
                 <th></th>
                 <th>CANT</th>
                 <th>UNITARIO</th>
@@ -62,11 +64,12 @@
                 <th></th>
             </tr>
             <tr class="b-c-gray">
+                <th></th>
                 <th colspan="4">TOTAL</th>
-                <th><input type="text" name="global_costreal_budgetTotal"   class="form-control" disabled></th>
-                <th><input type="text" name="global_costreal_paid"          class="form-control" disabled></th>
-                <th><input type="text" name="global_costreal_balancePaid"   class="form-control" disabled></th>
-                <th><input type="text" name="global_costreal_balanceItem"   class="form-control" disabled></th>
+                <th><input type="text" name="global_costreal_budgetTotal"   class="form-control text-center" disabled></th>
+                <th><input type="text" name="global_costreal_paid"          class="form-control text-center" disabled></th>
+                <th><input type="text" name="global_costreal_balancePaid"   class="form-control text-center" disabled></th>
+                <th><input type="text" name="global_costreal_balanceItem"   class="form-control text-center" disabled></th>
                 <th></th>
                 <th></th>
                 <th></th>
@@ -75,11 +78,12 @@
             @if((int) !$project->is_open_budget)
                 @foreach($project_real_costs as $key => $collectionSubitem)
                     <tr class="b-c-gray costreal-item" id="costreal-item-{{ $key }}" data-id="{{ $key }}">
+                        <th>{{ \App\Item::getNumberFromId($key) }}</th>
                         <th colspan="4" class="text-left pl-3">{{ \App\Item::getName($key) }}</th>
-                        <th><input type="text" name="costreal_budget_total"   class="form-control" disabled></th>
-                        <th><input type="text" name="costreal_paid"           class="form-control" disabled></th>
-                        <th><input type="text" name="costreal_balance_paid"   class="form-control" disabled></th>
-                        <th><input type="text" name="costreal_balance_item"   class="form-control" disabled></th>
+                        <th><input type="text" name="costreal_budget_total"   class="form-control text-center" disabled></th>
+                        <th><input type="text" name="costreal_paid"           class="form-control text-center" disabled></th>
+                        <th><input type="text" name="costreal_balance_paid"   class="form-control text-center" disabled></th>
+                        <th><input type="text" name="costreal_balance_item"   class="form-control text-center" disabled></th>
                         <th></th>
                         <th></th>
                         <th>
@@ -105,16 +109,17 @@
                         <input      type="hidden" name="real_cost[{{ $costReal->id_subitem }}][id]" value="{{ $costReal->id }}" />
                         <input      type="hidden" name="real_cost[{{ $costReal->id_subitem }}][id_item]" value="{{ $key }}" />
 
+                        <td>{{ \App\SubItem::getNumberFromId($costReal->id_subitem) }}</td>
                         <td class="pl-3"><input class="form-control" value="{{ \App\SubItem::getName($costReal->id_subitem) }}" disabled /></td>
-                        <td><input type="number"  name="real_cost[{{ $costReal->id_subitem }}][quantity]" value="{{ $costReal->quantity }}"         id="quantity_realcost_{{ $costReal->id_subitem }}" data-idsubiteam="{{ $costReal->id_subitem }}" maxlength="11" class="form-control calculate-subtotal-realcost" /></td>
-                        <td><input type="text"    name="real_cost[{{ $costReal->id_subitem }}][unit_cost]"value="{{ $costReal->unit_cost }}"        id="unit_cost_realcost_{{ $costReal->id_subitem }}" data-idsubiteam="{{ $costReal->id_subitem }}" maxlength="14" class="form-control validate-number-decimal calculate-subtotal-realcost" /></td>
-                        <td><input type="number"  name="real_cost[{{ $costReal->id_subitem }}][tax]" value="{{ $costReal->tax }}"                   id="tax_realcost_{{ $costReal->id_subitem }}" data-idsubiteam="{{ $costReal->id_subitem }}" maxlength="5" class="form-control calculate-subtotal-realcost" pattern="/^-?\d+\.?\d*$/" onKeyPress="if(this.value.length == 3) return false;" /></td>
-                        <td><input type="text"    name="real_cost[{{ $costReal->id_subitem }}][budget_total]" value="{{ $costReal->budget_total }}" id="budget_total_realcost_{{ $costReal->id_subitem }}" maxlength="14" class="form-control validate-number-decimal" readonly /></td>
-                        <td><input type="text"    name="real_cost[{{ $costReal->id_subitem }}][paid]" value="{{ $costReal->paid }}"        maxlength="14" class="form-control validate-number-decimal" readonly /></td>
-                        <td><input type="text"    name="real_cost[{{ $costReal->id_subitem }}][balance_paid]" value="{{ $costReal->balance_paid }}"maxlength="14"  class="form-control validate-number-decimal" readonly/></td>
-                        <td><input type="text"    name="real_cost[{{ $costReal->id_subitem }}][balance_item]" value="{{ $costReal->balance_item }}" id="balance_item_realcost_{{ $costReal->id_subitem }}" maxlength="14" class="form-control validate-number-decimal" readonly /></td>
-                        <td><input type="text"    name="real_cost[{{ $costReal->id_subitem }}][budget_variation_pesos]" value="{{ $costReal->budget_variation_pesos }}" id="budget_variation_pesos_realcost_{{ $costReal->id_subitem }}" maxlength="14" class="form-control validate-number-decimal" readonly /></td>
-                        <td><input type="number"  name="real_cost[{{ $costReal->id_subitem }}][budget_variation_tax]" value="{{ $costReal->budget_variation_tax }}"    maxlength="5" class="form-control" pattern="/^-?\d+\.?\d*$/" onKeyPress="if(this.value.length == 3) return false;" readonly /></td>
+                        <td><input type="number"name="real_cost[{{ $costReal->id_subitem }}][quantity]" value="{{ $costReal->quantity }}"         id="quantity_realcost_{{ $costReal->id_subitem }}" data-idsubiteam="{{ $costReal->id_subitem }}" maxlength="11" class="form-control text-center calculate-subtotal-realcost" /></td>
+                        <td><input type="text"  name="real_cost[{{ $costReal->id_subitem }}][unit_cost]"value="{{ $costReal->unit_cost }}"        id="unit_cost_realcost_{{ $costReal->id_subitem }}" data-idsubiteam="{{ $costReal->id_subitem }}" maxlength="14" class="form-control text-center validate-number-decimal calculate-subtotal-realcost" /></td>
+                        <td><input type="text"  name="real_cost[{{ $costReal->id_subitem }}][tax]" value="{{ $costReal->tax }}"                   id="tax_realcost_{{ $costReal->id_subitem }}" data-idsubiteam="{{ $costReal->id_subitem }}" maxlength="6" class="form-control text-center validate-tax calculate-subtotal-realcost" /></td>
+                        <td><input type="text"  name="real_cost[{{ $costReal->id_subitem }}][budget_total]" value="{{ $costReal->budget_total }}" id="budget_total_realcost_{{ $costReal->id_subitem }}" maxlength="14" class="form-control text-center validate-number-decimal" readonly /></td>
+                        <td><input type="text"  name="real_cost[{{ $costReal->id_subitem }}][paid]" value="{{ $costReal->paid }}"        maxlength="14" class="form-control text-center validate-number-decimal" readonly /></td>
+                        <td><input type="text"  name="real_cost[{{ $costReal->id_subitem }}][balance_paid]" value="{{ $costReal->balance_paid }}"maxlength="14"  class="form-control text-center validate-number-decimal" readonly/></td>
+                        <td><input type="text"  name="real_cost[{{ $costReal->id_subitem }}][balance_item]" value="{{ $costReal->balance_item }}" id="balance_item_realcost_{{ $costReal->id_subitem }}" maxlength="14" class="form-control text-center validate-number-decimal" readonly /></td>
+                        <td><input type="text"  name="real_cost[{{ $costReal->id_subitem }}][budget_variation_pesos]" value="{{ $costReal->budget_variation_pesos }}" id="budget_variation_pesos_realcost_{{ $costReal->id_subitem }}" maxlength="14" class="form-control text-center validate-number-decimal" readonly /></td>
+                        <td><input type="text"  name="real_cost[{{ $costReal->id_subitem }}][budget_variation_tax]" value="{{ $costReal->budget_variation_tax }}"    maxlength="6" class="form-control text-center validate-tax" readonly /></td>
                         
                         <td class="text-center b-c-gray" style="vertical-align: inherit;">
                             <button
