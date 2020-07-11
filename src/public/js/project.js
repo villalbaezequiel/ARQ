@@ -52,11 +52,16 @@ $(document).ready(function() {
       formatCurrency($(this), "blur");
     });
 
+    $.each($(".validate-tax"), function(){
+      formatTax($(this), "blur");
+    });
+
     calculateTotales();
     calculateTotalesRealCost();
     removeItem();
     removeItemRealCost();
     validateNumberDecimal();
+    validateTax();
     calculateBudgetGlobalItems();
     calculateCostRealGlobalItems();
     deleteBudgetItem();
@@ -163,10 +168,10 @@ function generateTemplateItems(idItem, numberItem, nameItem, dataSubItems)
     <tr class="b-c-gray" id="item-${idItem}">
       <th>${numberItem}</th>
       <th colspan="4" class="text-left pl-3">${nameItem}</th>
-      <th><input type="text" name="item_subtotal" class="form-control validate-number-decimal" disabled></th>
+      <th><input type="text" name="item_subtotal" class="form-control text-center validate-number-decimal" disabled></th>
       <th></th>
-      <th><input type="text" name="item_total" class="form-control validate-number-decimal" disabled></th>
-      <th><input type="number" name="item_incidence" class="form-control" maxlength="6" disabled></th>
+      <th><input type="text" name="item_total" class="form-control text-center validate-number-decimal" disabled></th>
+      <th><input type="text" name="item_incidence" class="form-control text-center validate-tax" maxlength="6" disabled></th>
       <th>
         <button
           class="btn btn-danger removeItem" 
@@ -185,13 +190,13 @@ function generateTemplateItems(idItem, numberItem, nameItem, dataSubItems)
 
         <td>${v.number}</td>
         <td class="pl-3"><input class="form-control" value="${v.name}" disabled /></td>
-        <td><input type="text"    name="budget[${v.id}][unit]"      class="form-control" required /></td>
-        <td><input type="number"  name="budget[${v.id}][quantity]"  maxlength="11"  id="quantity_${v.id}" value="1" data-idsubiteam="${v.id}" class="form-control calculate-subtotal" required /></td>
-        <td><input type="text"    name="budget[${v.id}][unit_cost]" maxlength="14"  id="unit_cost_${v.id}" data-idsubiteam="${v.id}" value="$1" class="form-control calculate-subtotal validate-number-decimal" required /></td>
-        <td><input type="text"    name="budget[${v.id}][subtotal]"  maxlength="14"  id="subtotal_${v.id}"  value="$1" class="form-control validate-number-decimal" readonly required /></td>
-        <td><input type="number"  name="budget[${v.id}][tax]"       maxlength="5"   id="tax_${v.id}" value="0" data-idsubiteam="${v.id}" class="form-control calculate-subtotal" pattern="/^-?\d+\.?\d*$/" onKeyPress="if(this.value.length == 3) return false;" required /></td>
-        <td><input type="text"    name="budget[${v.id}][total]"     maxlength="14"  id="total_${v.id}" value="$1" class="form-control validate-number-decimal" readonly required /></td>
-        <td></td>
+        <td><input type="text"    name="budget[${v.id}][unit]"      class="form-control text-center" required /></td>
+        <td><input type="number"  name="budget[${v.id}][quantity]"  maxlength="11"  id="quantity_${v.id}" value="1" data-idsubiteam="${v.id}" class="form-control text-center calculate-subtotal" required /></td>
+        <td><input type="text"    name="budget[${v.id}][unit_cost]" maxlength="14"  id="unit_cost_${v.id}" data-idsubiteam="${v.id}" value="$1" class="form-control text-center calculate-subtotal validate-number-decimal" required /></td>
+        <td><input type="text"    name="budget[${v.id}][subtotal]"  maxlength="14"  id="subtotal_${v.id}"  value="$1" class="form-control text-center validate-number-decimal" readonly required /></td>
+        <td><input type="text"    name="budget[${v.id}][tax]"       maxlength="6"   id="tax_${v.id}" value="%0" data-idsubiteam="${v.id}" class="form-control text-center validate-tax calculate-subtotal" /></td>
+        <td><input type="text"    name="budget[${v.id}][total]"     maxlength="14"  id="total_${v.id}" value="$1" class="form-control text-center validate-number-decimal" readonly required /></td>
+        <td><input type="text"    name="budget[${v.id}][incidence]" maxlength="6"   id="incidence_${v.id}" data-idsubiteam="${v.id}" class="form-control text-center validate-tax" readonly /></td>
         
         <td class="text-center b-c-gray" style="vertical-align: inherit;">
           <button
@@ -211,6 +216,7 @@ function generateTemplateItems(idItem, numberItem, nameItem, dataSubItems)
   calculateTotales();
   removeItem();
   validateNumberDecimal();
+  validateTax();
   projectJS.validateNumberDecimalAddAttr();
 }
 
@@ -270,6 +276,7 @@ function generateTemplateItemsRealCost(idItem, nameItem, dataSubItems)
   calculateTotalesRealCost();
   removeItemRealCost();
   validateNumberDecimal();
+  validateTax();
   projectJS.validateNumberDecimalAddAttr();
 }
 
@@ -294,8 +301,8 @@ function calculateTotales(){
       $('#subtotal_'+idSubItem).val(subTotal);
       $('#total_'+idSubItem).val(total);
 
-      formatCurrency($('#subtotal_'+idSubItem));
-      formatCurrency($('#total_'+idSubItem));
+      formatCurrency($('#subtotal_'+idSubItem), 'blur');
+      formatCurrency($('#total_'+idSubItem), 'blur');
   });
 }
 
@@ -369,6 +376,66 @@ function validateNumberDecimal()
   });
 }
 
+function validateTax()
+{
+  $(".validate-tax").on({
+    keyup: function() {
+      formatTax($(this));
+    },
+    blur: function() { 
+      formatTax($(this), "blur");
+    }
+  });
+}
+
+function formatNumberTax(n)
+{
+  try {
+    return n.replace(/\D/g, "").replace(/\B(?=(\d{3})+(?!\d))/g, ".")
+  } catch (error) {
+    console.log(n.val());
+  }
+}
+
+function formatTax(input, blur)
+{
+  var input_val = input.val();
+
+  if (input_val === "") { return; }
+
+  var original_len  = input_val.length;
+  var caret_pos     = input.prop("selectionStart");
+    
+  if (input_val.indexOf(".") >= 0)
+  {
+    var decimal_pos = input_val.indexOf(".");
+    var left_side   = input_val.substring(0, decimal_pos);
+    var right_side  = input_val.substring(decimal_pos);
+
+    left_side   = formatNumberTax(left_side);
+    right_side  = formatNumberTax(right_side);
+    
+    if (blur === "blur") {
+      right_side += "00";
+    }
+    
+    right_side  = right_side.substring(0, 2);
+    input_val   = "%" + left_side + "." + right_side;
+
+  } else {
+    input_val = formatNumberTax(input_val);
+    input_val = "%" + input_val;
+    
+    if (blur === "blur") { input_val += ".00"; }
+  }
+
+  input.val(input_val);
+
+  var updated_len = input_val.length;
+  caret_pos = updated_len - original_len + caret_pos;
+  input[0].setSelectionRange(caret_pos, caret_pos);
+}
+
 function formatNumber(n)
 {
   try {
@@ -431,8 +498,8 @@ function calculateBudgetGlobalItems()
     $(this).find('input[name="item_subtotal"]').val(subTotal);
     $(this).find('input[name="item_total"]').val(total);
 
-    formatCurrency($(this).find('input[name="item_subtotal"]'));
-    formatCurrency($(this).find('input[name="item_total"]'));
+    formatCurrency($(this).find('input[name="item_subtotal"]'), 'blur');
+    formatCurrency($(this).find('input[name="item_total"]'), 'blur');
 
     globalSubtotal  += parseFloat(subTotal);
     globalTotal     += parseFloat(total);
@@ -448,10 +515,12 @@ function calculateBudgetGlobalItems()
     let incidence   = ( parseFloat(totalItem) / parseFloat(totalGlobal) ) * 100;
 
     $(this).find('input[name="item_incidence"]').val(incidence.toFixed(2));
+
+    formatTax($(this).find('input[name="item_incidence"]'));
   });
 
-  formatCurrency($('input[name="global_subtotal"]'));
-  formatCurrency($('input[name="global_total"]'));
+  formatCurrency($('input[name="global_subtotal"]'), 'blur');
+  formatCurrency($('input[name="global_total"]'), 'blur');
 }
 
 function calculateCostRealGlobalItems(){
@@ -1159,7 +1228,7 @@ let projectJS = {
   },
 
   parseFloatPrices: (price) =>  {
-      return (price ? parseFloat(price.replace("$", "").replace(/\,/g, "")) : 0);
+      return (price ? parseFloat(price.replace("$", "").replace(/\,/g, "").replace("%", "")) : 0);
   },
 
   validateNumberDecimalAddAttr: (className = 'validate-number-decimal') => {

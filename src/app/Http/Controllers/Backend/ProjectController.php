@@ -178,7 +178,13 @@ class ProjectController extends Controller
         
         // collection ProjectBudget (presupuesto)
         $collectionProjectBudget= [];
-        $projectBudget          = ProjectBudget::where('id_project', $id)->get();
+        $projectBudget          = ProjectBudget::select("project_budgets.*")
+                                                    ->join('items', 'items.id', 'project_budgets.id_item')
+                                                    ->join('sub_items', 'sub_items.id', 'project_budgets.id_subitem')
+                                                    ->where('id_project', $id)
+                                                    ->orderBy('items.number', 'ASC')
+                                                    ->orderBy('sub_items.number', 'ASC')
+                                                    ->get();
 
         foreach ($projectBudget as $value) {
             $collectionProjectBudget[$value->id_item][] = $value;
