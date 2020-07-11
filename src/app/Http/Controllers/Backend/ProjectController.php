@@ -223,7 +223,7 @@ class ProjectController extends Controller
                                         ->whereIn('clients.id', json_decode($project->id_client, true))->get();
 
         // collection ProjectCashFlow (flujo de caja)
-        $collectionProjectCashFlow  = ProjectCashFlow::where('id_project', $id)->get();
+        $collectionProjectCashFlow  = ProjectCashFlow::where('id_project', $id)->orderBy('date', 'ASC')->get();
 
         $balance = 0;
 
