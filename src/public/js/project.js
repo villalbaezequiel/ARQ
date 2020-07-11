@@ -431,6 +431,10 @@ function formatTax(input, blur)
 
   input.val(input_val);
 
+  if(input.val().length == 7){
+    input.attr('maxlength', '7');
+  }
+
   var updated_len = input_val.length;
   caret_pos = updated_len - original_len + caret_pos;
   input[0].setSelectionRange(caret_pos, caret_pos);

@@ -110,7 +110,7 @@ class ProjectController extends Controller
                         $projectBudget->quantity    = $val['quantity'];
                         $projectBudget->unit_cost   = Project::setParseFormatPrice($val['unit_cost']);
                         $projectBudget->subtotal    = Project::setParseFormatPrice($val['subtotal']);
-                        $projectBudget->tax         = $val['tax'];
+                        $projectBudget->tax         = Project::setParseFormatTax($val['tax']);
                         $projectBudget->total       = Project::setParseFormatPrice($val['total']);
                         $projectBudget->save();
                     }
@@ -233,7 +233,7 @@ class ProjectController extends Controller
             $value->type    = ProjectCashFlow::getType($value->type);
             $value->balance = Helpers::getFormatSalary(round($balance, 2));
             $value->amount  = Helpers::getFormatSalary($value->amount);
-            $value->tax     = "%".$value->tax;
+            $value->tax     = $value->tax;
             $value->payment_type = ProjectCashFlow::getPaymentType($value->payment_type);
             $value->id_item = Item::getName($value->id_item);
             $value->id_subitem  = SubItem::getName($value->id_subitem);
@@ -305,7 +305,7 @@ class ProjectController extends Controller
                             $projectBudget->quantity    = $val['quantity'];
                             $projectBudget->unit_cost   = Project::setParseFormatPrice($val['unit_cost']);
                             $projectBudget->subtotal    = Project::setParseFormatPrice($val['subtotal']);
-                            $projectBudget->tax         = $val['tax'];
+                            $projectBudget->tax         = Project::setParseFormatTax($val['tax']);
                             $projectBudget->total       = Project::setParseFormatPrice($val['total']);
                             $projectBudget->save();
                         } else {
@@ -317,7 +317,7 @@ class ProjectController extends Controller
                             $projectBudget->quantity    = $val['quantity'];
                             $projectBudget->unit_cost   = Project::setParseFormatPrice($val['unit_cost']);
                             $projectBudget->subtotal    = Project::setParseFormatPrice($val['subtotal']);
-                            $projectBudget->tax         = $val['tax'];
+                            $projectBudget->tax         = Project::setParseFormatTax($val['tax']);
                             $projectBudget->total       = Project::setParseFormatPrice($val['total']);
                             $projectBudget->save();
                         }
@@ -334,7 +334,7 @@ class ProjectController extends Controller
                             $projectRealCost->id_subitem   = $key;
                             $projectRealCost->quantity     = $val['quantity'];
                             $projectRealCost->unit_cost    = Project::setParseFormatPrice($val['unit_cost']);
-                            $projectRealCost->tax          = $val['tax'];
+                            $projectRealCost->tax          = Project::setParseFormatTax($val['tax']);
                             $projectRealCost->budget_total = Project::setParseFormatPrice($val['budget_total']);
                             $projectRealCost->balance_item = Project::setParseFormatPrice($val['balance_item']);
                             $projectRealCost->budget_variation_pesos   = Project::setParseFormatPrice($val['budget_variation_pesos']);
@@ -347,7 +347,7 @@ class ProjectController extends Controller
                             $projectRealCost->id_subitem   = $key;
                             $projectRealCost->quantity     = $val['quantity'];
                             $projectRealCost->unit_cost    = Project::setParseFormatPrice($val['unit_cost']);
-                            $projectRealCost->tax          = $val['tax'];
+                            $projectRealCost->tax          = Project::setParseFormatTax($val['tax']);
                             $projectRealCost->budget_total = Project::setParseFormatPrice($val['budget_total']);
                             $projectRealCost->paid         = 0;
                             $projectRealCost->balance_paid = 0;

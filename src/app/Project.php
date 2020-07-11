@@ -92,4 +92,9 @@ class Project extends Model
     {
       return (float) str_replace(array("$", ","), array("", ""), $price);
     }
+
+    static public function setParseFormatTax($tax)
+    {
+      return (float) str_replace("%", "", $tax);
+    }
 }

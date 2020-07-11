@@ -48,7 +48,7 @@ class ProjectCashFlowController extends Controller
             $projectCashFlow->date          = Helpers::setDateFormatTimestamp($request->get('date'));
             $projectCashFlow->type          = $request->get('type');
             $projectCashFlow->amount        = Project::setParseFormatPrice($request->get('amount'));
-            $projectCashFlow->tax           = $request->get('tax');
+            $projectCashFlow->tax           = Project::setParseFormatTax($request->get('tax'));
             $projectCashFlow->payment_type  = $request->get('payment_type');
             $projectCashFlow->id_item       = $request->get('id_item');
             $projectCashFlow->id_subitem    = $request->get('id_subitem');
