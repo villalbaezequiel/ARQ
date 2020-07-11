@@ -321,12 +321,8 @@ function calculateTotalesRealCost()
     if(!total) total = parseFloat(1);
 
     $('#budget_total_realcost_'+idSubItem).val(total);
-    $('#balance_item_realcost_'+idSubItem).val(total);
-    $('#budget_variation_pesos_realcost_'+idSubItem).val(total);
 
     formatCurrency($('#budget_total_realcost_'+idSubItem));
-    formatCurrency($('#balance_item_realcost_'+idSubItem));
-    formatCurrency($('#budget_variation_pesos_realcost_'+idSubItem));
   });  
 }
 
