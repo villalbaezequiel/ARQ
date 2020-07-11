@@ -57,7 +57,6 @@
                 <th>IMPUESTOS</th>
                 <th>PRESUPUESTO</th>
                 <th>PAGADO</th>
-                <th>SALDO PAGO</th>
                 <th>SALDO ITEM</th>
                 <th>VARIACION ($)</th>
                 <th>VARIACION (%)</th>
@@ -68,7 +67,6 @@
                 <th colspan="4">TOTAL</th>
                 <th><input type="text" name="global_costreal_budgetTotal"   class="form-control text-center" disabled></th>
                 <th><input type="text" name="global_costreal_paid"          class="form-control text-center" disabled></th>
-                <th><input type="text" name="global_costreal_balancePaid"   class="form-control text-center" disabled></th>
                 <th><input type="text" name="global_costreal_balanceItem"   class="form-control text-center" disabled></th>
                 <th></th>
                 <th></th>
@@ -82,7 +80,6 @@
                         <th colspan="4" class="text-left pl-3">{{ \App\Item::getName($key) }}</th>
                         <th><input type="text" name="costreal_budget_total"   class="form-control text-center" disabled></th>
                         <th><input type="text" name="costreal_paid"           class="form-control text-center" disabled></th>
-                        <th><input type="text" name="costreal_balance_paid"   class="form-control text-center" disabled></th>
                         <th><input type="text" name="costreal_balance_item"   class="form-control text-center" disabled></th>
                         <th></th>
                         <th></th>
@@ -99,7 +96,6 @@
                     <?php 
                         $budgetTotal   = 0;
                         $paid          = 0;
-                        $balancePaid   = 0;
                         $balanceItem   = 0;
                     ?>
 
@@ -116,7 +112,6 @@
                         <td><input type="text"  name="real_cost[{{ $costReal->id_subitem }}][tax]" value="{{ $costReal->tax }}"                   id="tax_realcost_{{ $costReal->id_subitem }}" data-idsubiteam="{{ $costReal->id_subitem }}" maxlength="6" class="form-control text-center validate-tax calculate-subtotal-realcost" /></td>
                         <td><input type="text"  name="real_cost[{{ $costReal->id_subitem }}][budget_total]" value="{{ $costReal->budget_total }}" id="budget_total_realcost_{{ $costReal->id_subitem }}" maxlength="14" class="form-control text-center validate-number-decimal" readonly /></td>
                         <td><input type="text"  name="real_cost[{{ $costReal->id_subitem }}][paid]" value="{{ $costReal->paid }}"        maxlength="14" class="form-control text-center validate-number-decimal" readonly /></td>
-                        <td><input type="text"  name="real_cost[{{ $costReal->id_subitem }}][balance_paid]" value="{{ $costReal->balance_paid }}"maxlength="14"  class="form-control text-center validate-number-decimal" readonly/></td>
                         <td><input type="text"  name="real_cost[{{ $costReal->id_subitem }}][balance_item]" value="{{ $costReal->balance_item }}" id="balance_item_realcost_{{ $costReal->id_subitem }}" maxlength="14" class="form-control text-center validate-number-decimal" readonly /></td>
                         <td><input type="text"  name="real_cost[{{ $costReal->id_subitem }}][budget_variation_pesos]" value="{{ $costReal->budget_variation_pesos }}" id="budget_variation_pesos_realcost_{{ $costReal->id_subitem }}" maxlength="14" class="form-control text-center validate-number-decimal" readonly /></td>
                         <td><input type="text"  name="real_cost[{{ $costReal->id_subitem }}][budget_variation_tax]" value="{{ $costReal->budget_variation_tax }}"    maxlength="6" class="form-control text-center validate-tax" readonly /></td>
@@ -132,7 +127,6 @@
                         <?php 
                             $budgetTotal   += $costReal->budget_total;
                             $paid          += $costReal->paid;
-                            $balancePaid   += $costReal->balance_paid;
                             $balanceItem   += $costReal->balance_item;
                         ?>
                     </tr>
@@ -140,7 +134,6 @@
 
                     <input type="text" class="hidden validate-number-decimal" name="costreal_budget_total_calc_{{ $key }}"   value="{{ $budgetTotal }}">
                     <input type="text" class="hidden validate-number-decimal" name="costreal_paid_calc_{{ $key }}"           value="{{ $paid }}">
-                    <input type="text" class="hidden validate-number-decimal" name="costreal_balance_paid_calc_{{ $key }}"   value="{{ $balancePaid }}">
                     <input type="text" class="hidden validate-number-decimal" name="costreal_balance_item_calc_{{ $key }}"   value="{{ $balanceItem }}">
 
                 @endforeach

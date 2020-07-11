@@ -230,7 +230,6 @@ function generateTemplateItemsRealCost(idItem, numberItem, nameItem, dataSubItem
       <th colspan="4" class="text-left pl-3">${nameItem}</th>
       <th><input type="text" name="costreal_budget_total"   class="form-control" disabled></th>
       <th><input type="text" name="costreal_paid"           class="form-control" disabled></th>
-      <th><input type="text" name="costreal_balance_paid"   class="form-control" disabled></th>
       <th><input type="text" name="costreal_balance_item"   class="form-control" disabled></th>
       <th></th>
       <th></th>
@@ -257,7 +256,6 @@ function generateTemplateItemsRealCost(idItem, numberItem, nameItem, dataSubItem
         <td><input type="text"  name="real_cost[${v.id}][tax]" value="%0"           id="tax_realcost_${v.id}"  maxlength="6" data-idsubiteam="${v.id}" class="form-control text-center validate-tax calculate-subtotal-realcost" /></td>
         <td><input type="text"  name="real_cost[${v.id}][budget_total]" value="$1" id="budget_total_realcost_${v.id}"  maxlength="14"  class="form-control text-center validate-number-decimal" readonly /></td>
         <td><input type="text"  name="real_cost[${v.id}][paid]" maxlength="14"  class="form-control text-center validate-number-decimal" readonly /></td>
-        <td><input type="text"  name="real_cost[${v.id}][balance_paid]" maxlength="14"  class="form-control text-center validate-number-decimal" readonly/></td>
         <td><input type="text"  name="real_cost[${v.id}][balance_item]" maxlength="14" id="balance_item_realcost_${v.id}" class="form-control text-center validate-number-decimal" readonly /></td>
         <td><input type="text"  name="real_cost[${v.id}][budget_variation_pesos]" id="budget_variation_pesos_realcost_${v.id}" maxlength="14"  class="form-control text-center validate-number-decimal" readonly /></td>
         <td><input type="text"  name="real_cost[${v.id}][budget_variation_tax]" maxlength="6"   class="form-control text-center validate-tax" readonly /></td>
@@ -547,35 +545,29 @@ function calculateCostRealGlobalItems(){
   let itemsContent      = $('.costreal-item');
   let globalbudgetTotal = 0,
       globalpaid        = 0,
-      globalbalancePaid = 0,
       globalbalanceItem = 0;
 
   $.each(itemsContent, function(i, v){
     let idItem        = $(this).data('id');
     let budgetTotal   = $(`input[name=costreal_budget_total_calc_${idItem}]`).val();
     let paid          = $(`input[name=costreal_paid_calc_${idItem}]`).val();
-    let balancePaid   = $(`input[name=costreal_balance_paid_calc_${idItem}]`).val();
     let balanceItem   = $(`input[name=costreal_balance_item_calc_${idItem}]`).val();
 
     $(this).find('input[name=costreal_budget_total]').val(budgetTotal);
     $(this).find('input[name=costreal_paid]').val(paid);
-    $(this).find('input[name=costreal_balance_paid]').val(balancePaid);
     $(this).find('input[name=costreal_balance_item]').val(balanceItem);
 
     globalbudgetTotal += projectJS.parseFloatPrices(budgetTotal);
     globalpaid        += projectJS.parseFloatPrices(paid);
-    globalbalancePaid += projectJS.parseFloatPrices(balancePaid);
     globalbalanceItem += projectJS.parseFloatPrices(balanceItem);
   });
 
   $('input[name=global_costreal_budgetTotal]').val(globalbudgetTotal);
   $('input[name=global_costreal_paid]').val(globalpaid);
-  $('input[name=global_costreal_balancePaid]').val(globalbalancePaid);
   $('input[name=global_costreal_balanceItem]').val(globalbalanceItem);
 
   formatCurrency($('input[name=global_costreal_budgetTotal]'));
   formatCurrency($('input[name=global_costreal_paid]'));
-  formatCurrency($('input[name=global_costreal_balancePaid]'));
   formatCurrency($('input[name=global_costreal_balanceItem]'));
 }
 

@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Helpers;
 use App\Project;
+use App\ProjectRealCost;
 use App\ProjectCashFlow;
 
 class ProjectCashFlowController extends Controller
@@ -58,6 +59,19 @@ class ProjectCashFlowController extends Controller
             $projectCashFlow->id_user       = $request->get('id_user');
             $projectCashFlow->id_client     = $request->get('id_client');
             $projectCashFlow->save();
+
+            if($request->get('type') == "egress")
+            {
+                $realCost = ProjectRealCost::where('id_project', $request->get('id_project'))
+                                            ->where('id_item', $request->get('id_item'))
+                                            ->where('id_subitem', $request->get('id_subitem'))
+                                            ->first();
+                if($realCost) {
+                    $realCost->paid         = $realCost->paid + Project::setParseFormatPrice($request->get('amount'));
+                    $realCost->balance_item = $realCost->budget_total - $realCost->paid;
+                    $realCost->save();
+                }
+            }
 
         } catch (\Exception $err) {
             $status = false;

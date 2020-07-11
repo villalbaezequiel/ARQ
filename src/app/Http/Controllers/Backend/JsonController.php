@@ -91,9 +91,9 @@ class JsonController extends Controller
                     $realCost->budget_total = $budget->total;
                     $realCost->paid         = 0;
                     $realCost->balance_paid = 0;
-                    $realCost->balance_item = $budget->total;
-                    $realCost->budget_variation_pesos   = $budget->total;
-                    $realCost->budget_variation_tax     = 0;
+                    $realCost->balance_item = 0;
+                    $realCost->budget_variation_pesos   = $realCost->budget_total - $budget->total;
+                    $realCost->budget_variation_tax     = $realCost->budget_variation_pesos / $budget->total;
                     $realCost->save();
                 }
 
