@@ -322,7 +322,7 @@ function calculateTotalesRealCost()
 
     $('#budget_total_realcost_'+idSubItem).val(total);
 
-    formatCurrency($('#budget_total_realcost_'+idSubItem));
+    formatCurrency($('#budget_total_realcost_'+idSubItem), 'blur');
   });  
 }
 
@@ -562,9 +562,9 @@ function calculateCostRealGlobalItems(){
   $('input[name=global_costreal_paid]').val(globalpaid);
   $('input[name=global_costreal_balanceItem]').val(globalbalanceItem);
 
-  formatCurrency($('input[name=global_costreal_budgetTotal]'));
-  formatCurrency($('input[name=global_costreal_paid]'));
-  formatCurrency($('input[name=global_costreal_balanceItem]'));
+  formatCurrency($('input[name=global_costreal_budgetTotal]'), 'blur');
+  formatCurrency($('input[name=global_costreal_paid]'), 'blur');
+  formatCurrency($('input[name=global_costreal_balanceItem]'), 'blur');
 }
 
 function deleteBudgetItem()

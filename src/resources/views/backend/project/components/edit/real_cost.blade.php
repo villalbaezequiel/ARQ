@@ -65,9 +65,9 @@
             <tr class="b-c-gray">
                 <th></th>
                 <th colspan="4">TOTAL</th>
-                <th><input type="text" name="global_costreal_budgetTotal"   class="form-control text-center" disabled></th>
-                <th><input type="text" name="global_costreal_paid"          class="form-control text-center" disabled></th>
-                <th><input type="text" name="global_costreal_balanceItem"   class="form-control text-center" disabled></th>
+                <th><input type="text" name="global_costreal_budgetTotal"   class="form-control text-center" style="font-weight: 700;" disabled></th>
+                <th><input type="text" name="global_costreal_paid"          class="form-control text-center" style="font-weight: 700;" disabled></th>
+                <th><input type="text" name="global_costreal_balanceItem"   class="form-control text-center" style="font-weight: 700;" disabled></th>
                 <th></th>
                 <th></th>
                 <th></th>

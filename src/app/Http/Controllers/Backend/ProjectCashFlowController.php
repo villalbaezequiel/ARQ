@@ -60,7 +60,7 @@ class ProjectCashFlowController extends Controller
             $projectCashFlow->id_client     = $request->get('id_client');
             $projectCashFlow->save();
 
-            if($request->get('type') == "egress")
+            if($request->get('type') == "egress" || $request->get('type') == "direct_payment")
             {
                 $realCost = ProjectRealCost::where('id_project', $request->get('id_project'))
                                             ->where('id_item', $request->get('id_item'))

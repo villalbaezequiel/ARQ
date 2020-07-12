@@ -4,8 +4,8 @@
     Tip 2: you can also add an image using data-image tag
   -->
   <div class="logo">
-    <a href="{{ url('/') }}" class="simple-text logo-normal text-header-frame">
-      ARQ
+    <a href="{{ url('/') }}" class="simple-text logo-normal text-center">
+      <img src="{{ asset('/img/logo_blanco.png') }}" width="130" />
     </a>
   </div>
   <div class="sidebar-wrapper">
