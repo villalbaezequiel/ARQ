@@ -18,7 +18,6 @@ class ProjectRealCostExport implements FromCollection, WithHeadings
         'Impuesto',
         'Total',
         'Pagado',
-        'Saldo Pagado',
         'Saldo Item',
         'Variacion $',
         'Variacion %',

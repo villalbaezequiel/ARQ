@@ -32,7 +32,6 @@ class ProjectRealCost extends Model
                                                 "tax",
                                                 "budget_total",
                                                 "paid",
-                                                "balance_paid",
                                                 "balance_item",
                                                 "budget_variation_pesos",
                                                 "budget_variation_tax",
