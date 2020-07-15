@@ -640,7 +640,9 @@ function deleteBudgetSubitem()
 
 function deleteCostRealItem()
 {
-  $('.removeCostRealItemAjax').click(function(){
+  $('.removeCostRealItemAjax').click(function(e){
+
+    e.preventDefault();
 
     let iditem            = $(this).data('iditem');
     let costrealSubitem   = $('.costreal-subitem');
@@ -660,49 +662,64 @@ function deleteCostRealItem()
       return false;
     }
 
-    let data = {
-      id_item: iditem,
-      id_project: $(this).data('idproject')
-    }
+    Swal.fire({
+      title: '¿Estas seguro que desea eliminar el Rubro?',
+      type: 'info',
+      showCancelButton: true,
+      confirmButtonColor: '#3085d6',
+      cancelButtonColor: '#d33',
+      confirmButtonText: 'Aceptar'
+    })
+    .then((result) => {
 
-    $.ajax({
-      type: 'GET',
-      url: '/json/costreal/delete-item',
-      data: data,
-      success: function(data){
-        if(data.status){
-          Swal.fire({
-            title: 'Rubro eliminado con Exito!',
-            type: 'info',
-            showCancelButton: false,
-            confirmButtonColor: '#3085d6',
-            cancelButtonColor: '#d33',
-            confirmButtonText: 'Aceptar'
-          });
+      if(result.dismiss == "cancel") { return false; }
 
-          $('#costreal-item-'+iditem).remove();
-
-          $.each(costrealSubitem, function(i, v){
-            if($(this).data('iditem') == iditem) {
-              $(this).remove();
-            }
-          });
-        
-        }
-      },
-      error: function(xhr, status){
-        console.log('Error: '+xhr);
+      let data = {
+        id_item: iditem,
+        id_project: $(this).data('idproject')
       }
+  
+      $.ajax({
+        type: 'GET',
+        url: '/json/costreal/delete-item',
+        data: data,
+        success: function(data){
+          if(data.status){
+            Swal.fire({
+              title: 'Rubro eliminado con Exito!',
+              type: 'info',
+              showCancelButton: false,
+              confirmButtonColor: '#3085d6',
+              cancelButtonColor: '#d33',
+              confirmButtonText: 'Aceptar'
+            });
+  
+            $('#costreal-item-'+iditem).remove();
+  
+            $.each(costrealSubitem, function(i, v){
+              if($(this).data('iditem') == iditem) {
+                $(this).remove();
+              }
+            });
+          
+          }
+        },
+        error: function(xhr, status){
+          console.log('Error: '+xhr);
+        }
+      });
+  
+      return false;
     });
-
-    return false;
 
   });
 }
 
 function deleteCostRealSubItem()
 {
-  $('.removeCostRealSubItemAjax').click(function(){
+  $('.removeCostRealSubItemAjax').click(function(e){
+
+    e.preventDefault();
     
     let checkCostrealPaidSubItem = projectJS.parseFloatPrices($('#costreal-subitem-'+$(this).data('id')+' .costreal-subitem-paid').val());
 
@@ -720,34 +737,47 @@ function deleteCostRealSubItem()
       return false;
     }
 
-    $('#costreal-subitem-'+$(this).data('id')).remove();
+    Swal.fire({
+      title: '¿Estas seguro que desea eliminar el Sub-Rubro?',
+      type: 'info',
+      showCancelButton: true,
+      confirmButtonColor: '#3085d6',
+      cancelButtonColor: '#d33',
+      confirmButtonText: 'Aceptar'
+    })
+    .then((result) => {
 
-    let data = {
-      id: $(this).data('id')
-    }
+      if(result.dismiss == "cancel") { return false; }
 
-    $.ajax({
-      type: 'GET',
-      url: '/json/costreal/delete-subitem',
-      data: data,
-      success: function(data){
-        if(data.status){
-          Swal.fire({
-            title: 'Sub Rubro eliminado con Exito!',
-            type: 'info',
-            showCancelButton: false,
-            confirmButtonColor: '#3085d6',
-            cancelButtonColor: '#d33',
-            confirmButtonText: 'Aceptar'
-          });
-        }
-      },
-      error: function(xhr, status){
-        console.log('Error: '+xhr);
+      $('#costreal-subitem-'+$(this).data('id')).remove();
+
+      let data = {
+        id: $(this).data('id')
       }
-    });
 
-    return false;
+      $.ajax({
+        type: 'GET',
+        url: '/json/costreal/delete-subitem',
+        data: data,
+        success: function(data){
+          if(data.status){
+            Swal.fire({
+              title: 'Sub Rubro eliminado con Exito!',
+              type: 'info',
+              showCancelButton: false,
+              confirmButtonColor: '#3085d6',
+              cancelButtonColor: '#d33',
+              confirmButtonText: 'Aceptar'
+            });
+          }
+        },
+        error: function(xhr, status){
+          console.log('Error: '+xhr);
+        }
+      });
+
+      return false;
+    });
 
   });
 }

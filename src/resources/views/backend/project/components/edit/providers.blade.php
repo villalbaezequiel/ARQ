@@ -3,7 +3,7 @@
     <div class="form-group">
       <div class="input-group-prepend">
         <span class="input-group-text row">
-            Rubros / Proveedores
+            Rubros
         </span>
         <div class="col-md-10">
             <select class="form-control selectpicker" data-style="btn btn-link" name="providers_item" data-live-search="true">

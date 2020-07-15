@@ -20,7 +20,7 @@
       </ul>
     </nav>
     <div class="copyright float-right">
-      &copy;{{ date('Y') }}, hecho con <i class="material-icons">favorite</i> por
+      &copy;{{ date('Y') }} - 
       <a href="http://www.google.com/" class="none-alert" target="_blank">Piche Solutions</a> para una mejor web.
     </div>
   </div>
