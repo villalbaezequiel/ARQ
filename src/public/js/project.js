@@ -642,8 +642,23 @@ function deleteCostRealItem()
 {
   $('.removeCostRealItemAjax').click(function(){
 
-    let iditem          = $(this).data('iditem');
-    let costrealSubitem = $('.costreal-subitem');
+    let iditem            = $(this).data('iditem');
+    let costrealSubitem   = $('.costreal-subitem');
+    let checkCostrealPaid = projectJS.parseFloatPrices($("#costreal-item-"+iditem+" input[name=costreal_paid]").val());
+
+    if(checkCostrealPaid != 0)
+    {
+      Swal.fire({
+        title: 'No se puede eliminar el Rubro Seleccionado. Dado que existen Sub-Rubros con Flujo de Caja Ingresados!',
+        type: 'info',
+        showCancelButton: false,
+        confirmButtonColor: '#3085d6',
+        cancelButtonColor: '#d33',
+        confirmButtonText: 'Aceptar'
+      });
+
+      return false;
+    }
 
     let data = {
       id_item: iditem,
@@ -689,6 +704,22 @@ function deleteCostRealSubItem()
 {
   $('.removeCostRealSubItemAjax').click(function(){
     
+    let checkCostrealPaidSubItem = projectJS.parseFloatPrices($('#costreal-subitem-'+$(this).data('id')+' .costreal-subitem-paid').val());
+
+    if(checkCostrealPaidSubItem != 0)
+    {
+      Swal.fire({
+        title: 'No se puede eliminar el Sub-Rubro Seleccionado. Dado que tiene Ingresado Flujo de Caja!',
+        type: 'info',
+        showCancelButton: false,
+        confirmButtonColor: '#3085d6',
+        cancelButtonColor: '#d33',
+        confirmButtonText: 'Aceptar'
+      });
+
+      return false;
+    }
+
     $('#costreal-subitem-'+$(this).data('id')).remove();
 
     let data = {
