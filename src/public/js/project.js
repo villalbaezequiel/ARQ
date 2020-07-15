@@ -994,8 +994,7 @@ function getTemplateHistoryProvider(){
                       <p class="text-left">Recibi la suma de Pesos ........ en concepto de avance N* ........</p>
                     </div>
                     <div class="col-md-12">
-                      <form action="#">
-                        <input type="hidden" name="_token" value="">
+                      <form action="/export/project_provider" class="export-history-provider" target="_blank">
                         <input type="hidden" name="id_project" value="">
                         <input type="hidden" name="id_provider" value="">
                         <input type="submit" class="btn btn-primary" value="Descargar Historial Proveedor">
@@ -1197,27 +1196,10 @@ let projectJS = {
                                     <td>${v.detail}</td>
                                     <td>${v.clarification}</td>
                                 </tr>`);
+                });
   
-                // let valorTotalHoraHsExtra = ( parseFloat(calculateHsExtras(countHour, v.agreed_hours)).toFixed(3) * valorHoraHsExtra );
-  
-                //   dataExport.push({
-                //     fecha: getDatePickerFormat(v.start, true),
-                //     rol: v.rol,
-                //     inicio: parseDate(start.getHours())+':'+parseDate(start.getMinutes()),
-                //     final: parseDate(finish.getHours())+':'+parseDate(finish.getMinutes()),
-                //     horas_pactadas: v.agreed_hours,
-                //     horas_extras: (countHour - v.agreed_hours),
-                //     valor_hora: "$" + valorHoraHsExtra.toFixed(2),
-                //     valor_total: "$" + valorTotalHoraHsExtra.toFixed(2)
-                //   });
-  
-              });
-  
-                // $("#form_hs_extras input[name=_token]").val($("#logic_project input[name=_token]").val());
-                // $("#form_hs_extras input[name=name_team]").val(nameTeam);
-                // $("#form_hs_extras input[name=id_project_provider]").val(id);
-                // $("#form_hs_extras input[name=hs_extras]").val(JSON.stringify(dataExport));
-  
+                $(".export-history-provider input[name=id_project]").val(idProject);
+                $(".export-history-provider input[name=id_provider]").val(idProvider);
               }
             }); 
           }

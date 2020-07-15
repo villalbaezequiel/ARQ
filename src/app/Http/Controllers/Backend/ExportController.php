@@ -4,8 +4,14 @@ namespace App\Http\Controllers\Backend;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
+use App\Helpers;
+use App\Item;
+use App\SubItem;
+use App\Provider;
 use App\ProjectBudget;
 use App\ProjectRealCost;
+use App\ProjectCashFlow;
+use App\Exports\ProjectProviderExport;
 
 class ExportController extends Controller
 {
@@ -27,70 +33,45 @@ class ExportController extends Controller
             //throw $th;
         }
     }
-
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
+    
+    public function projectHistoryProvider(Request $request)
     {
-        //
-    }
+        try {
+            $idProject  = $request->get('id_project');
+            $idProvider = $request->get('id_provider');
+            $timestamp  = date('mdhis');
+            $providerHistory = ProjectCashFlow::select(
+                                                'date',
+                                                'amount',
+                                                'tax',
+                                                'payment_type',
+                                                'id_item',
+                                                'id_subitem',
+                                                'detail',
+                                                'clarification'
+                                                )
+                                                ->where('id_project', $idProject)
+                                                ->where('id_provider', $idProvider)
+                                                ->where('type', 'egress')
+                                                ->orderBy('created_at', 'ASC')
+                                                ->get();
+            foreach($providerHistory as &$provider)
+            {
+                $provider->date     = Helpers::getDateParseFormat($provider->date);
+                $provider->amount   = Helpers::getFormatSalary($provider->amount);
+                $provider->tax      = "%".$provider->tax;
+                $provider->payment_type = ProjectCashFlow::getPaymentType($provider->payment_type);
+                $provider->id_item  = Item::getName($provider->id_item);
+                $provider->id_subitem   = SubItem::getName($provider->id_subitem);
+                $provider->detail   = ProjectCashFlow::getDetail($provider->detail);
+            }
 
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
-    public function store(Request $request)
-    {
-        //
-    }
+            $name = Provider::getName($idProvider);
 
-    /**
-     * Display the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function show($id)
-    {
-        //
-    }
+            return (new ProjectProviderExport($providerHistory))->download("{$name}_{$idProject}_{$timestamp}.csv", \Maatwebsite\Excel\Excel::TSV);
 
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function edit($id)
-    {
-        //
-    }
-
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function update(Request $request, $id)
-    {
-        //
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function destroy($id)
-    {
-        //
+        } catch (\Exception $err) {
+            
+        }
     }
 }
