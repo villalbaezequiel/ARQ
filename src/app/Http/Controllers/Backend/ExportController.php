@@ -12,6 +12,7 @@ use App\ProjectBudget;
 use App\ProjectRealCost;
 use App\ProjectCashFlow;
 use App\Exports\ProjectProviderExport;
+use App\Exports\ProviderExport;
 
 class ExportController extends Controller
 {
@@ -72,6 +73,16 @@ class ExportController extends Controller
 
         } catch (\Exception $err) {
             
+        }
+    }
+
+    public function providers()
+    {
+        try {
+            $timestamp  = date('mdhis');
+            return (new ProviderExport())->download("proveedores_{$timestamp}.csv", \Maatwebsite\Excel\Excel::TSV);
+        } catch (\Exception $err) {
+            //throw $th;
         }
     }
 }

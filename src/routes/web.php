@@ -52,6 +52,7 @@ Route::group(['middleware' => ['auth']], function () {
     Route::get('/export/project_budgets/{id}', 'Backend\ExportController@projectBudgets');
     Route::get('/export/project_realcost/{id}', 'Backend\ExportController@projectRealCost');
     Route::get('/export/project_provider', 'Backend\ExportController@projectHistoryProvider');
+    Route::get('/export/providers', 'Backend\ExportController@providers');
 
 });
 

@@ -380,6 +380,7 @@
                   <div class="col-md-8">
                     <div class="form-group">
                       <select class="form-control selectpicker" data-style="btn btn-link" name="type_account">
+                        <option value="">Seleccionar</option>
                         @foreach(\App\Provider::getTipoCuenta() as $key => $val)
                         <option value="{{ $key }}" <?php if($provider->type_account == $key){ echo "selected='selected'"; } ?>>{{ $val }}</option>
                         @endforeach
@@ -438,6 +439,7 @@
                   <div class="col-md-8">
                     <div class="form-group">
                       <select class="form-control selectpicker" data-style="btn btn-link" name="type_account_2">
+                        <option value="">Seleccionar</option>
                         @foreach(\App\Provider::getTipoCuenta() as $key => $val)
                         <option value="{{ $key }}" <?php if($provider->type_account_2 == $key){ echo "selected='selected'"; } ?>>{{ $val }}</option>
                         @endforeach
@@ -496,6 +498,7 @@
                   <div class="col-md-8">
                     <div class="form-group">
                       <select class="form-control selectpicker" data-style="btn btn-link" name="type_account_3">
+                        <option value="">Seleccionar</option>
                         @foreach(\App\Provider::getTipoCuenta() as $key => $val)
                         <option value="{{ $key }}" <?php if($provider->type_account_3 == $key){ echo "selected='selected'"; } ?>>{{ $val }}</option>
                         @endforeach
