@@ -202,7 +202,11 @@
               <label class="col-md-2 col-form-label">Rol Usuario <span class="required-red">*</span></label>
               <div class="col-md-7">
                 <div class="form-group">
-                  <select class="form-control selectpicker" data-live-search="true" data-style="btn btn-link" name="permissions" required>
+                <?php
+                  $rol = Auth::user()->permissions; 
+                  $disabled = ($rol != "admin" ? 'disabled' : '');
+                ?>
+                  <select class="form-control selectpicker" data-live-search="true" data-style="btn btn-link" name="permissions" required  <?php echo $disabled; ?> >
                     @foreach(\App\User::getRoles() as $key => $permission)
                     <option value="{{ $key }}" <?php if($user->permissions == $key){ echo "selected='selected'"; } ?>>{{ $permission }}</option>
                     @endforeach

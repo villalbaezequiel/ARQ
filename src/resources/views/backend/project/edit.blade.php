@@ -34,6 +34,8 @@
                   Información
                 </a>
               </li>
+
+              @if(Auth::user()->permissions == "admin")
               <li class="nav-item" style="width: 50%;">
                 <a class="nav-link" href="#module_two" data-toggle="tab" role="tab">
                   Presupuesto
@@ -44,6 +46,9 @@
                   Seguimiento
                 </a>
               </li>
+              @endif
+
+              @if(Auth::user()->permissions != "junior")
               <li class="nav-item" style="width: 50%;">
                 <a class="nav-link" href="#module_five" data-toggle="tab" role="tab">
                   Flujo de caja
@@ -54,6 +59,8 @@
                   Proveedores
                 </a>
               </li>
+              @endif
+
               <li class="nav-item" style="width: 50%;">
                 <a class="nav-link" href="#module_four" data-toggle="tab" role="tab">
                   Documentos
@@ -217,6 +224,7 @@
                 </div>
               </div>
 
+              @if(Auth::user()->permissions == "admin")
               <div class="tab-pane" id="module_two">
                 <h5 class="info-text"> Presupuesto </h5>
                 @include('backend.project.components.edit.budgets')
@@ -226,7 +234,9 @@
                 <h5 class="info-text"> Seguimiento </h5>
                 @include('backend.project.components.edit.real_cost')
               </div>
+              @endif
 
+              @if(Auth::user()->permissions != "junior")
               <div class="tab-pane" id="module_five">
                 <h5 class="info-text"> Flujo de Caja </h5>
                 @include('backend.project.components.edit.cash_flow')
@@ -236,6 +246,7 @@
                 <h5 class="info-text"> Proveedores </h5>
                 @include('backend.project.components.edit.providers')
               </div>
+              @endif
 
               <div class="tab-pane" id="module_four">
                 <h5 class="info-text"> Documentos </h5>

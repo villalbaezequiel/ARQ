@@ -8,6 +8,8 @@ use App\Helpers;
 use App\Project;
 use App\ProjectRealCost;
 use App\ProjectCashFlow;
+use App\User;
+use Illuminate\Support\Facades\Auth;
 
 class ProjectCashFlowController extends Controller
 {
@@ -18,7 +20,11 @@ class ProjectCashFlowController extends Controller
      */
     public function index()
     {
-        //
+        $cashFlow = ProjectCashFlow::where('is_approved', '0')->get();
+
+        return view('backend.cash_flow.index', [
+            'cash_flows' => $cashFlow
+        ]);
     }
 
     /**
@@ -39,9 +45,9 @@ class ProjectCashFlowController extends Controller
      */
     public function store(Request $request)
     {
-        $status = true;
-
-        $amount = str_replace(array('.', ','), array('', '.'), $request->get('amount'));
+        $status         = true;
+        $amount         = str_replace(array('.', ','), array('', '.'), $request->get('amount'));
+        $userPermission = User::getPermission($request->get('id_user'));
 
         try {
             $projectCashFlow = new ProjectCashFlow;
@@ -58,18 +64,22 @@ class ProjectCashFlowController extends Controller
             $projectCashFlow->clarification = $request->get('clarification');
             $projectCashFlow->id_user       = $request->get('id_user');
             $projectCashFlow->id_client     = $request->get('id_client');
+            $projectCashFlow->is_approved   = ($userPermission == "admin" ? '1' : '0');
             $projectCashFlow->save();
 
-            if($request->get('type') == "egress" || $request->get('type') == "direct_payment")
+            if($userPermission == "admin")
             {
-                $realCost = ProjectRealCost::where('id_project', $request->get('id_project'))
-                                            ->where('id_item', $request->get('id_item'))
-                                            ->where('id_subitem', $request->get('id_subitem'))
-                                            ->first();
-                if($realCost) {
-                    $realCost->paid         = $realCost->paid + Project::setParseFormatPrice($request->get('amount'));
-                    $realCost->balance_item = $realCost->budget_total - $realCost->paid;
-                    $realCost->save();
+                if($request->get('type') == "egress" || $request->get('type') == "direct_payment")
+                {
+                    $realCost = ProjectRealCost::where('id_project', $request->get('id_project'))
+                                                ->where('id_item', $request->get('id_item'))
+                                                ->where('id_subitem', $request->get('id_subitem'))
+                                                ->first();
+                    if($realCost) {
+                        $realCost->paid         = $realCost->paid + Project::setParseFormatPrice($request->get('amount'));
+                        $realCost->balance_item = $realCost->budget_total - $realCost->paid;
+                        $realCost->save();
+                    }
                 }
             }
 
@@ -110,7 +120,31 @@ class ProjectCashFlowController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
+        $status = "Fujo de Caja Aprobado con exito!";
+        try {
+          if(Auth::user()->permissions == "admin")
+            {
+              $projectCashFlow                = ProjectCashFlow::find($id);
+              $projectCashFlow->is_approved   = '1';
+              $projectCashFlow->save();
+
+              if($projectCashFlow->type == "egress" || $projectCashFlow->type == "direct_payment")
+              {
+                $realCost = ProjectRealCost::where('id_project', $projectCashFlow->id_project)
+                                                ->where('id_item', $projectCashFlow->id_item)
+                                                ->where('id_subitem', $projectCashFlow->id_subitem)
+                                                ->first();
+                if($realCost) {
+                    $realCost->paid         = $realCost->paid + Project::setParseFormatPrice($projectCashFlow->amount);
+                    $realCost->balance_item = $realCost->budget_total - $realCost->paid;
+                    $realCost->save();
+                }
+              }
+          }
+        } catch (\Exception $err) {
+            $status = "Hubo un error!";
+        }
+        return response()->json(['message' => $status]);
     }
 
     /**
@@ -120,7 +154,12 @@ class ProjectCashFlowController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function destroy($id)
-    {
-        //
+    {   
+        if(Auth::user()->permissions == "admin")
+        {
+            $projectCashFlow  = ProjectCashFlow::find($id);
+            $projectCashFlow->delete();
+        }
+        return response()->json(['message' => 'Flujo de Caja eliminado con exito!']);
     }
 }

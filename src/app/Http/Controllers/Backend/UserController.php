@@ -186,14 +186,22 @@ class UserController extends Controller
             // $user->id_nationality   = $request->get('id_nationality');
             // $user->visa         = $request->get('visa');
 
-            $user->permissions  = $request->get('permissions');
+            if(Auth::user()->permissions == "admin"){
+              $user->permissions  = $request->get('permissions');
+            }
+
             if($request->get('password')){
               $user->password = Hash::make($request->get('password'));
             }
             $user->is_active    = $request->get('is_active');
             $user->save();
 
-            return redirect('/users')->with('message', 'Usuario editado con exito!');
+            if(Auth::user()->permissions == "admin"){
+              return redirect('/users')->with('message', 'Usuario editado con exito!');
+            } else {
+              return back()->withInput()->with('message', 'Usuario editado con exito!');
+            }
+
   
           else:
   

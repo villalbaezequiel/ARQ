@@ -231,7 +231,7 @@ class ProjectController extends Controller
         {
             if($value->type == "entry") {
                 $balance += $value->amount;
-            } elseif($value->type == "egress") {
+            } elseif($value->type == "egress" && $value->is_approved == "1") {
                 $balance -= $value->amount;
             }
 

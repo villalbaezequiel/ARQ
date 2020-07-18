@@ -44,11 +44,15 @@
                 <td>{{ $user->getRole() }}</td>
                 <td>{{ \App\User::getActive($user->id) }}</td>
                 <td class="text-right">
+                @if(Auth::user()->permissions == "admin")
                   {!! Form::open(['route' => ['users.destroy', $user->id], 'method' => 'DELETE', 'class'=> 'alert-confirm-delete']) !!}
                     <a href="{{ url('/users/'.$user->id) }}" class="btn btn-link btn-warning btn-just-icon show" title="Ver"><i class="material-icons">visibility</i></a>
                     <a href="{{ url('/users/'.$user->id.'/edit') }}" class="btn btn-link btn-warning btn-just-icon edit" title="Editar"><i class="material-icons">dvr</i></a>
                     <button type="submit" class="btn btn-link btn-danger btn-just-icon remove" title="Eliminar"><i class="material-icons">close</i></button>
                   {!! Form::close() !!}
+                @else
+                  <a href="{{ url('/users/'.$user->id) }}" class="btn btn-link btn-warning btn-just-icon show" title="Ver"><i class="material-icons">visibility</i></a>
+                @endif
                 </td>
               </tr>
               @endforeach

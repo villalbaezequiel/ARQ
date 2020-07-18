@@ -271,6 +271,8 @@ class Helpers extends Model
 
   function setDateFormat($date, $explodeString = '/')
   {
+    if(!$date) return false; 
+
       $substrDate = substr($date, 0, 10);
       $separartor = '-';
       $format = explode($explodeString, $substrDate);

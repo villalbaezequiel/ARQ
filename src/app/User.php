@@ -149,10 +149,19 @@ class User extends Authenticatable
     static public function getRoles()
     {
       $roles = [
-        'admin'   => 'Administrador',
-        'invite'  => 'Invitado'
+        'admin' => 'Administrador',
+        'arq'   => 'Arq',
+        'junior'=> 'Junior'
       ];
 
       return $roles;
+    }
+
+    static public function getPermission($id)
+    {
+      $user = User::find($id);
+      if($user) {
+        return $user->permissions;
+      }
     }
 }

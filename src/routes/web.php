@@ -37,6 +37,7 @@ Route::group(['middleware' => ['auth']], function () {
     Route::resource('/items', 'Backend\ItemController');
     Route::resource('/sub_items', 'Backend\SubItemController');
     Route::resource('/users', 'Backend\UserController');
+    Route::resource('/roles', 'Backend\RolController');
     Route::resource('/project_cash_flow', 'Backend\ProjectCashFlowController');
 
     Route::get('/json/budgets/delete-item', 'Backend\JsonController@deleteBudgetItem');

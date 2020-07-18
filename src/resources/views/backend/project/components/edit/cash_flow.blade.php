@@ -207,7 +207,7 @@
         <tbody>
         @if(!(int) $project->is_open_budget)
           @foreach($project_cash_flow as $cashFlow)
-            <tr>
+            <tr <?php if($cashFlow->is_approved == "0"){ echo "style='background-color: rgba(0,0,0,.05);'"; }?> >
                 <td>{{ $cashFlow->date }}</td>
                 <td>{{ $cashFlow->type }}</td>
                 <td>{{ $cashFlow->amount }}</td>

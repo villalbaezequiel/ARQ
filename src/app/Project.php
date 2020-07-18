@@ -9,6 +9,16 @@ use App\ProjectDocument;
 
 class Project extends Model
 {
+
+    static public function getName($id)
+    {
+      $project = Project::find($id);
+      
+      if($project){
+        return $project->name;
+      }
+    }
+
     static public function getDateParseFormat($date, $separartor = '-')
     {
       if($date) {

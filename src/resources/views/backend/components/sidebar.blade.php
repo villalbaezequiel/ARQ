@@ -52,45 +52,71 @@
         </a>
       </li>
 
-      <li class="nav-item nav-check-url ">
-        <a class="nav-link" href="{{ url('/clients') }}">
-          <i class="material-icons">people</i>
-          <p> Clientes </p>
-        </a>
-      </li>
+      @if(Auth::user()->permissions == "admin")
+        <li class="nav-item nav-check-url ">
+          <a class="nav-link" href="{{ url('/project_cash_flow') }}">
+            <i class="material-icons">menu_book</i>
+            <p> Flujo de Cajas </p>
+          </a>
+        </li>
 
-      <li class="nav-item nav-check-url ">
-        <a class="nav-link" href="{{ url('/providers') }}">
-          <i class="material-icons">people_outline</i>
-          <p> Proveedores </p>
-        </a>
-      </li>
+        <li class="nav-item nav-check-url ">
+          <a class="nav-link" href="{{ url('/clients') }}">
+            <i class="material-icons">people</i>
+            <p> Clientes </p>
+          </a>
+        </li>
 
-      <li class="nav-item nav-check-url ">
-        <a class="nav-link none-alert" data-toggle="collapse" href="#items">
-          <i class="material-icons">group_work</i>
-          <p> Rubros
-            <b class="caret"></b>
-          </p>
-        </a>
-        <div class="collapse" id="items">
-          <ul class="nav">
-            <li class="nav-item nav-check-url ">
-              <a class="nav-link" href="{{ url('/items') }}">
-                <span class="sidebar-mini"> R </span>
-                <span class="sidebar-normal"> Rubros </span>
-              </a>
-            </li>
-            <li class="nav-item nav-check-url ">
-              <a class="nav-link" href="{{ url('/sub_items') }}">
-                <span class="sidebar-mini"> SR </span>
-                <span class="sidebar-normal"> Sub Rubros </span>
-              </a>
-            </li>
-          </ul>
-        </div>
-      </li>
+        <li class="nav-item nav-check-url ">
+          <a class="nav-link" href="{{ url('/providers') }}">
+            <i class="material-icons">people_outline</i>
+            <p> Proveedores </p>
+          </a>
+        </li>
 
+        <li class="nav-item nav-check-url ">
+          <a class="nav-link none-alert" data-toggle="collapse" href="#items">
+            <i class="material-icons">group_work</i>
+            <p> Rubros
+              <b class="caret"></b>
+            </p>
+          </a>
+          <div class="collapse" id="items">
+            <ul class="nav">
+              <li class="nav-item nav-check-url ">
+                <a class="nav-link" href="{{ url('/items') }}">
+                  <span class="sidebar-mini"> R </span>
+                  <span class="sidebar-normal"> Rubros </span>
+                </a>
+              </li>
+              <li class="nav-item nav-check-url ">
+                <a class="nav-link" href="{{ url('/sub_items') }}">
+                  <span class="sidebar-mini"> SR </span>
+                  <span class="sidebar-normal"> Sub Rubros </span>
+                </a>
+              </li>
+            </ul>
+          </div>
+        </li>
+      @endif
+
+      @if(Auth::user()->permissions == "junior")
+        <li class="nav-item nav-check-url ">
+          <a class="nav-link" href="{{ url('/clients') }}">
+            <i class="material-icons">people</i>
+            <p> Clientes </p>
+          </a>
+        </li>
+
+        <li class="nav-item nav-check-url ">
+          <a class="nav-link" href="{{ url('/providers') }}">
+            <i class="material-icons">people_outline</i>
+            <p> Proveedores </p>
+          </a>
+        </li>
+      @endif
+
+      @if(Auth::user()->permissions != "junior")
       <li class="nav-item nav-check-url ">
         <a class="nav-link none-alert" data-toggle="collapse" href="#users-nav-menu">
           <i class="material-icons">people</i>
@@ -107,7 +133,7 @@
               </a>
             </li>
             <li class="nav-item nav-check-url ">
-              <a class="nav-link" href="{{ url('/') }}">
+              <a class="nav-link" href="{{ url('/roles') }}">
                 <span class="sidebar-mini"> R </span>
                 <span class="sidebar-normal"> Roles </span>
               </a>
@@ -115,6 +141,7 @@
           </ul>
         </div>
       </li>
+      @endif
 
     </ul>
   </div>
