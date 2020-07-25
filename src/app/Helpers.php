@@ -201,46 +201,56 @@ class Helpers extends Model
       return $dateTransform;
    }
 
-   static function getCountries()
-   {
-      $list = [
-        1 => 'Argentina'
-      ];
-      
-      return $list;
-   }
-
-   static function getProvinces($id_country = 1)
-   {
-      $list = [
-          1   => 'Buenos Aires',
-          2   => 'Catamarca',
-          3   => 'Chaco',
-          4   => 'Chubut',
-          5   => 'Córdoba',
-          6   => 'Corrientes',
-          7   => 'Entre Ríos',
-          8   => 'Formosa',
-          9   => 'Jujuy',
-          10  => 'La Pampa',
-          11  => 'La Rioja',
-          12  => 'Mendoza',
-          13  => 'Misiones',
-          14  => 'Neuquén',
-          15  => 'Río Negro',
-          16  => 'Salta',
-          17  => 'San Juan',
-          18  => 'San Luis',
-          19  => 'Santa Cruz',
-          20  => 'Santa Fe',
-          21  => 'Santiago del Estero',
-          22  => 'Tierra del Fuego, Antártida e Isla del Atlántico Sur',
-          23  => 'Tucumán'
-      ];
-      
-      return $list;  
+  static function getCountries()
+  {
+    $list = [
+      1 => 'Argentina'
+    ];
+    
+    return $list;
   }
 
+  static function getCountry($key)
+  { 
+    return self::getCountries()[$key];
+  }
+
+  static function getProvinces()
+  {
+    $list = [
+        1   => 'Buenos Aires',
+        2   => 'Catamarca',
+        3   => 'Chaco',
+        4   => 'Chubut',
+        5   => 'Córdoba',
+        6   => 'Corrientes',
+        7   => 'Entre Ríos',
+        8   => 'Formosa',
+        9   => 'Jujuy',
+        10  => 'La Pampa',
+        11  => 'La Rioja',
+        12  => 'Mendoza',
+        13  => 'Misiones',
+        14  => 'Neuquén',
+        15  => 'Río Negro',
+        16  => 'Salta',
+        17  => 'San Juan',
+        18  => 'San Luis',
+        19  => 'Santa Cruz',
+        20  => 'Santa Fe',
+        21  => 'Santiago del Estero',
+        22  => 'Tierra del Fuego, Antártida e Isla del Atlántico Sur',
+        23  => 'Tucumán'
+    ];
+    
+    return $list;  
+  }
+
+  static function getProvince($key)
+  {
+    return self::getProvinces()[$key];
+  }
+  
   static public function getTypesDocumentationPerson()
   {
     $list = array('dni'=>'DNI', 'le'=>'LE', 'CI'=>'CI');
