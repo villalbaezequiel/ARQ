@@ -37,6 +37,7 @@ $helpers = new \App\Helpers;
                 <th>Rubro</th>
                 <th>Sub-Rubro</th>
                 <th>Monto</th>
+                <th>Tipo</th>
                 <th>Fecha</th>
                 <th>Usuario</th>
                 <th>Accion</th>
@@ -49,6 +50,7 @@ $helpers = new \App\Helpers;
                 <td>{{ \App\Item::getName($cash_flow->id_item) }}</td>
                 <td>{{ \App\SubItem::getName($cash_flow->id_subitem) }}</td>
                 <td>{{ $helpers->getFormatSalary($cash_flow->amount) }}</td>
+                <td>{{ \App\ProjectCashFlow::getType($cash_flow->type) }}</td>
                 <td>{{ $helpers->setDateFormat($cash_flow->date, '-') }}</td>
                 <td>{{ \App\User::getFullName($cash_flow->id_user) }}</td>
                 <td class="text-right">

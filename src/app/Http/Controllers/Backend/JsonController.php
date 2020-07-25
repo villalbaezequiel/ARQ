@@ -279,4 +279,15 @@ class JsonController extends Controller
         }
     }
 
+    public function checkCashFlow()
+    {
+        try {
+            $countCashFlow = ProjectCashFlow::where('is_approved', '0')->count();
+
+            return response()->json(['status' => ($countCashFlow > 0 ? true : false)]);
+        } catch (\Exception $err) {
+            return response()->json(['status' => false]);
+        }
+    }
+
 }

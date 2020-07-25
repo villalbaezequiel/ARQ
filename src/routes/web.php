@@ -49,6 +49,8 @@ Route::group(['middleware' => ['auth']], function () {
     Route::get('/json/items/sub_items', 'Backend\JsonController@getSubItemsFromItems');
     Route::get('/json/project_providers/item/{idProject}/{idItem}', 'Backend\JsonController@searchProviders');
     Route::get('/json/project_provider_history/{idProject}/{idProvider}', 'Backend\JsonController@getHistoryProvider');
+
+    Route::get('/json/check_cash_flow', 'Backend\JsonController@checkCashFlow');
     
     Route::get('/export/project_budgets/{id}', 'Backend\ExportController@projectBudgets');
     Route::get('/export/project_realcost/{id}', 'Backend\ExportController@projectRealCost');

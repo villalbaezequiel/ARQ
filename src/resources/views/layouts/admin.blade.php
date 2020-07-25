@@ -86,6 +86,29 @@
         fixed_plugin_open = $('.sidebar .sidebar-wrapper .nav li.active a p').html();
 
         $sidebar_img_container.css('background-size', 'contain');
+
+        $.ajax({
+          type: 'GET',
+          url: '/json/check_cash_flow',
+          dataType: 'json',
+          success: function(data){
+            if(data.status)
+            {
+              $('.cash_flow').removeClass('hidden');
+            }
+          },
+          error: function(xhr, status){
+            Swal.fire({
+              title: 'Hubo un error al Consultar Contador de Aprobaciones!',
+              type: 'warning',
+              showCancelButton: false,
+              confirmButtonColor: '#3085d6',
+              cancelButtonColor: '#d33',
+              confirmButtonText: 'Aceptar'
+            });
+          }
+        });
+
       });
     </script>
 

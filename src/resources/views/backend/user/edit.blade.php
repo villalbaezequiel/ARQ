@@ -54,10 +54,10 @@
             </div>
 
             <div class="row">
-              <label class="col-md-2 col-form-label">Tipo de Documentación <span class="required-red">*</span></label>
+              <label class="col-md-2 col-form-label">Tipo de Documentación</label>
               <div class="col-md-7">
                 <div class="form-group">
-                  <select class="form-control selectpicker" data-style="btn btn-link" name="type_dni" required>
+                  <select class="form-control selectpicker" data-style="btn btn-link" name="type_dni">
                     @foreach(\App\Helpers::getTypesDocumentationPerson() as $key => $val)
                     <option value="{{ $key }}" <?php if($user->type_dni == $key){ echo "selected='selected'"; } ?>>{{ $val }}</option>
                     @endforeach
@@ -76,10 +76,10 @@
             </div>
 
             <div class="row">
-              <label class="col-md-2 col-form-label">CUIT <span class="required-red">*</span></label>
+              <label class="col-md-2 col-form-label">CUIT</label>
               <div class="col-md-7">
                 <div class="form-group">
-                  <input class="form-control input-type-number" type="number" name="cuit" value="{{ $user->cuit }}" maxlength="125" required>
+                  <input class="form-control input-type-number" type="number" name="cuit" value="{{ $user->cuit }}" maxlength="125">
                 </div>
               </div>
               <label class="col-md-3 label-on-right">
@@ -88,10 +88,10 @@
             </div>
 
             <div class="row">
-              <label class="col-md-2 col-form-label">Teléfono <span class="required-red">*</span></label>
+              <label class="col-md-2 col-form-label">Teléfono</label>
               <div class="col-md-7">
                 <div class="form-group">
-                  <input class="form-control input-type-number" type="text" name="telephone" value="{{ $user->telephone }}" maxlength="125" required>
+                  <input class="form-control input-type-number" type="text" name="telephone" value="{{ $user->telephone }}" maxlength="125">
                 </div>
               </div>
             </div>
@@ -139,16 +139,16 @@
                 <div class="form-group">
                   @if($user->birthdate)
                     <?php $birthdate = explode('-', \App\Helpers::getDate($user->birthdate)); ?>
-                    <input class="form-control datepicker validate-year" style="background-color: white!important;" pattern="^([0-2][0-9]|(3)[0-1])(\/)(((0)[0-9])|((1)[0-2]))(\/)\d{4}$" type="text" name="birthdate" value="{{ $birthdate[2].'/'.$birthdate[1].'/'.$birthdate[0] }}" minlength="10" maxlength="10" required readonly>
+                    <input class="form-control datepicker validate-year" style="background-color: white!important;" pattern="^([0-2][0-9]|(3)[0-1])(\/)(((0)[0-9])|((1)[0-2]))(\/)\d{4}$" type="text" name="birthdate" value="{{ $birthdate[2].'/'.$birthdate[1].'/'.$birthdate[0] }}" minlength="10" maxlength="10" readonly>
                   @else
-                    <input class="form-control datepicker validate-year" style="background-color: white!important;" pattern="^([0-2][0-9]|(3)[0-1])(\/)(((0)[0-9])|((1)[0-2]))(\/)\d{4}$" type="text" name="birthdate" value="{{ \App\Helpers::getDate($user->birthdate) }}" minlength="10" maxlength="10" required readonly>
+                    <input class="form-control datepicker validate-year" style="background-color: white!important;" pattern="^([0-2][0-9]|(3)[0-1])(\/)(((0)[0-9])|((1)[0-2]))(\/)\d{4}$" type="text" name="birthdate" value="{{ \App\Helpers::getDate($user->birthdate) }}" minlength="10" maxlength="10" readonly>
                   @endif
                 </div>
               </div>
             </div>
 
             <div class="row">
-                <label class="col-md-2 col-form-label">Pais <span class="required-red">*</span></label>
+                <label class="col-md-2 col-form-label">Pais</label>
                 <div class="col-md-2">
                   <div class="form-group">
                     <select class="form-control selectpicker" data-style="btn btn-link" data-live-search="true" name="id_country">
@@ -175,7 +175,7 @@
               </div>
 
               <div class="row">
-                <label class="col-md-2 col-form-label">Dirección <span class="required-red">*</span></label>
+                <label class="col-md-2 col-form-label">Dirección</label>
                 <div class="col-md-3">
                   <div class="form-group">
                     <input class="form-control" type="text" name="address" value="{{ $user->address }}">

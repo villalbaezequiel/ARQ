@@ -56,7 +56,7 @@
         <li class="nav-item nav-check-url ">
           <a class="nav-link" href="{{ url('/project_cash_flow') }}">
             <i class="material-icons">menu_book</i>
-            <p> Flujo de Cajas </p>
+            <p> Aprobaciones <i class="fa fa-tag hidden cash_flow" style="float:right; color:red"></i></p>
           </a>
         </li>
 
