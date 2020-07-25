@@ -40,7 +40,9 @@ class UserController extends Controller
      */
     public function create()
     {
-        return view('backend.user.create');
+      if(Auth::user()->permissions == "arq") return redirect('/users');
+      
+      return view('backend.user.create');
     }
 
     /**
@@ -51,6 +53,8 @@ class UserController extends Controller
      */
     public function store(Request $request)
     {
+        if(Auth::user()->permissions == "arq") return redirect('/users');
+
         $message;
         try {
           // Validations, check: email, dni
@@ -139,6 +143,8 @@ class UserController extends Controller
      */
     public function edit($id)
     {
+      if(Auth::user()->permissions == "arq") return redirect('/users');
+       
       return view('backend.user.edit', [
           'user' => User::find($id)
       ]);
@@ -153,6 +159,8 @@ class UserController extends Controller
      */
     public function update(Request $request, $id)
     {
+        if(Auth::user()->permissions == "arq") return redirect('/users');
+
         $message;
         try {
           // Validations, check: email, dni
@@ -238,10 +246,13 @@ class UserController extends Controller
      */
     public function destroy($id)
     {
+        if(Auth::user()->permissions == "arq") return redirect('/users');
+
         // User Delete
         $user = User::find($id);
         $user->delete();
   
         return response(array('message' => 'Usuario eliminado con exito!'));
     }
+    
 }

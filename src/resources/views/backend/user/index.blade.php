@@ -5,7 +5,9 @@
 @section('content')
 <div class="container-fluid">
 
-  <a href="{{ url('/users/create') }}" class="btn btn-primary">Nuevo Usuario</a>
+  @if(Auth::user()->permissions == "admin")
+    <a href="{{ url('/users/create') }}" class="btn btn-primary">Nuevo Usuario</a>
+  @endif
 
   <div class="row">
     <div class="col-md-12">

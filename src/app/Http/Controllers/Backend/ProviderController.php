@@ -14,39 +14,6 @@ use App\Item;
 
 class ProviderController extends Controller
 {
-    // protected $_permission;
-    // protected $permissionApproved = ['1', '3'];
-
-    // /**
-    //  * Instantiate a new controller instance.
-    //  *
-    //  * @return void
-    //  */
-    // public function __construct()
-    // {
-    //   $this->middleware(function ($request, $next) {
-
-    //     if(\Request::route()->getName() == "crew.store"){
-    //       return $next($request);
-    //     }
-
-    //     $cancelPermission = true;
-    //     $this->_permission = json_decode(Auth::user()->permissions);
-
-    //     if($this->_permission){
-    //       foreach($this->permissionApproved as $approved){
-    //         foreach($this->_permission as $userPermission){
-    //           if($approved == $userPermission){
-    //             $cancelPermission = false;
-    //             return $next($request);
-    //           }
-    //         }
-    //       }
-    //     }
-
-    //   });
-    // }
-
     /**
      * Display a listing of the resource.
      *
@@ -66,6 +33,8 @@ class ProviderController extends Controller
     */
     public function create()
     {
+      if(Auth::user()->permissions == "arq") return redirect('/providers');
+
       return view('backend.provider.create', [
         'items' => Item::where('is_active', '1')->get()
       ]);
@@ -79,6 +48,8 @@ class ProviderController extends Controller
     */
     public function store(Request $request)
     {
+      if(Auth::user()->permissions == "arq") return redirect('/providers');
+
       $message;
       try {
         // Validations, check: cuit
@@ -235,6 +206,8 @@ class ProviderController extends Controller
       */
     public function edit($id)
     {
+      if(Auth::user()->permissions == "arq") return redirect('/providers');
+
       $provider = Provider::find($id);
      
       return view('backend.provider.edit', [
@@ -254,6 +227,8 @@ class ProviderController extends Controller
       */
     public function update(Request $request, $id)
     {
+      if(Auth::user()->permissions == "arq") return redirect('/providers');
+
       $message;
       try {
         // Validations, check: cuit
@@ -372,6 +347,8 @@ class ProviderController extends Controller
       */
     public function destroy($id)
     {
+      if(Auth::user()->permissions == "arq") return redirect('/providers');
+
       $provider = Provider::find($id);
         // User Delete
         $user = User::find($provider->id_user);

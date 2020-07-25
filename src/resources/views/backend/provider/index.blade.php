@@ -5,8 +5,10 @@
 @section('content')
 <div class="container-fluid">
 
-  <a href="{{ url('/providers/create') }}" class="btn btn-primary">Nuevo Proveedor</a>
-  <a href='{{ url("/export/providers") }}' class="btn btn-primary">Descargar Lista</a>
+  @if(Auth::user()->permissions == "admin")
+    <a href="{{ url('/providers/create') }}" class="btn btn-primary">Nuevo Proveedor</a>
+    <a href='{{ url("/export/providers") }}' class="btn btn-primary">Descargar Lista</a>
+  @endif
 
   <div class="row">
     <div class="col-md-12">
@@ -45,11 +47,16 @@
                 <td>{{ \App\User::getFullName($provider->id_user) }}</td>
                 <td>{{ \App\User::getActive($provider->id_user) }}</td>
                 <td class="text-right">
+
+                @if(Auth::user()->permissions == "admin")
                   {!! Form::open(['route' => ['providers.destroy', $provider->id], 'method' => 'DELETE', 'class'=> 'alert-confirm-delete']) !!}
                     <a href="{{ url('/providers/'.$provider->id) }}" class="btn btn-link btn-warning btn-just-icon show" title="Ver"><i class="material-icons">visibility</i></a>
                     <a href="{{ url('/providers/'.$provider->id.'/edit') }}" class="btn btn-link btn-warning btn-just-icon edit" title="Editar"><i class="material-icons">dvr</i></a>
                     <button type="submit" class="btn btn-link btn-danger btn-just-icon remove" title="Eliminar"><i class="material-icons">close</i></button>
                   {!! Form::close() !!}
+                @else
+                  <a href="{{ url('/providers/'.$provider->id) }}" class="btn btn-link btn-warning btn-just-icon show" title="Ver"><i class="material-icons">visibility</i></a>
+                @endif
                 </td>
               </tr>
               @endforeach
