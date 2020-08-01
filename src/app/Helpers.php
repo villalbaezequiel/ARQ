@@ -49,15 +49,19 @@ class Helpers extends Model
 
     static public function setDateFormatTimestamp($date, $explodeString = '/', $hour = '00:00:00')
     {
-      $substrDate = substr($date, 0, 10);
-      $separartor = '-';
-      $format = explode($explodeString, $substrDate);
-
-      if(isset($format[2]))
+      if($date)
       {
-        return $format[2].$separartor.$format[1].$separartor.$format[0]." ".$hour;
-      } else {
-        return null;
+        $substrDate = substr($date, 0, 10);
+        $separartor = '-';
+        $format = explode($explodeString, $substrDate);
+
+        if(isset($format[2]))
+        {
+          return $format[2].$separartor.$format[1].$separartor.$format[0]." ".$hour;
+        } else {
+          return null;
+        
+        }
       }
     }
 
@@ -195,10 +199,13 @@ class Helpers extends Model
 
    static function setTransformDateTimestamp($date, $separartor = '/', $hour = '00:00:00')
    {
-      $setDate = explode($separartor, $date);
-      $dateTransform = $setDate[2].'-'.$setDate[1].'-'.$setDate[0].' '.$hour;
+      if($date)
+      {
+        $setDate = explode($separartor, $date);
+        $dateTransform = $setDate[2].'-'.$setDate[1].'-'.$setDate[0].' '.$hour;
 
-      return $dateTransform;
+        return $dateTransform;
+      }
    }
 
   static function getCountries()

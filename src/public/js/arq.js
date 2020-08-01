@@ -526,8 +526,7 @@ let arqJs = {
             {
                 $.each(data, function(i, v)
                 {
-                  var idOptgroup  = i.normalize('NFD').replace(/[\u0300-\u036f]/g,"");
-                  idOptgroup      = idOptgroup.replace(/ /g, '_'); 
+                  var idOptgroup  = i.normalize('NFD').replace(/[\u0300-\u036f]/g,"").replace(/\//g, ' ').replace(/\ /g, '_');
 
                   subItems.append(`<optgroup label="${i}" id="${idOptgroup}" data-min-options="1"></optgroup>`);
                   
