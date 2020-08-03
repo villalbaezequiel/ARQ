@@ -108,8 +108,11 @@ class User extends Authenticatable
 
     public function getRole()
     {
-      $roles = static::getRoles();
-      return $roles[$this->permissions];
+      if($this->permissions)
+      {
+        $roles = static::getRoles();
+        return $roles[$this->permissions];
+      }
     }
 
     public function getIDClient()
