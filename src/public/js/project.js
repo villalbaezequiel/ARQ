@@ -45,6 +45,7 @@ $(document).ready(function() {
   
         $('textarea[name=observations]').val(result.value);
         $('#logic_project').submit();
+        $(".spinner").show();
       });
     });
 

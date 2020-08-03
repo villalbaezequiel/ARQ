@@ -108,17 +108,8 @@ class User extends Authenticatable
 
     public function getRole()
     {
-      $role = 'admin';
-
-      if((bool) $this->is_client) {
-        $role = 'cliente';
-      }
-
-      if((bool) $this->is_provider) {
-        $role = 'proveedor';
-      }
-
-      return $role;
+      $roles = static::getRoles();
+      return $roles[$this->permissions];
     }
 
     public function getIDClient()

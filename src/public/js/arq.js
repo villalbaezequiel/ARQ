@@ -217,6 +217,11 @@ $(document).ready(function(){
     }
   });
 
+  // spinner loading
+  $(".loading-spinner").click(function(){
+    $(".spinner").show();
+  });
+
 });
 
 
