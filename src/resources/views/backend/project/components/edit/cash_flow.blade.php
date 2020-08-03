@@ -135,7 +135,7 @@
         <div class="form-group">
             <div class="input-group-prepend">
             <span class="input-group-text">
-                Aclaracion<span class="default-required required-red">*</span>
+                Aclaracion<span class="hidden required-red">*</span>
             </span>
             <input type="text" class="form-control" name="cash_flow_clarification" maxlength="125">
             </div>

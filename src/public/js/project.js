@@ -883,6 +883,8 @@ function addCashFlow(e)
     let data  = {};
     let type  = $('select[name=cash_flow_type]').find(':selected').val();
 
+    let cashFlowClarification = $('input[name=cash_flow_clarification]').val();
+
     if(type == "entry")
     {
       data = {
@@ -896,7 +898,7 @@ function addCashFlow(e)
           id_subitem    : "0",
           detail        : $('select[name=cash_flow_detail]').find(':selected').val(),
           id_provider   : "0",
-          clarification : $('input[name=cash_flow_clarification]').val(),
+          clarification : (cashFlowClarification ? cashFlowClarification : " "),
           id_user       : $('select[name=cash_flow_id_user]').find(':selected').val(),
           id_client     : $('select[name=cash_flow_id_client]').find(':selected').val()  
       }
@@ -914,7 +916,7 @@ function addCashFlow(e)
         id_subitem    : $('select[name=cash_flow_id_subitem]').find(':selected').val(),
         detail        : $('select[name=cash_flow_detail]').find(':selected').val(),
         id_provider   : $('select[name=cash_flow_id_provider]').find(':selected').val(),
-        clarification : $('input[name=cash_flow_clarification]').val(),
+        clarification : (cashFlowClarification ? cashFlowClarification : " "),
         id_user       : $('select[name=cash_flow_id_user]').find(':selected').val(),
         id_client     : "0"
       }
@@ -931,7 +933,7 @@ function addCashFlow(e)
         id_subitem    : $('select[name=cash_flow_id_subitem]').find(':selected').val(),
         detail        : $('select[name=cash_flow_detail]').find(':selected').val(),
         id_provider   : "0",
-        clarification : $('input[name=cash_flow_clarification]').val(),
+        clarification : (cashFlowClarification ? cashFlowClarification : " "),
         id_user       : $('select[name=cash_flow_id_user]').find(':selected').val(),
         id_client     : "0"
       }

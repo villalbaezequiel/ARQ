@@ -56,7 +56,10 @@ class ProjectController extends Controller
             }
         }
 
-        $clients = Client::select('clients.id', 'users.last_name', 'users.name')->join('users', 'clients.id_user', 'users.id')->where('users.is_active', '1')->get();
+        $clients = Client::select('clients.id', 'users.last_name', 'users.name')
+                    ->join('users', 'clients.id_user', 'users.id')->where('users.is_active', '1')
+                    ->orderBy('users.last_name', 'ASC')
+                    ->get();
         
         return view('backend.project.create', [
             'clients' => $clients,
@@ -215,6 +218,7 @@ class ProjectController extends Controller
         // collection clients
         $collectionClients          = Client::select('clients.id', 'users.last_name', 'users.name')
                                         ->join('users', 'clients.id_user', 'users.id')
+                                        ->orderBy('users.last_name', 'ASC')
                                         ->where('users.is_active', '1')->get();
 
         // collection ProjectClients (flujo de caja -> clientes del proyecto)
