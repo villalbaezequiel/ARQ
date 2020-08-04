@@ -198,7 +198,7 @@ function generateTemplateItems(idItem, numberItem, nameItem, dataSubItems)
         <td><input type="number"  name="budget[${v.id}][quantity]"  maxlength="11"  id="quantity_${v.id}" value="1" data-idsubiteam="${v.id}" class="form-control text-center calculate-subtotal" required /></td>
         <td><input type="text"    name="budget[${v.id}][unit_cost]" maxlength="14"  id="unit_cost_${v.id}" data-idsubiteam="${v.id}" value="$1" class="form-control text-center calculate-subtotal validate-number-decimal reset-value" required /></td>
         <td><input type="text"    name="budget[${v.id}][subtotal]"  maxlength="14"  id="subtotal_${v.id}"  value="$1" class="form-control text-center validate-number-decimal" readonly required /></td>
-        <td><input type="text"    name="budget[${v.id}][tax]"       maxlength="6"   id="tax_${v.id}" value="%0" data-idsubiteam="${v.id}" class="form-control text-center validate-tax calculate-subtotal" /></td>
+        <td><input type="text"    name="budget[${v.id}][tax]"       maxlength="6"   id="tax_${v.id}" value="%0" data-idsubiteam="${v.id}" class="form-control text-center validate-tax calculate-subtotal reset-value" /></td>
         <td><input type="text"    name="budget[${v.id}][total]"     maxlength="14"  id="total_${v.id}" value="$1" class="form-control text-center validate-number-decimal" readonly required /></td>
         <td><input type="text"    name="budget[${v.id}][incidence]" maxlength="6"   id="incidence_${v.id}" data-idsubiteam="${v.id}" class="form-control text-center validate-tax" readonly /></td>
         
@@ -1296,7 +1296,11 @@ let projectJS = {
 
   resetValueDefault: () => {
     $('.reset-value').click(function(){
-      if($(this).val() == "$1" || $(this).val() == "$1.00") $(this).val(''); 
+      if( $(this).val() == "$1" || $(this).val() == "$1.00" ||
+          $(this).val() == "%0" || $(this).val() == "%0.00")
+      {
+        $(this).val('');
+      } 
     });
   },
 
