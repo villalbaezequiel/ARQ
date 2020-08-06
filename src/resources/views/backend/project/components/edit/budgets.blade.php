@@ -63,7 +63,7 @@
                 <th></th>
             </tr>
         </thead>
-        <tbody>
+        <tbody id="content-data-budget">
             <tr class="b-c-gray">
                 <th></th>
                 <th></th>
@@ -88,67 +88,6 @@
                 <th><input type="text" name="global_incidence"class="form-control text-center validate-tax" value="100" disabled></th>
                 <th></th>
             </tr>
-
-            @foreach($project_budgets as $key => $collectionSubitem)
-                <tr class="b-c-gray items_content" id="item-{{ $key }}" data-id="{{ $key }}">
-                    <th>{{ \App\Item::getNumberFromId($key) }}</th>
-                    <th colspan="4" class="text-left pl-3">{{ \App\Item::getName($key) }}</th>
-                    <th><input type="text"  name="item_subtotal" class="form-control text-center validate-number-decimal" disabled></th>
-                    <th></th>
-                    <th><input type="text"  name="item_total" class="form-control text-center validate-number-decimal" disabled></th>
-                    <th><input type="text"name="item_incidence" class="form-control text-center validate-tax" maxlength="6" disabled></th>
-                    <th>
-                        <button
-                            class="btn btn-danger removeItem removeItemAjax" 
-                            data-idproject="{{ $project->id }}"
-                            data-iditem="{{ $key }}"
-                            style="padding: 0px 5px;"
-                        >X</button>
-                    </th>
-                </tr>
-
-                <?php 
-                    $itemSubtotal   = 0;
-                    $itemTotal      = 0;
-                    $itemIncidene   = 0;
-                ?>
-
-                @foreach($collectionSubitem as $budgetSubItem)
-                <tr id="subitem-{{ $budgetSubItem->id_subitem }}" data-id="{{ $budgetSubItem->id_subitem }}" data-iditem="{{ $key }}" class="sub_items_content">
-                    
-                    <input      type="hidden" name="budget[{{ $budgetSubItem->id_subitem }}][id]" value="{{ $budgetSubItem->id }}" />
-                    <input      type="hidden" name="budget[{{ $budgetSubItem->id_subitem }}][id_item]" value="{{ $key }}" />
-
-                    <td>{{ \App\SubItem::getNumberFromId($budgetSubItem->id_subitem) }}</td>
-                    <td class="pl-3"><input class="form-control" value="{{ \App\SubItem::getName($budgetSubItem->id_subitem) }}" disabled /></td>
-                    <td><input type="text"  name="budget[{{ $budgetSubItem->id_subitem }}][unit]"      value="{{ $budgetSubItem->unit }}" class="form-control text-center" required /></td>
-                    <td><input type="number"name="budget[{{ $budgetSubItem->id_subitem }}][quantity]"  value="{{ $budgetSubItem->quantity }}" maxlength="11"  id="quantity_{{ $budgetSubItem->id_subitem }}" data-idsubiteam="{{ $budgetSubItem->id_subitem }}" class="form-control text-center calculate-subtotal" required /></td>
-                    <td><input type="text"  name="budget[{{ $budgetSubItem->id_subitem }}][unit_cost]" value="{{ $budgetSubItem->unit_cost }}" maxlength="14" id="unit_cost_{{ $budgetSubItem->id_subitem }}" data-idsubiteam="{{ $budgetSubItem->id_subitem }}" class="form-control text-center calculate-subtotal validate-number-decimal reset-value" required /></td>
-                    <td><input type="text"  name="budget[{{ $budgetSubItem->id_subitem }}][subtotal]"  value="{{ $budgetSubItem->subtotal }}" maxlength="14"  id="subtotal_{{ $budgetSubItem->id_subitem }}" class="form-control text-center validate-number-decimal" readonly required /></td>
-                    <td><input type="text"  name="budget[{{ $budgetSubItem->id_subitem }}][tax]"       value="{{ $budgetSubItem->tax }}" maxlength="6"        id="tax_{{ $budgetSubItem->id_subitem }}" data-idsubiteam="{{ $budgetSubItem->id_subitem }}" class="form-control text-center validate-tax calculate-subtotal reset-value" /></td>
-                    <td><input type="text"  name="budget[{{ $budgetSubItem->id_subitem }}][total]"     value="{{ $budgetSubItem->total }}" maxlength="14"     id="total_{{ $budgetSubItem->id_subitem }}" class="form-control text-center validate-number-decimal" readonly required /></td>
-                    <td><input type="text"  name="budget[{{ $budgetSubItem->id_subitem }}][incidence]" value="" maxlength="6"        id="incidence_{{ $budgetSubItem->id_subitem }}" data-idsubiteam="{{ $budgetSubItem->id_subitem }}" class="form-control text-center validate-tax" readonly /></td>
-                    
-                    <td class="text-center b-c-gray" style="vertical-align: inherit;">
-                        <button
-                        class="btn btn-danger removeSubItemAjax" 
-                        data-idsubitem="subitem-{{ $budgetSubItem->id_subitem }}" 
-                        data-id="{{ $budgetSubItem->id }}"
-                        style="padding: 0px 5px;" 
-                        >X</button>
-                    </td>
-
-                    <?php 
-                        $itemSubtotal   += $budgetSubItem->subtotal;
-                        $itemTotal      += $budgetSubItem->total;
-                    ?>
-                </tr>
-                @endforeach
-                
-                <input type="hidden" name="item_subtotal_calc_{{ $key }}" value="{{ $itemSubtotal }}">
-                <input type="hidden" name="item_total_calc_{{ $key }}" value="{{ $itemTotal }}">
-               
-            @endforeach
         </tbody>
       </table>
     </div>
@@ -161,3 +100,7 @@
     }
 </style>
 @endif
+
+<script type="text/javascript">
+    let projectBudgets = {!! json_encode($project_budgets,JSON_FORCE_OBJECT) !!};
+</script>

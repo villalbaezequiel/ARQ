@@ -33,13 +33,12 @@
 
         <div class="content">
           @yield('content')
-
-          <div class="spinner" style="display: none;"></div>
-
         </div>
         @include('backend.components.footer')
       </div>
     </div>
+
+    <div class="spinner" style="display: none;"></div>
     
     @guest
     @else

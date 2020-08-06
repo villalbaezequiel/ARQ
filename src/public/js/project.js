@@ -1,5 +1,7 @@
 $(document).ready(function() {
 
+    let showURL = window.location.pathname;
+
     $('a').click(function(e) {
         if(!$(this).hasClass('none-alert')) {
           var parentForm = $(this).parents('form');
@@ -28,7 +30,63 @@ $(document).ready(function() {
     };
   
     arqJs.initMaterialWizard(rules);
-  
+
+    $('.save-continue').mouseover(function(){
+        let status = true;
+
+        if( $('.tab-pane.active').attr('id') == 'module_five' ||
+            $('.tab-pane.active').attr('id') == 'module_six' ||
+            $('.tab-pane.active').attr('id') == 'module_four')
+        {
+          status = false;
+        }
+
+        if($('.tab-pane.active').attr('id') == 'module_two' && $('input[name=open_budget]').val() == 0) status = false; 
+
+        if(status)
+        {
+          let dataLogicProject = $('.tab-pane.active :input').serialize();
+
+          $.ajax({
+            type: 'PUT',
+            url: '/projects/'+$('#logic_project').data('id'),
+            dataType: 'json',
+            data: dataLogicProject,
+            success: function(response){
+              if(!response.status){
+                Swal.fire({
+                  title: 'Error al Guardar!',
+                  type: 'warning',
+                  showCancelButton: false,
+                  confirmButtonColor: '#3085d6',
+                  cancelButtonColor: '#d33',
+                  confirmButtonText: 'Aceptar'
+                });
+              }
+            },
+            error: function(xhr, status){
+              console.log('Error: '+xhr);
+            }
+          });
+        }
+    });
+
+    $('.save-continue').click(function(){
+
+      $('.spinner').show();
+      $("#content-data-budget tr").remove();
+      $("#content-data-realcost tr").remove();
+
+      setTimeout(function(){
+        if($('.tab-pane.active').attr('id') == 'module_two') processDataBudget();
+
+        if($('.tab-pane.active').attr('id') == 'module_three') processDataRealCost();
+      }, 100);
+
+      setTimeout(function(){ $('.spinner').hide(); }, 150);
+      
+    });
+
     $('.show-content-observation').click(function(e) {
       e.preventDefault();
   
@@ -42,19 +100,48 @@ $(document).ready(function() {
         if(result.dismiss == "cancel"){
           return false;
         }
-  
-        $('textarea[name=observations]').val(result.value);
-        $('#logic_project').submit();
+
         $(".spinner").show();
+
+        $('textarea[name=observations]').val(result.value);
+
+        if(showURL == "/projects/create")
+        {
+          let dataLogicProject = $('#logic_project').serialize();
+
+          $.ajax({
+            type: 'POST',
+            url: '/projects',
+            data: dataLogicProject ,
+            success: function(response){
+              if(response.status){
+                projectJS.setUrlPath('/projects');
+              }
+            },
+            error: function(xhr, status){
+              console.log('Error: '+xhr);
+            }
+          });
+        } else {
+          let dataLogicProject = $('.tab-pane.active :input').serialize();
+
+          $.ajax({
+            type: 'PUT',
+            url: '/projects/'+$('#logic_project').data('id'),
+            dataType: 'json',
+            data: dataLogicProject,
+            success: function(response){
+              if(response.status){
+                projectJS.setUrlPath('/projects');
+              }
+            },
+            error: function(xhr, status){
+              console.log('Error: '+xhr);
+            }
+          });
+        }
+      
       });
-    });
-
-    $.each($(".validate-number-decimal"), function(){
-      formatCurrency($(this), "blur");
-    });
-
-    $.each($(".validate-tax"), function(){
-      formatTax($(this), "blur");
     });
 
     calculateTotales();
@@ -1308,5 +1395,16 @@ let projectJS = {
       $('.btn-finish').show();
   },
 
+  showSpinner: () => {
+    $('.spinner').show();
+  },
+
+  hideSpinner: () => {
+    $('.spinner').hide();
+  },
+
+  setUrlPath: (path) => {
+    window.location.replace(window.location.origin + path);
+  }
 };
 

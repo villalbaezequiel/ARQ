@@ -91,9 +91,11 @@
 
             <div class="hidden cash_flow_id_subitem_collection">
               @foreach($project_real_costs as $key => $item)
-                <optgroup data-id="{{ $key }}" label="{{ \App\Item::getName($key) }}">
+                <optgroup data-id="{{ $key }}" label="{{ $item['item_name'] }}">
                     @foreach($item as $subitem)
-                        <option value="{{ $subitem->id_subitem }}" data-id="{{ $subitem->id }}">{{ \App\SubItem::getName($subitem->id_subitem) }}</option>
+                        @if(isset($subitem->id_subitem))
+                        <option value="{{ $subitem->id_subitem }}" data-id="{{ $subitem->id }}">{{ $subitem->name_subitem }}</option>
+                        @endif
                     @endforeach
                 </optgroup>
               @endforeach

@@ -75,68 +75,74 @@ class ProjectController extends Controller
      */
     public function store(Request $request)
     {
-        try {
-            // New Project
-            $project                = new Project;
-            $project->start_date    = Project::getDateParseFormat($request->get('start_date'));
-            $project->finish_date   = Project::getDateParseFormat($request->get('finish_date'));
-            $project->id_client     = json_encode($request->get('id_client'));
-            $project->name          = $request->get('name');
-            $project->description   = $request->get('description');
-            $project->observations  = $request->get('observations');
-            $project->id_country    = $request->get('id_country');
-            $project->id_province   = $request->get('id_province');
-            $project->location      = $request->get('location');
-            $project->address       = $request->get('address');
-            $project->address_number= $request->get('address_number');
-            $project->cp            = $request->get('cp');
-            $project->piso_depto    = $request->get('piso_depto');
-            $project->is_open_budget= '1';
-            $project->is_active     = $request->get('is_active');
-            $project->link_google_drive = $request->get('link_google_drive');
-            $project->link_dropbox  = $request->get('link_dropbox');
-            $project->name_budget   = $request->get('name_budget');
-            $project->save();
+        if($request->ajax())
+        {
+            try {
+                // New Project
+                $project                = new Project;
+                $project->start_date    = Project::getDateParseFormat($request->get('start_date'));
+                $project->finish_date   = Project::getDateParseFormat($request->get('finish_date'));
+                $project->id_client     = json_encode($request->get('id_client'));
+                $project->name          = $request->get('name');
+                $project->description   = $request->get('description');
+                $project->observations  = $request->get('observations');
+                $project->id_country    = $request->get('id_country');
+                $project->id_province   = $request->get('id_province');
+                $project->location      = $request->get('location');
+                $project->address       = $request->get('address');
+                $project->address_number= $request->get('address_number');
+                $project->cp            = $request->get('cp');
+                $project->piso_depto    = $request->get('piso_depto');
+                $project->is_open_budget= '1';
+                $project->is_active     = $request->get('is_active');
+                $project->link_google_drive = $request->get('link_google_drive');
+                $project->link_dropbox  = $request->get('link_dropbox');
+                $project->name_budget   = $request->get('name_budget');
+                $project->save();
 
-            // save budgets
-            if($project->getIsOpenBudget())
-            {
-                if($request->get('budget'))
+                // save budgets
+                if($project->getIsOpenBudget())
                 {
-                    foreach($request->get('budget') as $key => $val)
+                    if($request->get('budget'))
                     {
-                        $projectBudget = new ProjectBudget;
-                        $projectBudget->id_project  = $project->id;
-                        $projectBudget->id_item     = $val['id_item'];
-                        $projectBudget->id_subitem  = $key;
-                        $projectBudget->unit        = $val['unit'];
-                        $projectBudget->quantity    = $val['quantity'];
-                        $projectBudget->unit_cost   = Project::setParseFormatPrice($val['unit_cost']);
-                        $projectBudget->subtotal    = Project::setParseFormatPrice($val['subtotal']);
-                        $projectBudget->tax         = Project::setParseFormatTax($val['tax']);
-                        $projectBudget->total       = Project::setParseFormatPrice($val['total']);
-                        $projectBudget->save();
+                        $dataProjectBudget = [];
+                        foreach($request->get('budget') as $key => $val)
+                        {
+                            $dataProjectBudget[] = [
+                                'id_project'  => $project->id,
+                                'id_item'     => $val['id_item'],
+                                'id_subitem'  => $key,
+                                'unit'        => $val['unit'],
+                                'quantity'    => $val['quantity'],
+                                'unit_cost'   => Project::setParseFormatPrice($val['unit_cost']),
+                                'subtotal'    => Project::setParseFormatPrice($val['subtotal']),
+                                'tax'         => Project::setParseFormatTax($val['tax']),
+                                'total'       => Project::setParseFormatPrice($val['total']),
+                            ];
+                        }
+                        ProjectBudget::insert($dataProjectBudget);
                     }
                 }
+
+                //save ProductDocument
+                Project::uploadDocuments($request, 'files', $project->id);
+
+                return response()->json(['status' => true]);
+
+            } catch(\Exception $e) {
+                if(\Config::get('app.debug')):
+                $message = 'ERROR('.$e->getLine().'): '.$e->getMessage();
+                else:
+                $message = 'Se ha producido un error. Por favor intente nuevamente.';
+                endif;
+    
+                $respuesta = array(
+                'estado' => false,
+                'mensaje' => $message
+                );
+
+                return response()->json(['status' => false, 'message' => $respuesta]);
             }
-
-            //save ProductDocument
-            Project::uploadDocuments($request, 'files', $project->id);
-
-            return redirect('/projects')->with('message', 'Proyecto creado con exito!');
-
-        } catch(\Exception $e) {
-            if(\Config::get('app.debug')):
-              $message = 'ERROR('.$e->getLine().'): '.$e->getMessage();
-            else:
-              $message = 'Se ha producido un error. Por favor intente nuevamente.';
-            endif;
-  
-            $respuesta = array(
-              'estado' => false,
-              'mensaje' => $message
-            );
-            return \Response::json($respuesta);
         }
     }
 
@@ -189,7 +195,12 @@ class ProjectController extends Controller
                                                     ->orderBy('sub_items.number', 'ASC')
                                                     ->get();
 
-        foreach ($projectBudget as $value) {
+        foreach ($projectBudget as $value)
+        {
+            $value->number_subitem = SubItem::getNumberFromId($value->id_subitem);
+            $value->name_subitem = SubItem::getName($value->id_subitem);
+            $collectionProjectBudget[$value->id_item]['item_number'] = Item::getNumberFromId($value->id_item);
+            $collectionProjectBudget[$value->id_item]['item_name'] = Item::getName($value->id_item);
             $collectionProjectBudget[$value->id_item][] = $value;
         }
 
@@ -208,7 +219,13 @@ class ProjectController extends Controller
 
         foreach ($projectRealCost as $value)
         {
+            $value->number_subitem = SubItem::getNumberFromId($value->id_subitem);
+            $value->name_subitem = SubItem::getName($value->id_subitem);
+            $collectionProjectRealCost[$value->id_item]['item_number'] = Item::getNumberFromId($value->id_item);
+            $collectionProjectRealCost[$value->id_item]['item_name'] = Item::getName($value->id_item);
+
             $collectionProjectRealCost[$value->id_item][]   = $value;
+
             $collectionProjectItems[$value->id_item]        = Item::getName($value->id_item);
         }
 
@@ -276,120 +293,134 @@ class ProjectController extends Controller
      */
     public function update(Request $request, $id)
     {
-        try {
-            // New Project
-            $project                = Project::find($id);
-            $project->start_date    = Project::getDateParseFormat($request->get('start_date'));
-            $project->finish_date   = Project::getDateParseFormat($request->get('finish_date'));
-            $project->id_client     = json_encode($request->get('id_client'));
-            $project->name          = $request->get('name');
-            $project->description   = $request->get('description');
-            $project->observations  = $request->get('observations');
-            $project->id_country    = $request->get('id_country');
-            $project->id_province   = $request->get('id_province');
-            $project->location      = $request->get('location');
-            $project->address       = $request->get('address');
-            $project->address_number= $request->get('address_number');
-            $project->cp            = $request->get('cp');
-            $project->piso_depto    = $request->get('piso_depto');
-            $project->is_active     = $request->get('is_active');
-            $project->link_google_drive = $request->get('link_google_drive');
-            $project->link_dropbox      = $request->get('link_dropbox');
-            $project->name_budget   = $request->get('name_budget');
-            $project->save();
+        if($request->ajax())
+        {
+            try {
+                // update Project
+                $project                = Project::find($id);
+                
+              if($request->get('name'))
+              {
+                $project->start_date    = Project::getDateParseFormat($request->get('start_date'));
+                $project->finish_date   = Project::getDateParseFormat($request->get('finish_date'));
+                $project->id_client     = json_encode($request->get('id_client'));
+                $project->name          = $request->get('name');
+                $project->description   = $request->get('description');
+                $project->id_country    = $request->get('id_country');
+                $project->id_province   = $request->get('id_province');
+                $project->location      = $request->get('location');
+                $project->address       = $request->get('address');
+                $project->address_number= $request->get('address_number');
+                $project->cp            = $request->get('cp');
+                $project->piso_depto    = $request->get('piso_depto');
+                $project->is_active     = $request->get('is_active');
+                $project->name_budget   = $request->get('name_budget');
+              }
 
-            //save ProductDocument
-            Project::uploadDocuments($request, 'files', $project->id);
+              if($request->get('observations')) $project->observations = $request->get('observations');
+              if($request->get('link_google_drive')) $project->link_google_drive = $request->get('link_google_drive');
+              if($request->get('link_dropbox')) $project->link_dropbox = $request->get('link_dropbox');
 
-            if($project->getIsOpenBudget())
-            {
-                if($request->get('budget'))
+              $project->save();
+
+                //save ProductDocument
+                Project::uploadDocuments($request, 'files', $project->id);
+
+                if($project->getIsOpenBudget())
                 {
-                    foreach($request->get('budget') as $key => $val)
+                    if($request->get('budget'))
                     {
-                        if(isset($val['id']))
+                        $dataProjectBudget = [];
+                        foreach($request->get('budget') as $key => $val)
                         {
-                            $projectBudget = ProjectBudget::find($val['id']);
-                            $projectBudget->id_subitem  = $key;
-                            $projectBudget->unit        = $val['unit'];
-                            $projectBudget->quantity    = $val['quantity'];
-                            $projectBudget->unit_cost   = Project::setParseFormatPrice($val['unit_cost']);
-                            $projectBudget->subtotal    = Project::setParseFormatPrice($val['subtotal']);
-                            $projectBudget->tax         = Project::setParseFormatTax($val['tax']);
-                            $projectBudget->total       = Project::setParseFormatPrice($val['total']);
-                            $projectBudget->save();
-                        } else {
-                            $projectBudget = new ProjectBudget;
-                            $projectBudget->id_project  = $project->id;
-                            $projectBudget->id_item     = $val['id_item'];
-                            $projectBudget->id_subitem  = $key;
-                            $projectBudget->unit        = $val['unit'];
-                            $projectBudget->quantity    = $val['quantity'];
-                            $projectBudget->unit_cost   = Project::setParseFormatPrice($val['unit_cost']);
-                            $projectBudget->subtotal    = Project::setParseFormatPrice($val['subtotal']);
-                            $projectBudget->tax         = Project::setParseFormatTax($val['tax']);
-                            $projectBudget->total       = Project::setParseFormatPrice($val['total']);
-                            $projectBudget->save();
+                            if(isset($val['id']))
+                            {
+                                $projectBudget = ProjectBudget::find($val['id']);
+                                $projectBudget->id_subitem  = $key;
+                                $projectBudget->unit        = $val['unit'];
+                                $projectBudget->quantity    = $val['quantity'];
+                                $projectBudget->unit_cost   = Project::setParseFormatPrice($val['unit_cost']);
+                                $projectBudget->subtotal    = Project::setParseFormatPrice($val['subtotal']);
+                                $projectBudget->tax         = Project::setParseFormatTax($val['tax']);
+                                $projectBudget->total       = Project::setParseFormatPrice($val['total']);
+                                $projectBudget->save();
+                            } else {
+                                $dataProjectBudget[] = [
+                                    'id_project'  => $project->id,
+                                    'id_item'     => $val['id_item'],
+                                    'id_subitem'  => $key,
+                                    'unit'        => $val['unit'],
+                                    'quantity'    => $val['quantity'],
+                                    'unit_cost'   => Project::setParseFormatPrice($val['unit_cost']),
+                                    'subtotal'    => Project::setParseFormatPrice($val['subtotal']),
+                                    'tax'         => Project::setParseFormatTax($val['tax']),
+                                    'total'       => Project::setParseFormatPrice($val['total']),
+                                ];
+                            }
                         }
+                        ProjectBudget::insert($dataProjectBudget);
+                    }
+                } else {
+                    if($request->get('real_cost'))
+                    {
+                        $dataProjectRealCost = [];
+                        foreach($request->get('real_cost') as $key => $val)
+                        {
+                            $totalBudget = ProjectBudget::select('total')->where('id_project' ,$id)->where('id_subitem', $key)->first();
+
+                            if(!$totalBudget->total) $totalBudget = 0;
+
+                            if(isset($val['id']))
+                            {
+                                $projectRealCost = ProjectRealCost::find($val['id']);
+                                $projectRealCost->id_subitem   = $key;
+                                $projectRealCost->quantity     = $val['quantity'];
+                                $projectRealCost->unit_cost    = Project::setParseFormatPrice($val['unit_cost']);
+                                $projectRealCost->tax          = Project::setParseFormatTax($val['tax']);
+                                $projectRealCost->budget_total = Project::setParseFormatPrice($val['budget_total']);
+                                $projectRealCost->balance_item = $projectRealCost->budget_total - $projectRealCost->paid;
+                                $projectRealCost->budget_variation_pesos   = Project::setParseFormatPrice($val['budget_variation_pesos']);
+                                $projectRealCost->budget_variation_pesos   = $projectRealCost->budget_total - $totalBudget->total;
+                                $projectRealCost->budget_variation_tax     = $projectRealCost->budget_variation_pesos / $totalBudget->total;        
+                                $projectRealCost->save();
+
+                            } else {
+                                $dataProjectRealCost[] = [
+                                    'id_project'   => $project->id,
+                                    'id_item'      => $val['id_item'],
+                                    'id_subitem'   => $key,
+                                    'quantity'     => $val['quantity'],
+                                    'unit_cost'    => Project::setParseFormatPrice($val['unit_cost']),
+                                    'tax'          => Project::setParseFormatTax($val['tax']),
+                                    'budget_total' => Project::setParseFormatPrice($val['budget_total']),
+                                    'paid'         => 0,
+                                    'balance_paid' => 0,
+                                    'balance_item' => 0,
+                                    'budget_variation_pesos'   => $projectRealCost->budget_total - $totalBudget->total,
+                                    'budget_variation_tax'     => $projectRealCost->budget_variation_pesos / $totalBudget->total,
+                                ];
+                            }
+                        }
+                        
+                        ProjectRealCost::insert($dataProjectRealCost);
                     }
                 }
-            } else {
-                if($request->get('real_cost'))
-                {
-                    foreach($request->get('real_cost') as $key => $val)
-                    {
-                        $totalBudget = ProjectBudget::select('total')->where('id_project' ,$id)->where('id_subitem', $key)->first();
 
-                        if(!$totalBudget->total) $totalBudget = 0;
+                return response()->json(['status' => true]);
 
-                        if(isset($val['id']))
-                        {
-                            $projectRealCost = ProjectRealCost::find($val['id']);
-                            $projectRealCost->id_subitem   = $key;
-                            $projectRealCost->quantity     = $val['quantity'];
-                            $projectRealCost->unit_cost    = Project::setParseFormatPrice($val['unit_cost']);
-                            $projectRealCost->tax          = Project::setParseFormatTax($val['tax']);
-                            $projectRealCost->budget_total = Project::setParseFormatPrice($val['budget_total']);
-                            $projectRealCost->balance_item = $projectRealCost->budget_total - $projectRealCost->paid;
-                            $projectRealCost->budget_variation_pesos   = Project::setParseFormatPrice($val['budget_variation_pesos']);
-                            $projectRealCost->budget_variation_pesos   = $projectRealCost->budget_total - $totalBudget->total;
-                            $projectRealCost->budget_variation_tax     = $projectRealCost->budget_variation_pesos / $totalBudget->total;        
-                            $projectRealCost->save();
-
-                        } else {
-                            $projectRealCost = new ProjectRealCost;
-                            $projectRealCost->id_project   = $project->id;
-                            $projectRealCost->id_item      = $val['id_item'];
-                            $projectRealCost->id_subitem   = $key;
-                            $projectRealCost->quantity     = $val['quantity'];
-                            $projectRealCost->unit_cost    = Project::setParseFormatPrice($val['unit_cost']);
-                            $projectRealCost->tax          = Project::setParseFormatTax($val['tax']);
-                            $projectRealCost->budget_total = Project::setParseFormatPrice($val['budget_total']);
-                            $projectRealCost->paid         = 0;
-                            $projectRealCost->balance_paid = 0;
-                            $projectRealCost->balance_item = 0;
-                            $projectRealCost->budget_variation_pesos   = $projectRealCost->budget_total - $totalBudget->total;
-                            $projectRealCost->budget_variation_tax     = $projectRealCost->budget_variation_pesos / $totalBudget->total;
-                            $projectRealCost->save();
-                        }
-                    }
-                }
+            } catch(\Exception $e) {
+                if(\Config::get('app.debug')):
+                $message = 'ERROR('.$e->getLine().'): '.$e->getMessage();
+                else:
+                $message = 'Se ha producido un error. Por favor intente nuevamente.';
+                endif;
+    
+                $respuesta = array(
+                'estado' => false,
+                'mensaje' => $message
+                );
+                return response()->json(['status' => false, 'message' => $respuesta]);
             }
-
-            return redirect('/projects')->with('message', 'Proyecto editado con exito!');
-
-        } catch(\Exception $e) {
-            if(\Config::get('app.debug')):
-              $message = 'ERROR('.$e->getLine().'): '.$e->getMessage();
-            else:
-              $message = 'Se ha producido un error. Por favor intente nuevamente.';
-            endif;
-  
-            $respuesta = array(
-              'estado' => false,
-              'mensaje' => $message
-            );
-            return \Response::json($respuesta);
         }
     }
 
