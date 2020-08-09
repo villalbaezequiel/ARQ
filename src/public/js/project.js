@@ -170,6 +170,18 @@ $(document).ready(function() {
 
 });
 
+function getAlertInfo(message)
+{
+  Swal.fire({
+    title: message,
+    type: 'info',
+    showCancelButton: false,
+    confirmButtonColor: '#3085d6',
+    cancelButtonColor: '#d33',
+    confirmButtonText: 'Aceptar'
+  });
+}
+
 function addGroupItems(e)
 {
     e.preventDefault();
@@ -1175,6 +1187,20 @@ function getTemplateHistoryProvider(){
   return formSwal;
 }
 
+function getTemplateClients(){
+  let formSwal = `<div class="row">
+        <label class="col-sm-4 text-right pt-4">Clientes:</label>
+        <div class="col-sm-6">
+          <div class="form-group">
+            <select class="form-control selectpicker" data-style="btn btn-link" name="realcost_client" required>
+            </select>
+          </div>
+        </div>
+      </div>`;
+
+  return formSwal;
+}
+
 let projectJS = {
 
   getProvidersFromItem: (item, selectProviders, toggleSubItem) => {
@@ -1460,7 +1486,70 @@ let projectJS = {
     $('html, body').animate({
         scrollTop: $("#"+idElement).offset().top
     }, 2000);
+  },
+
+  sendRealCostMailClient: (e) => {
+    e.preventDefault();
+
+    console.log();
+    
+    Swal.fire({
+      title: `Elegir Cliente para enviar Seguimiento`,
+      html: getTemplateClients(),
+      confirmButtonText: 'Enviar',
+      confirmButtonClass: "btn btn-success",
+      showCancelButton: false,
+      customClass: 'swal-wide',
+      buttonsStyling: !1,
+      onBeforeOpen: () => {
+
+        $('select[name=realcost_client]').append(`<option value="">Seleccionar</option>`);
+        
+        $.each(collectionClients, function(i, v){
+          $('select[name=realcost_client]').append(`<option value="${v.id}">${v.last_name} ${v.name}</option>`);
+        });
+
+        $('.selectpicker').selectpicker('refresh');
+      }
+    })
+    .then(function(data){
+      if(data.value){
+
+        $('.spinner').show();
+
+        let client    = $("select[name=realcost_client]").find(':selected').val();
+        let idProject = $('#logic_project').data('id');
+  
+        if(client)
+        {
+          $.ajax({
+            type: 'POST',
+            url: '/json/send-email-realcost',
+            data: {client: client, project: idProject},
+            success: function(data){
+
+              setTimeout(function(){ $('.spinner').hide(); }, 50);
+              
+              if(data.status)
+              {
+                getAlertInfo("Seguimiento enviado con Exito!");
+              } else {
+                getAlertInfo("Se ha generado un Error!");
+              }
+
+            },
+            error: function(xhr, status){
+              getAlertInfo("Se ha generado un Error!");
+              console.log('Error: '+xhr);
+            }
+          });
+  
+        } else {
+          getAlertInfo("Para Enviar el Seguimiento debes seleccionar un Cliente! Gracias.");
+        }
+  
+      }
+    });   
   }
 
 };
-

@@ -284,6 +284,8 @@
 
 @section('javascript')
   <script>
+    let collectionClients = {!! json_encode($clients,JSON_FORCE_OBJECT) !!};
+
     function processDataBudget()
     {
       $("#content-data-budget tr").remove();

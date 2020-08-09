@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Backend;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
+use App\Notifications\SendRealCost;
 use App\Helpers;
 use App\Provider;
 use App\Project;
@@ -12,6 +13,8 @@ use App\ProjectRealCost;
 use App\ProjectCashFlow;
 use App\Item;
 use App\SubItem;
+use App\Client;
+use App\User;
 use DB;
 
 class JsonController extends Controller
@@ -287,6 +290,25 @@ class JsonController extends Controller
             return response()->json(['status' => ($countCashFlow > 0 ? true : false)]);
         } catch (\Exception $err) {
             return response()->json(['status' => false]);
+        }
+    }
+
+    public function sendEmailRealCost(Request $request)
+    {
+        try {
+            $client     = Client::find($request->get('client'));
+            $userClient = User::find($client->id_user);
+
+            $data = array(
+                'user' => $userClient,
+                'project' => $request->get('project')
+            );
+
+            $userClient->notify(new SendRealCost($data));
+
+            return response()->json([ 'status' => true ]);
+        } catch (\Exception $err) {
+            return response()->json([ 'status' => false ]);
         }
     }
 

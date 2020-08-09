@@ -32,6 +32,7 @@
 </div>
 <div class="col-md-12 row">
     <a href="{{ url('/export/project_realcost/'.$project->id) }}" class="btn btn-success" style="margin: 8px auto;">Descargar</a>
+    <button onclick="projectJS.sendRealCostMailClient(event); return false;" class="btn btn-success" style="margin: 8px auto;">Enviar por Mail</button>
 </div>
 @endif
 
