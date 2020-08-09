@@ -55,12 +55,13 @@ Route::group(['middleware' => ['auth']], function () {
     Route::post('/json/send-email-realcost', 'Backend\JsonController@sendEmailRealCost');
     
     Route::get('/export/project_budgets/{id}', 'Backend\ExportController@projectBudgets');
-    Route::get('/export/project_realcost/{id}', 'Backend\ExportController@projectRealCost')->name('export.project_realcost');
     Route::get('/export/project_provider', 'Backend\ExportController@projectHistoryProvider');
     Route::get('/export/providers', 'Backend\ExportController@providers');
     Route::get('/export/clients', 'Backend\ExportController@clients');
 
 });
+
+Route::get('/export/project_realcost/{id}', 'Backend\ExportController@projectRealCost')->name('export.project_realcost');
 
 Route::get('/registro-proveedor', function(){
     return view('frontend.provider.create');
