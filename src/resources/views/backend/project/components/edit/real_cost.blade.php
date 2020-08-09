@@ -2,11 +2,11 @@
 <div class="col-md-12 row">
     <div class="form-group">
       <div class="input-group-prepend">
-        <span class="input-group-text col-md-2">
+        <span class="input-group-text col-md-3">
             Rubros
         </span>
-        <div class="col-md-10">
-            <select class="form-control selectpicker" data-style="btn btn-link" data-live-search="true" name="items">
+        <div class="col-md-8">
+            <select class="form-control selectpicker select-items-realcost" data-style="btn btn-link" data-live-search="true" name="items">
             @foreach($items as $val)
                 <option value="{{ $val['id'] }}" data-number="{{ \App\Item::getNumberFromId($val['id']) }}">{{ $val['name'] }}</option>
             @endforeach
@@ -14,8 +14,8 @@
         </div>
 
         @foreach($items as $val)
-            <div class="col-md-5 hidden select-subitems" id="select-subitems-{{ $val['id'] }}">
-                <select class="form-control selectpicker" data-style="btn btn-link" data-live-search="true" name="sub_items" multiple>
+            <div class="col-md-8 hidden select-subitems select-subitems-realcost" id="select-subitems-{{ $val['id'] }}">
+                <select class="form-control selectpicker" data-style="btn btn-link" data-live-search="true" name="sub_items">
                     @foreach($val['data'] as $budgetSubItem)
                         <option value="{{ $budgetSubItem->id }}" data-number="{{ \App\SubItem::getNumberFromId($budgetSubItem->id) }}">{{ $budgetSubItem->name }}</option>
                     @endforeach
@@ -27,12 +27,11 @@
             <button class="btn btn-success" onclick="addGroupItemsRealCost(event); return false;">Agregar</button>
         </div>
 
-        <div class="col-md-4 text-center">
-            <a href="{{ url('/export/project_realcost/'.$project->id) }}" class="btn btn-success">Descargar</a>
-        </div>
-
       </div>
     </div>
+</div>
+<div class="col-md-12 row">
+    <a href="{{ url('/export/project_realcost/'.$project->id) }}" class="btn btn-success" style="margin: 8px auto;">Descargar</a>
 </div>
 @endif
 

@@ -30,19 +30,19 @@
           <div class="wizard-navigation">
             <ul class="nav nav-pills">
               <li class="nav-item" style="width: 50%;">
-                <a class="nav-link active" href="#module_one" data-toggle="tab" role="tab">
+                <a class="nav-link disabled-click active" href="#module_one" data-toggle="tab" role="tab">
                   Información
                 </a>
               </li>
 
               @if(Auth::user()->permissions == "admin")
               <li class="nav-item" style="width: 50%;">
-                <a class="nav-link" href="#module_two" data-toggle="tab" role="tab">
+                <a class="nav-link disabled-click" href="#module_two" data-toggle="tab" role="tab">
                   Presupuesto
                 </a>
               </li>
               <li class="nav-item" style="width: 50%;">
-                <a class="nav-link" href="#module_three" data-toggle="tab" role="tab">
+                <a class="nav-link disabled-click" href="#module_three" data-toggle="tab" role="tab">
                   Seguimiento
                 </a>
               </li>
@@ -50,19 +50,19 @@
 
               @if(Auth::user()->permissions != "junior")
               <li class="nav-item" style="width: 50%;">
-                <a class="nav-link" href="#module_five" data-toggle="tab" role="tab">
+                <a class="nav-link disabled-click" href="#module_five" data-toggle="tab" role="tab">
                   Flujo de caja
                 </a>
               </li>
               <li class="nav-item" style="width: 50%;">
-                <a class="nav-link" href="#module_six" data-toggle="tab" role="tab">
+                <a class="nav-link disabled-click" href="#module_six" data-toggle="tab" role="tab">
                   Proveedores
                 </a>
               </li>
               @endif
 
               <li class="nav-item" style="width: 50%;">
-                <a class="nav-link" href="#module_four" data-toggle="tab" role="tab">
+                <a class="nav-link disabled-click" href="#module_four" data-toggle="tab" role="tab">
                   Documentos
                 </a>
               </li>
@@ -432,71 +432,72 @@
 
       $.each(projectRealCosts, function(key, collectionSubitem){
 
-      let projectId       = {!! $project->id !!};
+        let projectId       = {!! $project->id !!};
 
-      $("#content-data-realcost").append(`
-      <tr class="b-c-gray costreal-item" id="costreal-item-${key}" data-id="${key}">
-        <th>${collectionSubitem.item_number}</th>
-        <th colspan="4" class="text-left pl-3">${collectionSubitem.item_name}</th>
-        <th><input type="text" name="costreal_budget_total"   class="form-control text-center" disabled></th>
-        <th><input type="text" name="costreal_paid"           class="form-control text-center" disabled></th>
-        <th><input type="text" name="costreal_balance_item"   class="form-control text-center" disabled></th>
-        <th></th>
-        <th></th>
-        <th>
-            <button
-                class="btn btn-danger removeCostRealItemAjax" 
-                data-idproject="${projectId}"
-                data-iditem="${key}"
-                style="padding: 0px 5px;"
-            >X</button>
-        </th>
-      </tr>`);
+        $("#content-data-realcost").append(`
+        <tr class="b-c-gray costreal-item" id="costreal-item-${key}" data-id="${key}">
+          <th>${collectionSubitem.item_number}</th>
+          <th colspan="4" class="text-left pl-3">${collectionSubitem.item_name}</th>
+          <th><input type="text" name="costreal_budget_total"   class="form-control text-center" disabled></th>
+          <th><input type="text" name="costreal_paid"           class="form-control text-center" disabled></th>
+          <th><input type="text" name="costreal_balance_item"   class="form-control text-center" disabled></th>
+          <th></th>
+          <th></th>
+          <th>
+              <button
+                  class="btn btn-danger removeCostRealItemAjax" 
+                  data-idproject="${projectId}"
+                  data-iditem="${key}"
+                  style="padding: 0px 5px;"
+              >X</button>
+          </th>
+        </tr>`);
 
-      let budgetTotal = 0;
-      let paid        = 0;
-      let balanceItem = 0;
+        let budgetTotal = 0;
+        let paid        = 0;
+        let balanceItem = 0;
 
-      $.each(collectionSubitem, function(i, costReal)
-      {
-        if(costReal.name_subitem != null)
+        $.each(collectionSubitem, function(i, costReal)
         {
-          budgetTotal += costReal.budget_total;
-          paid += costReal.paid;
-          balanceItem += costReal.balance_item;
+          if(costReal.name_subitem != null)
+          {
+            budgetTotal += costReal.budget_total;
+            paid += costReal.paid;
+            balanceItem += costReal.balance_item;
 
 
-          $("#content-data-realcost").append(`
-            <tr id="costreal-subitem-${costReal.id}" data-iditem="${key}" class="costreal-subitem">
-                        
-                <input      type="hidden" name="real_cost[${costReal.id_subitem}][id]" value="${costReal.id}" />
-                <input      type="hidden" name="real_cost[${costReal.id_subitem}][id_item]" value="${key}" />
+            $("#content-data-realcost").append(`
+              <tr id="costreal-subitem-${costReal.id_subitem}" data-iditem="${key}" class="costreal-subitem">
+                          
+                  <input      type="hidden" name="real_cost[${costReal.id_subitem}][id]" value="${costReal.id}" />
+                  <input      type="hidden" name="real_cost[${costReal.id_subitem}][id_item]" value="${key}" />
 
-                <td>${costReal.number_subitem}</td>
-                <td class="pl-3"><input class="form-control" value="${costReal.name_subitem}" disabled /></td>
-                <td><input type="number"name="real_cost[${costReal.id_subitem}][quantity]" value="${costReal.quantity}"         id="quantity_realcost_${costReal.id_subitem}" data-idsubiteam="${costReal.id_subitem}" maxlength="11" class="form-control text-center calculate-subtotal-realcost" /></td>
-                <td><input type="text"  name="real_cost[${costReal.id_subitem}][unit_cost]"value="${costReal.unit_cost}"        id="unit_cost_realcost_${costReal.id_subitem}" data-idsubiteam="${costReal.id_subitem}" maxlength="14" class="form-control text-center validate-number-decimal calculate-subtotal-realcost" /></td>
-                <td><input type="text"  name="real_cost[${costReal.id_subitem}][tax]" value="${costReal.tax}"                   id="tax_realcost_${costReal.id_subitem}" data-idsubiteam="${costReal.id_subitem}" maxlength="6" class="form-control text-center validate-tax calculate-subtotal-realcost" /></td>
-                <td><input type="text"  name="real_cost[${costReal.id_subitem}][budget_total]" value="${costReal.budget_total}" id="budget_total_realcost_${costReal.id_subitem}" maxlength="14" class="form-control text-center validate-number-decimal" readonly /></td>
-                <td><input type="text"  name="real_cost[${costReal.id_subitem}][paid]" value="${costReal.paid}"        maxlength="14" class="form-control text-center validate-number-decimal costreal-subitem-paid" readonly /></td>
-                <td><input type="text"  name="real_cost[${costReal.id_subitem}][balance_item]" value="${costReal.balance_item}" id="balance_item_realcost_${costReal.id_subitem}" maxlength="14" class="form-control text-center validate-number-decimal" readonly /></td>
-                <td><input type="text"  name="real_cost[${costReal.id_subitem}][budget_variation_pesos]" value="${costReal.budget_variation_pesos}" id="budget_variation_pesos_realcost_${costReal.id_subitem}" maxlength="14" class="form-control text-center validate-number-decimal" readonly /></td>
-                <td><input type="text"  name="real_cost[${costReal.id_subitem}][budget_variation_tax]" value="${costReal.budget_variation_tax}"    maxlength="6" class="form-control text-center validate-tax" readonly /></td>
-                
-                <td class="text-center b-c-gray" style="vertical-align: inherit;">
-                    <button
-                        class="btn btn-danger removeCostRealSubItemAjax" 
-                        data-id="${costReal.id}"
-                        style="padding: 0px 5px;" 
-                    >X</button>
-                </td>
-            </tr>
-            `);
-        }
-      });
+                  <td>${costReal.number_subitem}</td>
+                  <td class="pl-3"><input class="form-control" value="${costReal.name_subitem}" disabled /></td>
+                  <td><input type="number"name="real_cost[${costReal.id_subitem}][quantity]" value="${costReal.quantity}"         id="quantity_realcost_${costReal.id_subitem}" data-idsubiteam="${costReal.id_subitem}" maxlength="11" class="form-control text-center calculate-subtotal-realcost" /></td>
+                  <td><input type="text"  name="real_cost[${costReal.id_subitem}][unit_cost]"value="${costReal.unit_cost}"        id="unit_cost_realcost_${costReal.id_subitem}" data-idsubiteam="${costReal.id_subitem}" maxlength="14" class="form-control text-center validate-number-decimal calculate-subtotal-realcost" /></td>
+                  <td><input type="text"  name="real_cost[${costReal.id_subitem}][tax]" value="${costReal.tax}"                   id="tax_realcost_${costReal.id_subitem}" data-idsubiteam="${costReal.id_subitem}" maxlength="6" class="form-control text-center validate-tax calculate-subtotal-realcost" /></td>
+                  <td><input type="text"  name="real_cost[${costReal.id_subitem}][budget_total]" value="${costReal.budget_total}" id="budget_total_realcost_${costReal.id_subitem}" maxlength="14" class="form-control text-center validate-number-decimal" readonly /></td>
+                  <td><input type="text"  name="real_cost[${costReal.id_subitem}][paid]" value="${costReal.paid}"        maxlength="14" class="form-control text-center validate-number-decimal costreal-subitem-paid" readonly /></td>
+                  <td><input type="text"  name="real_cost[${costReal.id_subitem}][balance_item]" value="${costReal.balance_item}" id="balance_item_realcost_${costReal.id_subitem}" maxlength="14" class="form-control text-center validate-number-decimal" readonly /></td>
+                  <td><input type="text"  name="real_cost[${costReal.id_subitem}][budget_variation_pesos]" value="${costReal.budget_variation_pesos}" id="budget_variation_pesos_realcost_${costReal.id_subitem}" maxlength="14" class="form-control text-center validate-number-decimal" readonly /></td>
+                  <td><input type="text"  name="real_cost[${costReal.id_subitem}][budget_variation_tax]" value="${costReal.budget_variation_tax}"    maxlength="6" class="form-control text-center validate-tax" readonly /></td>
+                  
+                  <td class="text-center b-c-gray" style="vertical-align: inherit;">
+                      <button
+                          class="btn btn-danger removeCostRealSubItemAjax" 
+                          data-id="${costReal.id}"
+                          data-subitemid="${costReal.id_subitem}"
+                          style="padding: 0px 5px;" 
+                      >X</button>
+                  </td>
+              </tr>
+              `);
+          }
+        });
         
         $("#content-data-realcost").append(`
-            <input type="text" class="validate-number-decimal" style="display: none!important;" name="costreal_budget_total_calc_${key}"   value="${budgetTotal}">
+            <input type="text" id="add-subitems-item-${key}" class="validate-number-decimal" style="display: none!important;" name="costreal_budget_total_calc_${key}"   value="${budgetTotal}">
             <input type="text" class="validate-number-decimal" style="display: none!important;" name="costreal_paid_calc_${key}"           value="${paid}">
             <input type="text" class="validate-number-decimal" style="display: none!important;" name="costreal_balance_item_calc_${key}"   value="${balanceItem}">`);
 
@@ -509,6 +510,9 @@
       $.each($(".validate-tax"), function(){
         formatTax($(this), "blur");
       });
+
+      // active list select-subitems in seguimiento
+      $('.select-subitems').first().removeClass('hidden');
 
       calculateTotalesRealCost();
       removeItemRealCost();

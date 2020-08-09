@@ -345,17 +345,34 @@ class ProjectController extends Controller
                                 $projectBudget->total       = Project::setParseFormatPrice($val['total']);
                                 $projectBudget->save();
                             } else {
-                                $dataProjectBudget[] = [
-                                    'id_project'  => $project->id,
-                                    'id_item'     => $val['id_item'],
-                                    'id_subitem'  => $key,
-                                    'unit'        => $val['unit'],
-                                    'quantity'    => $val['quantity'],
-                                    'unit_cost'   => Project::setParseFormatPrice($val['unit_cost']),
-                                    'subtotal'    => Project::setParseFormatPrice($val['subtotal']),
-                                    'tax'         => Project::setParseFormatTax($val['tax']),
-                                    'total'       => Project::setParseFormatPrice($val['total']),
-                                ];
+
+                                $issetItemSubItem = ProjectBudget::where('id_item', $val['id_item'])
+                                                        ->where('id_subitem', $key)
+                                                        ->where('id_project', $project->id)
+                                                        ->first();
+                                if(!$issetItemSubItem)
+                                {
+                                    $dataProjectBudget[] = [
+                                        'id_project'  => $project->id,
+                                        'id_item'     => $val['id_item'],
+                                        'id_subitem'  => $key,
+                                        'unit'        => $val['unit'],
+                                        'quantity'    => $val['quantity'],
+                                        'unit_cost'   => Project::setParseFormatPrice($val['unit_cost']),
+                                        'subtotal'    => Project::setParseFormatPrice($val['subtotal']),
+                                        'tax'         => Project::setParseFormatTax($val['tax']),
+                                        'total'       => Project::setParseFormatPrice($val['total']),
+                                    ];
+                                } else {
+                                    $issetItemSubItem->id_subitem  = $key;
+                                    $issetItemSubItem->unit        = $val['unit'];
+                                    $issetItemSubItem->quantity    = $val['quantity'];
+                                    $issetItemSubItem->unit_cost   = Project::setParseFormatPrice($val['unit_cost']);
+                                    $issetItemSubItem->subtotal    = Project::setParseFormatPrice($val['subtotal']);
+                                    $issetItemSubItem->tax         = Project::setParseFormatTax($val['tax']);
+                                    $issetItemSubItem->total       = Project::setParseFormatPrice($val['total']);
+                                    $issetItemSubItem->save();    
+                                }
                             }
                         }
                         ProjectBudget::insert($dataProjectBudget);
@@ -367,8 +384,8 @@ class ProjectController extends Controller
                         foreach($request->get('real_cost') as $key => $val)
                         {
                             $totalBudget = ProjectBudget::select('total')->where('id_project' ,$id)->where('id_subitem', $key)->first();
-
-                            if(!$totalBudget->total) $totalBudget = 0;
+                            
+                            $totalBudget = (isset($totalBudget->total)) ? $totalBudget->total : null;
 
                             if(isset($val['id']))
                             {
@@ -380,25 +397,44 @@ class ProjectController extends Controller
                                 $projectRealCost->budget_total = Project::setParseFormatPrice($val['budget_total']);
                                 $projectRealCost->balance_item = $projectRealCost->budget_total - $projectRealCost->paid;
                                 $projectRealCost->budget_variation_pesos   = Project::setParseFormatPrice($val['budget_variation_pesos']);
-                                $projectRealCost->budget_variation_pesos   = $projectRealCost->budget_total - $totalBudget->total;
-                                $projectRealCost->budget_variation_tax     = $projectRealCost->budget_variation_pesos / $totalBudget->total;        
+                                $projectRealCost->budget_variation_pesos   = ($totalBudget ? $projectRealCost->budget_total - $totalBudget : 0);
+                                $projectRealCost->budget_variation_tax     = ($totalBudget ? $projectRealCost->budget_variation_pesos / $totalBudget : 0);        
                                 $projectRealCost->save();
 
                             } else {
-                                $dataProjectRealCost[] = [
-                                    'id_project'   => $project->id,
-                                    'id_item'      => $val['id_item'],
-                                    'id_subitem'   => $key,
-                                    'quantity'     => $val['quantity'],
-                                    'unit_cost'    => Project::setParseFormatPrice($val['unit_cost']),
-                                    'tax'          => Project::setParseFormatTax($val['tax']),
-                                    'budget_total' => Project::setParseFormatPrice($val['budget_total']),
-                                    'paid'         => 0,
-                                    'balance_paid' => 0,
-                                    'balance_item' => 0,
-                                    'budget_variation_pesos'   => $projectRealCost->budget_total - $totalBudget->total,
-                                    'budget_variation_tax'     => $projectRealCost->budget_variation_pesos / $totalBudget->total,
-                                ];
+                                $issetItemSubItem = ProjectRealCost::where('id_item', $val['id_item'])
+                                                        ->where('id_subitem', $key)
+                                                        ->where('id_project', $project->id)
+                                                        ->first();
+
+                                if(!$issetItemSubItem)
+                                {
+                                    $dataProjectRealCost[] = [
+                                        'id_project'   => $project->id,
+                                        'id_item'      => $val['id_item'],
+                                        'id_subitem'   => $key,
+                                        'quantity'     => $val['quantity'],
+                                        'unit_cost'    => Project::setParseFormatPrice($val['unit_cost']),
+                                        'tax'          => Project::setParseFormatTax($val['tax']),
+                                        'budget_total' => Project::setParseFormatPrice($val['budget_total']),
+                                        'paid'         => 0,
+                                        'balance_paid' => 0,
+                                        'balance_item' => 0,
+                                        'budget_variation_pesos'   => ($totalBudget ? $projectRealCost->budget_total - $totalBudget : 0),
+                                        'budget_variation_tax'     => ($totalBudget ? $projectRealCost->budget_variation_pesos / $totalBudget : 0),
+                                    ];
+                                } else {
+                                    $issetItemSubItem->id_subitem   = $key;
+                                    $issetItemSubItem->quantity     = $val['quantity'];
+                                    $issetItemSubItem->unit_cost    = Project::setParseFormatPrice($val['unit_cost']);
+                                    $issetItemSubItem->tax          = Project::setParseFormatTax($val['tax']);
+                                    $issetItemSubItem->budget_total = Project::setParseFormatPrice($val['budget_total']);
+                                    $issetItemSubItem->balance_item = $projectRealCost->budget_total - $projectRealCost->paid;
+                                    $issetItemSubItem->budget_variation_pesos   = Project::setParseFormatPrice($val['budget_variation_pesos']);
+                                    $issetItemSubItem->budget_variation_pesos   = ($totalBudget ? $projectRealCost->budget_total - $totalBudget : 0);
+                                    $issetItemSubItem->budget_variation_tax     = ($totalBudget ? $projectRealCost->budget_variation_pesos / $totalBudget : 0);        
+                                    $issetItemSubItem->save();
+                                }
                             }
                         }
                         

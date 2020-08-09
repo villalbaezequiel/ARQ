@@ -144,6 +144,12 @@ $(document).ready(function() {
       });
     });
 
+    $('.select-items-realcost').change(function(){
+      let idItem = $(this).find(':selected').val();
+      $('.select-subitems-realcost').addClass('hidden');
+      $(`#select-subitems-${idItem}`).removeClass('hidden');
+    });
+
     calculateTotales();
     calculateTotalesRealCost();
     removeItem();
@@ -160,6 +166,7 @@ $(document).ready(function() {
     deleteCostRealSubItem();
     projectJS.validateNumberDecimalAddAttr();
     projectJS.resetValueDefault();
+    projectJS.disabledCLick();
 
 });
 
@@ -194,8 +201,9 @@ function addGroupItems(e)
       });
 
       generateTemplateItems(idItem, numberItem, nameItem, dataSubItems);
-
       setSelectedOptions();
+      projectJS.scrollPosition(`item-${idItem}`);
+
     } else {
       Swal.fire({
         title: 'Rubro Existente en la Planilla!',
@@ -211,46 +219,60 @@ function addGroupItems(e)
 function addGroupItemsRealCost(e)
 {
     e.preventDefault();
+
+    let dataSubItems  = []
+    let issetItem     = false;
+    let issetSubItem  = false;
+
     let idItem      = $("select[name=items]").find(':selected').val();
     let nameItem    = $("select[name=items]").find(':selected').text();
     let numberItem  = $("select[name=items]").find(':selected').data('number');
 
-    let checkItem   = $('#content-real-cost tbody tr');
-    let issetItem   = false;
+    let idSubItem      = $("#select-subitems-"+idItem+" select[name=sub_items]").find(':selected').val();
+    let nameSubItem    = $("#select-subitems-"+idItem+" select[name=sub_items]").find(':selected').text();
+    let numberSubItem  = $("#select-subitems-"+idItem+" select[name=sub_items]").find(':selected').data('number');
 
-    if(checkItem.length){
-      $.each(checkItem, function(i, v){
-        if($(this).data('iditem') == idItem) {
-          issetItem = true;
-        }  
+    if($("#costreal-subitem-"+idSubItem).length > 0)
+    {
+      issetSubItem = true; 
+    } else {
+      dataSubItems.push({
+        name: nameSubItem,
+        number: numberSubItem,
+        id: idSubItem
       });
+    } 
+
+    if($("#costreal-item-"+idItem).length > 0)
+    {
+      issetItem = true;  
     }
 
-    if(issetItem == false)
+    if(issetSubItem)
     {
-      // add all subitems
-      let dataSubItems  = [];
-      $("#select-subitems-"+idItem+" select[name=sub_items] option").each(function(){
-          dataSubItems.push({
-            name: $(this).text(),
-            number: $(this).data('number'),
-            id: $(this).val()
-          });
-      });
-
-      generateTemplateItemsRealCost(idItem, numberItem, nameItem, dataSubItems);
-
-      setSelectedOptions();
-    } else {
       Swal.fire({
-        title: 'Rubro Existente en la Planilla!',
+        title: 'Sub Rubro Existente en la Planilla!',
         type: 'info',
         showCancelButton: false,
         confirmButtonColor: '#3085d6',
         cancelButtonColor: '#d33',
         confirmButtonText: 'Aceptar'
       });
+      return false;
     }
+
+    generateTemplateItemsRealCost(issetItem, idItem, numberItem, nameItem, dataSubItems);
+    setSelectedOptions();
+
+    // add all subitems
+    /*let dataSubItems  = [];
+    $("#select-subitems-"+idItem+" select[name=sub_items] option").each(function(){
+        dataSubItems.push({
+          name: $(this).text(),
+          number: $(this).data('number'),
+          id: $(this).val()
+        });
+    });*/ 
 }
 
 function generateTemplateItems(idItem, numberItem, nameItem, dataSubItems)
@@ -312,9 +334,12 @@ function generateTemplateItems(idItem, numberItem, nameItem, dataSubItems)
   projectJS.resetValueDefault();
 }
 
-function generateTemplateItemsRealCost(idItem, numberItem, nameItem, dataSubItems)
+function generateTemplateItemsRealCost(issetItem = false, idItem, numberItem, nameItem, dataSubItems)
 {
-  let items = `
+  let subItems = '';
+  if(!issetItem)
+  {
+    $("#content-real-cost tbody").append(`
     <tr class="b-c-gray" id="costreal-item-${idItem}" data-id="${idItem}">
       <th>${numberItem}</th>
       <th colspan="4" class="text-left pl-3">${nameItem}</th>
@@ -330,11 +355,18 @@ function generateTemplateItemsRealCost(idItem, numberItem, nameItem, dataSubItem
             style="padding: 0px 5px;"
           >X</button>
       </th>
-    </tr>`;
+    </tr>
+    <input type="hidden" id="add-subitems-item-${idItem}">
+    `);
+  }
+
+  let scrollID = '';
 
   $.each(dataSubItems, function(i, v){
-        
-    items += `
+    
+    scrollID = `costreal-subitem-${v.id}`;
+
+    subItems += `
       <tr id="costreal-subitem-${v.id}" data-iditem="${idItem}" class="costreal-subitem">
       
         <input      type="hidden" name="real_cost[${v.id}][id_item]" value="${idItem}" />
@@ -363,19 +395,28 @@ function generateTemplateItemsRealCost(idItem, numberItem, nameItem, dataSubItem
     `;
   });
   
-  $('#content-real-cost tbody').append(items);
+  if(!issetItem){
+    $("#content-real-cost tbody").append(subItems);
+  } else {
+    $(`#add-subitems-item-${idItem}`).before(subItems);
+  }
 
   calculateTotalesRealCost();
   removeItemRealCost();
   validateNumberDecimal();
   validateTax();
   projectJS.validateNumberDecimalAddAttr();
+  projectJS.scrollPosition(scrollID);
 }
 
 function setSelectedOptions()
 {
   $('select[name=items] option:selected').prop("selected", false);
   $('select[name=sub_items] option:selected').prop("selected", false);
+
+  $('.select-subitems').addClass('hidden');
+  $('.select-subitems').first().removeClass('hidden');
+
   $('.selectpicker').selectpicker('refresh');
 }
 
@@ -785,6 +826,10 @@ function deleteCostRealItem()
             });
   
             $('#costreal-item-'+iditem).remove();
+
+            $(`input[name=costreal_budget_total_calc_${iditem}]`).remove();
+            $(`input[name=costreal_paid_calc_${iditem}]`).remove();
+            $(`input[name=costreal_balance_item_calc_${iditem}]`).remove();
   
             $.each(costrealSubitem, function(i, v){
               if($(this).data('iditem') == iditem) {
@@ -811,7 +856,7 @@ function deleteCostRealSubItem()
 
     e.preventDefault();
     
-    let checkCostrealPaidSubItem = projectJS.parseFloatPrices($('#costreal-subitem-'+$(this).data('id')+' .costreal-subitem-paid').val());
+    let checkCostrealPaidSubItem = projectJS.parseFloatPrices($('#costreal-subitem-'+$(this).data('subitemid')+' .costreal-subitem-paid').val());
 
     if(checkCostrealPaidSubItem != 0)
     {
@@ -839,7 +884,7 @@ function deleteCostRealSubItem()
 
       if(result.dismiss == "cancel") { return false; }
 
-      $('#costreal-subitem-'+$(this).data('id')).remove();
+      $('#costreal-subitem-'+$(this).data('subitemid')).remove();
 
       let data = {
         id: $(this).data('id')
@@ -1405,6 +1450,17 @@ let projectJS = {
 
   setUrlPath: (path) => {
     window.location.replace(window.location.origin + path);
+  },
+
+  disabledCLick: () => {
+      $('.disabled-click').click(false);
+  },
+
+  scrollPosition: (idElement) => {
+    $('html, body').animate({
+        scrollTop: $("#"+idElement).offset().top
+    }, 2000);
   }
+
 };
 
