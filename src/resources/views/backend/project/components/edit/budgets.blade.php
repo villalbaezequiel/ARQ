@@ -100,7 +100,3 @@
     }
 </style>
 @endif
-
-<script type="text/javascript">
-    let projectBudgets = {!! json_encode($project_budgets,JSON_FORCE_OBJECT) !!};
-</script>

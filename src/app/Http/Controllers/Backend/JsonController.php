@@ -312,4 +312,59 @@ class JsonController extends Controller
         }
     }
 
+    public function processDataBudget($id)
+    {
+        try {
+            // collection ProjectBudget (presupuesto)
+            $collectionProjectBudget= [];
+            $projectBudget          = ProjectBudget::select("project_budgets.*")
+                                                        ->join('items', 'items.id', 'project_budgets.id_item')
+                                                        ->join('sub_items', 'sub_items.id', 'project_budgets.id_subitem')
+                                                        ->where('id_project', $id)
+                                                        ->orderBy('items.number', 'ASC')
+                                                        ->orderBy('sub_items.number', 'ASC')
+                                                        ->get();
+
+            foreach ($projectBudget as $value)
+            {
+                $value->number_subitem = SubItem::getNumberFromId($value->id_subitem);
+                $value->name_subitem = SubItem::getName($value->id_subitem);
+                $collectionProjectBudget[$value->id_item]['item_number'] = Item::getNumberFromId($value->id_item);
+                $collectionProjectBudget[$value->id_item]['item_name'] = Item::getName($value->id_item);
+                $collectionProjectBudget[$value->id_item][] = $value;
+            }
+
+            return response()->json([ 'data' => $collectionProjectBudget ]);
+        } catch (\Exception $err) {
+            return response()->json([ 'data' => [] ]);
+        }
+    }
+
+    public function processDataRealCost($id)
+    {
+        try {
+            $collectionProjectRealCost  = [];
+            $projectRealCost            = ProjectRealCost::select('project_real_costs.*')
+                                                        ->join('items', 'items.id', 'project_real_costs.id_item')
+                                                        ->join('sub_items', 'sub_items.id', 'project_real_costs.id_subitem')
+                                                        ->where('id_project', $id)
+                                                        ->orderBy('items.number', 'ASC')
+                                                        ->orderBy('sub_items.number', 'ASC')
+                                                        ->get();
+
+            foreach ($projectRealCost as $value)
+            {
+                $value->number_subitem = SubItem::getNumberFromId($value->id_subitem);
+                $value->name_subitem = SubItem::getName($value->id_subitem);
+                $collectionProjectRealCost[$value->id_item]['item_number'] = Item::getNumberFromId($value->id_item);
+                $collectionProjectRealCost[$value->id_item]['item_name'] = Item::getName($value->id_item);
+
+                $collectionProjectRealCost[$value->id_item][]   = $value;
+            }
+            
+            return response()->json([ 'data' => $collectionProjectRealCost ]);
+        } catch (\Exception $err) {
+            return response()->json([ 'data' => [] ]);
+        }
+    }
 }

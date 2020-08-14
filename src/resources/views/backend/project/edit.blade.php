@@ -285,248 +285,280 @@
 @section('javascript')
   <script>
     let collectionClients = {!! json_encode($clients,JSON_FORCE_OBJECT) !!};
+    let projectID = {!! json_encode($project->id,JSON_FORCE_OBJECT) !!};
 
     function processDataBudget()
     {
-      $("#content-data-budget tr").remove();
+      $.ajax({
+        type: 'GET',
+        url: '/json/projects/budget/'+projectID,
+        dataType: 'json',
+        success: function(response) {
 
-      $("#content-data-budget").append(`
-        <tr class="b-c-gray">
-            <th></th>
-            <th></th>
-            <th>U</th>
-            <th>CAN</th>
-            <th>UNITARIO</th>
-            <th>SUBTOTAL</th>
-            <th>IMPUESTOS</th>
-            <th>TOTAL</th>
-            <th>INCIDENCIA</th>
-            <th></th>
-        </tr>
-        <tr class="b-c-gray">
-            <th></th>
-            <th>TOTAL</th>
-            <th></th>
-            <th></th>
-            <th></th>
-            <th><input type="text" name="global_subtotal" class="form-control text-center" disabled></th>
-            <th></th>
-            <th><input type="text" name="global_total"    class="form-control text-center" disabled></th>
-            <th><input type="text" name="global_incidence"class="form-control text-center validate-tax" value="100" disabled></th>
-            <th></th>
-        </tr>`);
+          let projectBudgets = response.data;
 
-      $.each(projectBudgets, function(key, collectionSubitem){
+          $("#content-data-budget tr").remove();
 
-      let projectId       = {!! $project->id !!};
-
-      $("#content-data-budget").append(`
-      <tr class="b-c-gray items_content" id="item-${key}" data-id="${key}">
-          <th>${collectionSubitem.item_number}</th>
-          <th colspan="4" class="text-left pl-3">${collectionSubitem.item_name}</th>
-          <th><input type="text"  name="item_subtotal" class="form-control text-center validate-number-decimal" disabled></th>
-          <th></th>
-          <th><input type="text"  name="item_total" class="form-control text-center validate-number-decimal" disabled></th>
-          <th><input type="text"name="item_incidence" class="form-control text-center validate-tax" maxlength="6" disabled></th>
-          <th>
-              <button
-                  class="btn btn-danger removeItem removeItemAjax" 
-                  data-idproject="${projectId}"
-                  data-iditem="${key}"
-                  style="padding: 0px 5px;"
-              >X</button>
-          </th>
-      </tr>`);
-
-      let itemSubtotal   = 0;
-      let itemTotal      = 0;
-      let itemIncidene   = 0;
-
-      $.each(collectionSubitem, function(i, budgetSubItem)
-      {
-        if(budgetSubItem.name_subitem != null)
-        {      
-          itemSubtotal   += budgetSubItem.subtotal;
-          itemTotal      += budgetSubItem.total;
-        
           $("#content-data-budget").append(`
-            <tr id="subitem-${budgetSubItem.id_subitem}" data-id="${budgetSubItem.id_subitem}" data-iditem="${key}" class="sub_items_content">
-              
-              <input      type="hidden" name="budget[${budgetSubItem.id_subitem}][id]" value="${budgetSubItem.id}" />
-              <input      type="hidden" name="budget[${budgetSubItem.id_subitem}][id_item]" value="${key}" />
-
-              <td>${budgetSubItem.number_subitem}</td>
-              <td class="pl-3"><input class="form-control" value="${budgetSubItem.name_subitem}" disabled /></td>
-              <td><input type="text"  name="budget[${budgetSubItem.id_subitem}][unit]"      value="${budgetSubItem.unit}" class="form-control text-center" required /></td>
-              <td><input type="number"name="budget[${budgetSubItem.id_subitem}][quantity]"  value="${budgetSubItem.quantity}" maxlength="11"  id="quantity_${budgetSubItem.id_subitem}" data-idsubiteam="${budgetSubItem.id_subitem}" class="form-control text-center calculate-subtotal" required /></td>
-              <td><input type="text"  name="budget[${budgetSubItem.id_subitem}][unit_cost]" value="${budgetSubItem.unit_cost}" maxlength="14" id="unit_cost_${budgetSubItem.id_subitem}" data-idsubiteam="${budgetSubItem.id_subitem}" class="form-control text-center calculate-subtotal validate-number-decimal reset-value" required /></td>
-              <td><input type="text"  name="budget[${budgetSubItem.id_subitem}][subtotal]"  value="${budgetSubItem.subtotal}" maxlength="14"  id="subtotal_${budgetSubItem.id_subitem}" class="form-control text-center validate-number-decimal" readonly required /></td>
-              <td><input type="text"  name="budget[${budgetSubItem.id_subitem}][tax]"       value="${budgetSubItem.tax}" maxlength="6"        id="tax_${budgetSubItem.id_subitem}" data-idsubiteam="${budgetSubItem.id_subitem}" class="form-control text-center validate-tax calculate-subtotal reset-value" /></td>
-              <td><input type="text"  name="budget[${budgetSubItem.id_subitem}][total]"     value="${budgetSubItem.total}" maxlength="14"     id="total_${budgetSubItem.id_subitem}" class="form-control text-center validate-number-decimal" readonly required /></td>
-              <td><input type="text"  name="budget[${budgetSubItem.id_subitem}][incidence]" value="" maxlength="6"        id="incidence_${budgetSubItem.id_subitem}" data-idsubiteam="${budgetSubItem.id_subitem}" class="form-control text-center validate-tax" readonly /></td>
-              
-              <td class="text-center b-c-gray" style="vertical-align: inherit;">
-                  <button
-                  class="btn btn-danger removeSubItemAjax" 
-                  data-idsubitem="subitem-${budgetSubItem.id_subitem}" 
-                  data-id="${budgetSubItem.id}"
-                  style="padding: 0px 5px;" 
-                  >X</button>
-              </td>
-            </tr>`);
-        }
-      });
-        
-        $("#content-data-budget").append(`
-          <input type="hidden" name="item_subtotal_calc_${key}" value="${itemSubtotal}">
-          <input type="hidden" name="item_total_calc_${key}" value="${itemTotal}">`);
-
-      });
-
-      $.each($(".validate-number-decimal"), function(){
-        formatCurrency($(this), "blur");
-      });
-
-      $.each($(".validate-tax"), function(){
-        formatTax($(this), "blur");
-      });
-
-      calculateTotales();
-      removeItem();
-      validateNumberDecimal();
-      validateTax();
-      calculateBudgetGlobalItems();
-      deleteBudgetItem();
-      deleteBudgetSubitem();
-      isOpenBudget();
-      projectJS.validateNumberDecimalAddAttr();
-      projectJS.resetValueDefault();
-    }
-
-    function processDataRealCost()
-    {
-      $("#content-data-realcost tr").remove();
-
-      $("#content-data-realcost").append(`
-        <tr class="b-c-gray">
+            <tr class="b-c-gray">
                 <th></th>
                 <th></th>
-                <th>CANT</th>
+                <th>U</th>
+                <th>CAN</th>
                 <th>UNITARIO</th>
+                <th>SUBTOTAL</th>
                 <th>IMPUESTOS</th>
-                <th>PRESUPUESTO</th>
-                <th>PAGADO</th>
-                <th>SALDO ITEM</th>
-                <th>VARIACION ($)</th>
-                <th>VARIACION (%)</th>
+                <th>TOTAL</th>
+                <th>INCIDENCIA</th>
                 <th></th>
             </tr>
             <tr class="b-c-gray">
                 <th></th>
-                <th colspan="4">TOTAL</th>
-                <th><input type="text" name="global_costreal_budgetTotal"   class="form-control text-center" style="font-weight: 700;" disabled></th>
-                <th><input type="text" name="global_costreal_paid"          class="form-control text-center" style="font-weight: 700;" disabled></th>
-                <th><input type="text" name="global_costreal_balanceItem"   class="form-control text-center" style="font-weight: 700;" disabled></th>
+                <th>TOTAL</th>
                 <th></th>
                 <th></th>
                 <th></th>
-        </tr>`);
+                <th><input type="text" name="global_subtotal" class="form-control text-center" disabled></th>
+                <th></th>
+                <th><input type="text" name="global_total"    class="form-control text-center" disabled></th>
+                <th><input type="text" name="global_incidence"class="form-control text-center validate-tax" value="100" disabled></th>
+                <th></th>
+            </tr>`);
 
-      $.each(projectRealCosts, function(key, collectionSubitem){
+          $.each(projectBudgets, function(key, collectionSubitem){
 
-        let projectId       = {!! $project->id !!};
+          let projectId       = {!! $project->id !!};
 
-        $("#content-data-realcost").append(`
-        <tr class="b-c-gray costreal-item" id="costreal-item-${key}" data-id="${key}">
-          <th>${collectionSubitem.item_number}</th>
-          <th colspan="4" class="text-left pl-3">${collectionSubitem.item_name}</th>
-          <th><input type="text" name="costreal_budget_total"   class="form-control text-center" disabled></th>
-          <th><input type="text" name="costreal_paid"           class="form-control text-center" disabled></th>
-          <th><input type="text" name="costreal_balance_item"   class="form-control text-center" disabled></th>
-          <th></th>
-          <th></th>
-          <th>
-              <button
-                  class="btn btn-danger removeCostRealItemAjax" 
-                  data-idproject="${projectId}"
-                  data-iditem="${key}"
-                  style="padding: 0px 5px;"
-              >X</button>
-          </th>
-        </tr>`);
+          $("#content-data-budget").append(`
+          <tr class="b-c-gray items_content" id="item-${key}" data-id="${key}">
+              <th>${collectionSubitem.item_number}</th>
+              <th colspan="4" class="text-left pl-3">${collectionSubitem.item_name}</th>
+              <th><input type="text"  name="item_subtotal" class="form-control text-center validate-number-decimal" disabled></th>
+              <th></th>
+              <th><input type="text"  name="item_total" class="form-control text-center validate-number-decimal" disabled></th>
+              <th><input type="text"name="item_incidence" class="form-control text-center validate-tax" maxlength="6" disabled></th>
+              <th>
+                  <button
+                      class="btn btn-danger removeItem removeItemAjax" 
+                      data-idproject="${projectId}"
+                      data-iditem="${key}"
+                      style="padding: 0px 5px;"
+                  >X</button>
+              </th>
+          </tr>`);
 
-        let budgetTotal = 0;
-        let paid        = 0;
-        let balanceItem = 0;
+          let itemSubtotal   = 0;
+          let itemTotal      = 0;
+          let itemIncidene   = 0;
 
-        $.each(collectionSubitem, function(i, costReal)
-        {
-          if(costReal.name_subitem != null)
+          $.each(collectionSubitem, function(i, budgetSubItem)
           {
-            budgetTotal += costReal.budget_total;
-            paid += costReal.paid;
-            balanceItem += costReal.balance_item;
+            if(budgetSubItem.name_subitem != null)
+            {      
+              itemSubtotal   += budgetSubItem.subtotal;
+              itemTotal      += budgetSubItem.total;
+            
+              $("#content-data-budget").append(`
+                <tr id="subitem-${budgetSubItem.id_subitem}" data-id="${budgetSubItem.id_subitem}" data-iditem="${key}" class="sub_items_content">
+                  
+                  <input      type="hidden" name="budget[${budgetSubItem.id_subitem}][id]" value="${budgetSubItem.id}" />
+                  <input      type="hidden" name="budget[${budgetSubItem.id_subitem}][id_item]" value="${key}" />
 
-
-            $("#content-data-realcost").append(`
-              <tr id="costreal-subitem-${costReal.id_subitem}" data-iditem="${key}" class="costreal-subitem">
-                          
-                  <input      type="hidden" name="real_cost[${costReal.id_subitem}][id]" value="${costReal.id}" />
-                  <input      type="hidden" name="real_cost[${costReal.id_subitem}][id_item]" value="${key}" />
-
-                  <td>${costReal.number_subitem}</td>
-                  <td class="pl-3"><input class="form-control" value="${costReal.name_subitem}" disabled /></td>
-                  <td><input type="number"name="real_cost[${costReal.id_subitem}][quantity]" value="${costReal.quantity}"         id="quantity_realcost_${costReal.id_subitem}" data-idsubiteam="${costReal.id_subitem}" maxlength="11" class="form-control text-center calculate-subtotal-realcost" /></td>
-                  <td><input type="text"  name="real_cost[${costReal.id_subitem}][unit_cost]"value="${costReal.unit_cost}"        id="unit_cost_realcost_${costReal.id_subitem}" data-idsubiteam="${costReal.id_subitem}" maxlength="14" class="form-control text-center validate-number-decimal calculate-subtotal-realcost" /></td>
-                  <td><input type="text"  name="real_cost[${costReal.id_subitem}][tax]" value="${costReal.tax}"                   id="tax_realcost_${costReal.id_subitem}" data-idsubiteam="${costReal.id_subitem}" maxlength="6" class="form-control text-center validate-tax calculate-subtotal-realcost" /></td>
-                  <td><input type="text"  name="real_cost[${costReal.id_subitem}][budget_total]" value="${costReal.budget_total}" id="budget_total_realcost_${costReal.id_subitem}" maxlength="14" class="form-control text-center validate-number-decimal" readonly /></td>
-                  <td><input type="text"  name="real_cost[${costReal.id_subitem}][paid]" value="${costReal.paid}"        maxlength="14" class="form-control text-center validate-number-decimal costreal-subitem-paid" readonly /></td>
-                  <td><input type="text"  name="real_cost[${costReal.id_subitem}][balance_item]" value="${costReal.balance_item}" id="balance_item_realcost_${costReal.id_subitem}" maxlength="14" class="form-control text-center validate-number-decimal" readonly /></td>
-                  <td><input type="text"  name="real_cost[${costReal.id_subitem}][budget_variation_pesos]" value="${costReal.budget_variation_pesos}" id="budget_variation_pesos_realcost_${costReal.id_subitem}" maxlength="14" class="form-control text-center validate-number-decimal" readonly /></td>
-                  <td><input type="text"  name="real_cost[${costReal.id_subitem}][budget_variation_tax]" value="${costReal.budget_variation_tax}"    maxlength="6" class="form-control text-center validate-tax" readonly /></td>
+                  <td>${budgetSubItem.number_subitem}</td>
+                  <td class="pl-3"><input class="form-control" value="${budgetSubItem.name_subitem}" disabled /></td>
+                  <td><input type="text"  name="budget[${budgetSubItem.id_subitem}][unit]"      value="${budgetSubItem.unit}" class="form-control text-center" required /></td>
+                  <td><input type="number"name="budget[${budgetSubItem.id_subitem}][quantity]"  value="${budgetSubItem.quantity}" maxlength="11"  id="quantity_${budgetSubItem.id_subitem}" data-idsubiteam="${budgetSubItem.id_subitem}" class="form-control text-center calculate-subtotal" required /></td>
+                  <td><input type="text"  name="budget[${budgetSubItem.id_subitem}][unit_cost]" value="${budgetSubItem.unit_cost}" maxlength="14" id="unit_cost_${budgetSubItem.id_subitem}" data-idsubiteam="${budgetSubItem.id_subitem}" class="form-control text-center calculate-subtotal validate-number-decimal reset-value" required /></td>
+                  <td><input type="text"  name="budget[${budgetSubItem.id_subitem}][subtotal]"  value="${budgetSubItem.subtotal}" maxlength="14"  id="subtotal_${budgetSubItem.id_subitem}" class="form-control text-center validate-number-decimal" readonly required /></td>
+                  <td><input type="text"  name="budget[${budgetSubItem.id_subitem}][tax]"       value="${budgetSubItem.tax}" maxlength="6"        id="tax_${budgetSubItem.id_subitem}" data-idsubiteam="${budgetSubItem.id_subitem}" class="form-control text-center validate-tax calculate-subtotal reset-value" /></td>
+                  <td><input type="text"  name="budget[${budgetSubItem.id_subitem}][total]"     value="${budgetSubItem.total}" maxlength="14"     id="total_${budgetSubItem.id_subitem}" class="form-control text-center validate-number-decimal" readonly required /></td>
+                  <td><input type="text"  name="budget[${budgetSubItem.id_subitem}][incidence]" value="" maxlength="6"        id="incidence_${budgetSubItem.id_subitem}" data-idsubiteam="${budgetSubItem.id_subitem}" class="form-control text-center validate-tax" readonly /></td>
                   
                   <td class="text-center b-c-gray" style="vertical-align: inherit;">
                       <button
-                          class="btn btn-danger removeCostRealSubItemAjax" 
-                          data-id="${costReal.id}"
-                          data-subitemid="${costReal.id_subitem}"
-                          style="padding: 0px 5px;" 
+                      class="btn btn-danger removeSubItemAjax" 
+                      data-idsubitem="subitem-${budgetSubItem.id_subitem}" 
+                      data-id="${budgetSubItem.id}"
+                      style="padding: 0px 5px;" 
                       >X</button>
                   </td>
-              </tr>
-              `);
-          }
-        });
-        
-        $("#content-data-realcost").append(`
-            <input type="text" id="add-subitems-item-${key}" class="validate-number-decimal" style="display: none!important;" name="costreal_budget_total_calc_${key}"   value="${budgetTotal}">
-            <input type="text" class="validate-number-decimal" style="display: none!important;" name="costreal_paid_calc_${key}"           value="${paid}">
-            <input type="text" class="validate-number-decimal" style="display: none!important;" name="costreal_balance_item_calc_${key}"   value="${balanceItem}">`);
+                </tr>`);
+            }
+          });
+            
+            $("#content-data-budget").append(`
+              <input type="hidden" name="item_subtotal_calc_${key}" value="${itemSubtotal}">
+              <input type="hidden" name="item_total_calc_${key}" value="${itemTotal}">`);
 
+          });
+
+          $.each($(".validate-number-decimal"), function(){
+            formatCurrency($(this), "blur");
+          });
+
+          $.each($(".validate-tax"), function(){
+            formatTax($(this), "blur");
+          });
+
+          calculateTotales();
+          removeItem();
+          validateNumberDecimal();
+          validateTax();
+          calculateBudgetGlobalItems();
+          deleteBudgetItem();
+          deleteBudgetSubitem();
+          isOpenBudget();
+          projectJS.validateNumberDecimalAddAttr();
+          projectJS.resetValueDefault();
+
+          setTimeout(function(){ $('.spinner').hide(); }, 150);
+
+        },
+        error: function(xhr, status){
+          console.log('Error: '+xhr);
+        }
       });
+    }
 
-      $.each($(".validate-number-decimal"), function(){
-        formatCurrency($(this), "blur");
+    function processDataRealCost()
+    {
+      $.ajax({
+        type: 'GET',
+        url: '/json/projects/real-cost/'+projectID,
+        dataType: 'json',
+        success: function(response){
+          
+          let projectRealCosts = response.data;
+
+          $("#content-data-realcost tr").remove();
+
+          $("#content-data-realcost").append(`
+            <tr class="b-c-gray">
+                    <th></th>
+                    <th></th>
+                    <th>CANT</th>
+                    <th>UNITARIO</th>
+                    <th>IMPUESTOS</th>
+                    <th>PRESUPUESTO</th>
+                    <th>PAGADO</th>
+                    <th>SALDO ITEM</th>
+                    <th>VARIACION ($)</th>
+                    <th>VARIACION (%)</th>
+                    <th></th>
+                </tr>
+                <tr class="b-c-gray">
+                    <th></th>
+                    <th colspan="4">TOTAL</th>
+                    <th><input type="text" name="global_costreal_budgetTotal"   class="form-control text-center" style="font-weight: 700;" disabled></th>
+                    <th><input type="text" name="global_costreal_paid"          class="form-control text-center" style="font-weight: 700;" disabled></th>
+                    <th><input type="text" name="global_costreal_balanceItem"   class="form-control text-center" style="font-weight: 700;" disabled></th>
+                    <th></th>
+                    <th></th>
+                    <th></th>
+            </tr>`);
+
+          $.each(projectRealCosts, function(key, collectionSubitem){
+
+            let projectId       = {!! $project->id !!};
+
+            $("#content-data-realcost").append(`
+            <tr class="b-c-gray costreal-item" id="costreal-item-${key}" data-id="${key}">
+              <th>${collectionSubitem.item_number}</th>
+              <th colspan="4" class="text-left pl-3">${collectionSubitem.item_name}</th>
+              <th><input type="text" name="costreal_budget_total"   class="form-control text-center" disabled></th>
+              <th><input type="text" name="costreal_paid"           class="form-control text-center" disabled></th>
+              <th><input type="text" name="costreal_balance_item"   class="form-control text-center" disabled></th>
+              <th></th>
+              <th></th>
+              <th>
+                  <button
+                      class="btn btn-danger removeCostRealItemAjax" 
+                      data-idproject="${projectId}"
+                      data-iditem="${key}"
+                      style="padding: 0px 5px;"
+                  >X</button>
+              </th>
+            </tr>`);
+
+            let budgetTotal = 0;
+            let paid        = 0;
+            let balanceItem = 0;
+
+            $.each(collectionSubitem, function(i, costReal)
+            {
+              if(costReal.name_subitem != null)
+              {
+                budgetTotal += costReal.budget_total;
+                paid += costReal.paid;
+                balanceItem += costReal.balance_item;
+
+
+                $("#content-data-realcost").append(`
+                  <tr id="costreal-subitem-${costReal.id_subitem}" data-iditem="${key}" class="costreal-subitem">
+                              
+                      <input      type="hidden" name="real_cost[${costReal.id_subitem}][id]" value="${costReal.id}" />
+                      <input      type="hidden" name="real_cost[${costReal.id_subitem}][id_item]" value="${key}" />
+
+                      <td>${costReal.number_subitem}</td>
+                      <td class="pl-3"><input class="form-control" value="${costReal.name_subitem}" disabled /></td>
+                      <td><input type="number"name="real_cost[${costReal.id_subitem}][quantity]" value="${costReal.quantity}"         id="quantity_realcost_${costReal.id_subitem}" data-idsubiteam="${costReal.id_subitem}" maxlength="11" class="form-control text-center calculate-subtotal-realcost" /></td>
+                      <td><input type="text"  name="real_cost[${costReal.id_subitem}][unit_cost]"value="${costReal.unit_cost}"        id="unit_cost_realcost_${costReal.id_subitem}" data-idsubiteam="${costReal.id_subitem}" maxlength="14" class="form-control text-center validate-number-decimal calculate-subtotal-realcost reset-value" /></td>
+                      <td><input type="text"  name="real_cost[${costReal.id_subitem}][tax]" value="${costReal.tax}"                   id="tax_realcost_${costReal.id_subitem}" data-idsubiteam="${costReal.id_subitem}" maxlength="6" class="form-control text-center validate-tax calculate-subtotal-realcost reset-value" /></td>
+                      <td><input type="text"  name="real_cost[${costReal.id_subitem}][budget_total]" value="${costReal.budget_total}" id="budget_total_realcost_${costReal.id_subitem}" maxlength="14" class="form-control text-center validate-number-decimal" readonly /></td>
+                      <td><input type="text"  name="real_cost[${costReal.id_subitem}][paid]" value="${costReal.paid}"        maxlength="14" class="form-control text-center validate-number-decimal costreal-subitem-paid" readonly /></td>
+                      <td><input type="text"  name="real_cost[${costReal.id_subitem}][balance_item]" value="${costReal.balance_item}" id="balance_item_realcost_${costReal.id_subitem}" maxlength="14" class="form-control text-center validate-number-decimal" readonly /></td>
+                      <td><input type="text"  name="real_cost[${costReal.id_subitem}][budget_variation_pesos]" value="${costReal.budget_variation_pesos}" id="budget_variation_pesos_realcost_${costReal.id_subitem}" maxlength="14" class="form-control text-center validate-number-decimal" readonly /></td>
+                      <td><input type="text"  name="real_cost[${costReal.id_subitem}][budget_variation_tax]" value="${costReal.budget_variation_tax}"    maxlength="6" class="form-control text-center validate-tax" readonly /></td>
+                      
+                      <td class="text-center b-c-gray" style="vertical-align: inherit;">
+                          <button
+                              class="btn btn-danger removeCostRealSubItemAjax" 
+                              data-id="${costReal.id}"
+                              data-subitemid="${costReal.id_subitem}"
+                              style="padding: 0px 5px;" 
+                          >X</button>
+                      </td>
+                  </tr>
+                  `);
+              }
+            });
+            
+            $("#content-data-realcost").append(`
+                <input type="text" id="add-subitems-item-${key}" class="validate-number-decimal" style="display: none!important;" name="costreal_budget_total_calc_${key}"   value="${budgetTotal}">
+                <input type="text" class="validate-number-decimal" style="display: none!important;" name="costreal_paid_calc_${key}"           value="${paid}">
+                <input type="text" class="validate-number-decimal" style="display: none!important;" name="costreal_balance_item_calc_${key}"   value="${balanceItem}">`);
+
+          });
+
+          $.each($(".validate-number-decimal"), function(){
+            formatCurrency($(this), "blur");
+          });
+
+          $.each($(".validate-tax"), function(){
+            formatTax($(this), "blur");
+          });
+
+          // active list select-subitems in seguimiento
+          $('.select-subitems').first().removeClass('hidden');
+
+          calculateTotalesRealCost();
+          removeItemRealCost();
+          validateNumberDecimal();
+          validateTax();
+          calculateCostRealGlobalItems();
+          isOpenBudget();
+          deleteCostRealItem();
+          deleteCostRealSubItem();
+          projectJS.validateNumberDecimalAddAttr();
+          projectJS.resetValueDefault();
+
+          setTimeout(function(){ $('.spinner').hide(); }, 150);
+
+        },
+        error: function(xhr, status){
+          console.log('Error: '+xhr);
+        }
       });
-
-      $.each($(".validate-tax"), function(){
-        formatTax($(this), "blur");
-      });
-
-      // active list select-subitems in seguimiento
-      $('.select-subitems').first().removeClass('hidden');
-
-      calculateTotalesRealCost();
-      removeItemRealCost();
-      validateNumberDecimal();
-      validateTax();
-      calculateCostRealGlobalItems();
-      isOpenBudget();
-      deleteCostRealItem();
-      deleteCostRealSubItem();
-      projectJS.validateNumberDecimalAddAttr();
-      projectJS.resetValueDefault();
-
     }
   </script>
   <script src="{{ asset('/js/project.js') }}"></script>

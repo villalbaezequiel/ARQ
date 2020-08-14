@@ -78,12 +78,17 @@ $(document).ready(function() {
       $("#content-data-realcost tr").remove();
 
       setTimeout(function(){
+        
         if($('.tab-pane.active').attr('id') == 'module_two') processDataBudget();
 
         if($('.tab-pane.active').attr('id') == 'module_three') processDataRealCost();
-      }, 100);
 
-      setTimeout(function(){ $('.spinner').hide(); }, 150);
+        if($('.tab-pane.active').attr('id') != 'module_two' || $('.tab-pane.active').attr('id') == 'module_three')
+        {
+          setTimeout(function(){ $('.spinner').hide(); }, 150);
+        }
+
+      }, 100);
       
     });
 

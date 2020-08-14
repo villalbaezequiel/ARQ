@@ -83,8 +83,4 @@
         <p class="card-title text-center">Debes Aprobar el Presupuesto para generar la Plantilla de Seguimiento</p>
     </div>
 </div>
-@else
-<script type="text/javascript">
-    let projectRealCosts = {!! json_encode($project_real_costs,JSON_FORCE_OBJECT) !!};
-</script>
 @endif

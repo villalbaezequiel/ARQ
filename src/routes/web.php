@@ -51,6 +51,8 @@ Route::group(['middleware' => ['auth']], function () {
     Route::get('/json/project_provider_history/{idProject}/{idProvider}', 'Backend\JsonController@getHistoryProvider');
 
     Route::get('/json/check_cash_flow', 'Backend\JsonController@checkCashFlow');
+    Route::get('/json/projects/budget/{id}', 'Backend\JsonController@processDataBudget');
+    Route::get('/json/projects/real-cost/{id}', 'Backend\JsonController@processDataRealCost');
 
     Route::post('/json/send-email-realcost', 'Backend\JsonController@sendEmailRealCost');
     
