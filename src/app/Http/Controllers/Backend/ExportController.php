@@ -43,6 +43,7 @@ class ExportController extends Controller
             $idProvider = $request->get('id_provider');
             $timestamp  = date('mdhis');
             $providerHistory = ProjectCashFlow::select(
+                                                'id as avance',
                                                 'date',
                                                 'amount',
                                                 'tax',
@@ -57,8 +58,12 @@ class ExportController extends Controller
                                                 ->where('type', 'egress')
                                                 ->orderBy('created_at', 'ASC')
                                                 ->get();
+            $avance = 1;
+
+
             foreach($providerHistory as &$provider)
             {
+                $provider->avance   = $avance;
                 $provider->date     = Helpers::getDateParseFormat($provider->date);
                 $provider->amount   = Helpers::getFormatSalary($provider->amount);
                 $provider->tax      = "%".$provider->tax;
@@ -66,6 +71,8 @@ class ExportController extends Controller
                 $provider->id_item  = Item::getName($provider->id_item);
                 $provider->id_subitem   = SubItem::getName($provider->id_subitem);
                 $provider->detail   = ProjectCashFlow::getDetail($provider->detail);
+
+                $avance++;
             }
 
             $name = Provider::getName($idProvider);

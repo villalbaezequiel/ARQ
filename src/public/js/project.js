@@ -391,8 +391,8 @@ function generateTemplateItemsRealCost(issetItem = false, idItem, numberItem, na
         <td>${v.number}</td>
         <td class="pl-3"><input class="form-control" value="${v.name}" disabled /></td>
         <td><input type="number"name="real_cost[${v.id}][quantity]" value="1"      id="quantity_realcost_${v.id}" maxlength="11" data-idsubiteam="${v.id}"  class="form-control text-center calculate-subtotal-realcost" /></td>
-        <td><input type="text"  name="real_cost[${v.id}][unit_cost]" value="$1"    id="unit_cost_realcost_${v.id}"  maxlength="14" data-idsubiteam="${v.id}" class="form-control text-center validate-number-decimal calculate-subtotal-realcost" /></td>
-        <td><input type="text"  name="real_cost[${v.id}][tax]" value="%0"           id="tax_realcost_${v.id}"  maxlength="6" data-idsubiteam="${v.id}" class="form-control text-center validate-tax calculate-subtotal-realcost" /></td>
+        <td><input type="text"  name="real_cost[${v.id}][unit_cost]" value="$1"    id="unit_cost_realcost_${v.id}"  maxlength="14" data-idsubiteam="${v.id}" class="form-control text-center validate-number-decimal calculate-subtotal-realcost reset-value" /></td>
+        <td><input type="text"  name="real_cost[${v.id}][tax]" value="%0"           id="tax_realcost_${v.id}"  maxlength="6" data-idsubiteam="${v.id}" class="form-control text-center validate-tax calculate-subtotal-realcost reset-value" /></td>
         <td><input type="text"  name="real_cost[${v.id}][budget_total]" value="$1" id="budget_total_realcost_${v.id}"  maxlength="14"  class="form-control text-center validate-number-decimal" readonly /></td>
         <td><input type="text"  name="real_cost[${v.id}][paid]" maxlength="14"  class="form-control text-center validate-number-decimal" readonly /></td>
         <td><input type="text"  name="real_cost[${v.id}][balance_item]" maxlength="14" id="balance_item_realcost_${v.id}" class="form-control text-center validate-number-decimal" readonly /></td>
@@ -424,6 +424,7 @@ function generateTemplateItemsRealCost(issetItem = false, idItem, numberItem, na
   validateTax();
   projectJS.validateNumberDecimalAddAttr();
   projectJS.scrollPosition(scrollID);
+  projectJS.resetValueDefault();
 }
 
 function setSelectedOptions()
@@ -1092,7 +1093,7 @@ function addCashFlow(e)
     if(validateObjectValues(data))
     {
       let balanceCashFlow = parseFloat($('input[name=balance-cash-flow]').val());
-      let amountCashFlow  = parseFloat(data.amount.toString().replace(/\./g, "").replace(",", "."));
+      let amountCashFlow  = parseFloat(data.amount.replace("$", "").replace(/\,/g, ""));
 
       if(type == "egress" && balanceCashFlow < amountCashFlow)
       {

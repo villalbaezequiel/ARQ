@@ -40,12 +40,7 @@
 
     <div class="spinner" style="display: none;"></div>
     
-    @guest
-    @else
-      <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
-          @csrf
-      </form>
-    @endif
+    <form id="logout-form" action="{{ url('/logout') }}" method="POST" style="display: none;">{{ csrf_field() }} </form>
 
     <!-- Javascripts Plugins  -->
     <script src="{{ asset('/js/core/jquery-3.3.1.min.js') }}"></script>

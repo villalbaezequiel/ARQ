@@ -284,6 +284,10 @@
 
 @section('javascript')
   <script>
+    $(document).ready(function(){
+      $('.disabled-click').click(false);
+    });
+    
     let collectionClients = {!! json_encode($clients,JSON_FORCE_OBJECT) !!};
     let projectID = {!! json_encode($project->id,JSON_FORCE_OBJECT) !!};
 

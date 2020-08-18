@@ -7,8 +7,8 @@
 
   @if(Auth::user()->permissions == "admin")
     <a href="{{ url('/providers/create') }}" class="btn btn-primary">Nuevo Proveedor</a>
-    <a href='{{ url("/export/providers") }}' class="btn btn-primary">Descargar Lista</a>
   @endif
+    <a href='{{ url("/export/providers") }}' class="btn btn-primary">Descargar Lista</a>
 
   <div class="row">
     <div class="col-md-12">

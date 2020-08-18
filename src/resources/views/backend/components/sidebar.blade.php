@@ -61,13 +61,6 @@
         </li>
 
         <li class="nav-item nav-check-url ">
-          <a class="nav-link" href="{{ url('/clients') }}">
-            <i class="material-icons">people</i>
-            <p> Clientes </p>
-          </a>
-        </li>
-
-        <li class="nav-item nav-check-url ">
           <a class="nav-link none-alert" data-toggle="collapse" href="#items">
             <i class="material-icons">group_work</i>
             <p> Rubros
@@ -93,14 +86,12 @@
         </li>
       @endif
 
-      @if(Auth::user()->permissions == "junior")
-        <li class="nav-item nav-check-url ">
-          <a class="nav-link" href="{{ url('/clients') }}">
-            <i class="material-icons">people</i>
-            <p> Clientes </p>
-          </a>
-        </li>
-      @endif
+      <li class="nav-item nav-check-url ">
+        <a class="nav-link" href="{{ url('/clients') }}">
+          <i class="material-icons">people</i>
+          <p> Clientes </p>
+        </a>
+      </li>
 
       <li class="nav-item nav-check-url ">
         <a class="nav-link" href="{{ url('/providers') }}">
@@ -109,7 +100,7 @@
         </a>
       </li>
 
-      @if(Auth::user()->permissions != "junior")
+      @if(Auth::user()->permissions == "admin")
       <li class="nav-item nav-check-url ">
         <a class="nav-link none-alert" data-toggle="collapse" href="#users-nav-menu">
           <i class="material-icons">people</i>
