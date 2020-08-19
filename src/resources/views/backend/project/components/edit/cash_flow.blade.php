@@ -1,5 +1,7 @@
 <div class="row justify-content-center cash_flow_form">
 
+    <input type="hidden" name="cash_flow_id" value="0">
+
     <div class="col-md-6">
         <div class="form-group">
             <div class="input-group-prepend">
@@ -178,7 +180,7 @@
 
     <div class="col-md-12 text-center" style="padding: 20px;">
         @if(!(int) $project->is_open_budget)
-            <button type="button" class="btn btn-primary" onclick="addCashFlow(event); return false;">Agregar</button>
+            <button type="button" class="btn btn-primary label-action-cashflow" onclick="addCashFlow(event); return false;">Agregar</button>
         @else
             <a href="javascript:void(0);" class="btn btn-default">Agregar</a>
         @endif
@@ -203,6 +205,7 @@
                 <th class="font-weight-bold-600">Proveedor</th>
                 <th class="font-weight-bold-600">Aclaración</th>
                 <th class="font-weight-bold-600">Usuario</th>
+                <th class="font-weight-bold-600">Accion</th>
                 <!-- <th class="font-weight-bold-600">Cliente</th> -->
             </tr>
         </thead>
@@ -211,17 +214,35 @@
           @foreach($project_cash_flow as $cashFlow)
             <tr <?php if($cashFlow->is_approved == "0"){ echo "style='background-color: rgba(0,0,0,.05);'"; }?> >
                 <td>{{ $cashFlow->date }}</td>
-                <td>{{ $cashFlow->type }}</td>
+                <td>{{ $cashFlow->name_type }}</td>
                 <td>{{ $cashFlow->amount }}</td>
                 <td>{{ $cashFlow->balance }}</td>
                 <td>{{ $cashFlow->tax }}</td>
-                <td>{{ $cashFlow->payment_type }}</td>
-                <td>{{ $cashFlow->id_item }}</td>
-                <td>{{ $cashFlow->id_subitem }}</td>
-                <td>{{ $cashFlow->detail }}</td>
-                <td>{{ $cashFlow->id_provider }}</td>
+                <td>{{ $cashFlow->name_payment_type }}</td>
+                <td>{{ $cashFlow->name_item }}</td>
+                <td>{{ $cashFlow->name_subitem }}</td>
+                <td>{{ $cashFlow->name_detail }}</td>
+                <td>{{ $cashFlow->name_provider }}</td>
                 <td>{{ $cashFlow->clarification }}</td>
-                <td>{{ $cashFlow->id_user }}</td>
+                <td>{{ $cashFlow->name_user }}</td>
+                <td>
+                    <button onclick="editCashFlow(event, this); return false;" data-idcashflow="{{ $cashFlow->id }}" class="btn btn-link btn-warning btn-just-icon edit" title="Editar">
+                        <i class="material-icons">dvr</i>
+                    </button>
+                </td>
+                
+                <input type="hidden" name="cashflow_id_{{ $cashFlow->id }}"         value="{{ $cashFlow->id }}" />
+                <input type="hidden" name="cashflow_date_{{ $cashFlow->id }}"       value="{{ $cashFlow->date }}" />
+                <input type="hidden" name="cashflow_type_{{ $cashFlow->id }}"       value="{{ $cashFlow->type }}" />
+                <input type="hidden" name="cashflow_amount_{{ $cashFlow->id }}"     value="{{ $cashFlow->amount }}" />
+                <input type="hidden" name="cashflow_tax_{{ $cashFlow->id }}"        value="{{ $cashFlow->tax }}" />
+                <input type="hidden" name="cashflow_payment_type_{{ $cashFlow->id }}"value="{{ $cashFlow->payment_type }}" />
+                <input type="hidden" name="cashflow_id_item_{{ $cashFlow->id }}"    value="{{ $cashFlow->id_item }}" />
+                <input type="hidden" name="cashflow_id_subitem_{{ $cashFlow->id }}" value="{{ $cashFlow->id_subitem }}" />
+                <input type="hidden" name="cashflow_detail_{{ $cashFlow->id }}"     value="{{ $cashFlow->detail }}" />
+                <input type="hidden" name="cashflow_id_provider_{{ $cashFlow->id }}"value="{{ $cashFlow->id_provider }}" />
+                <input type="hidden" name="cashflow_clarification_{{ $cashFlow->id }}"value="{{ $cashFlow->clarification }}" />
+
                 <!-- <td>$cashFlow->id_client</td> -->
             </tr>
           @endforeach

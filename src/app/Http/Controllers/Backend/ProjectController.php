@@ -257,17 +257,18 @@ class ProjectController extends Controller
             }
 
             $value->date    = Helpers::getDateParseFormat($value->date);
-            $value->type    = ProjectCashFlow::getType($value->type);
             $value->balance = Helpers::getFormatSalary(round($balance, 2));
             $value->amount  = Helpers::getFormatSalary($value->amount);
             $value->tax     = $value->tax;
-            $value->payment_type = ProjectCashFlow::getPaymentType($value->payment_type);
-            $value->id_item = Item::getName($value->id_item);
-            $value->id_subitem  = SubItem::getName($value->id_subitem);
-            $value->detail  = ProjectCashFlow::getDetail($value->detail);
-            $value->id_provider = Provider::getName($value->id_provider);
-            $value->id_user     = User::getFullName($value->id_user);
-            $value->id_client   = Client::getName($value->id_client);
+            
+            $value->name_type    = ProjectCashFlow::getType($value->type);
+            $value->name_detail  = ProjectCashFlow::getDetail($value->detail);
+            $value->name_payment_type = ProjectCashFlow::getPaymentType($value->payment_type);
+            $value->name_item = Item::getName($value->id_item);
+            $value->name_subitem  = SubItem::getName($value->id_subitem);
+            $value->name_provider = Provider::getName($value->id_provider);
+            $value->name_user     = User::getFullName($value->id_user);
+            $value->name_client   = Client::getName($value->id_client);
         }
 
         return view('backend.project.edit', [

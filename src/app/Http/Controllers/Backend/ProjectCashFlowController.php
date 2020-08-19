@@ -50,7 +50,14 @@ class ProjectCashFlowController extends Controller
         $userPermission = User::getPermission($request->get('id_user'));
 
         try {
-            $projectCashFlow = new ProjectCashFlow;
+
+            if((float) $request->get('id') > 0)
+            {
+                $projectCashFlow = ProjectCashFlow::find($request->get('id'));
+            } else {
+                $projectCashFlow = new ProjectCashFlow;
+            }
+
             $projectCashFlow->id_project    = $request->get('id_project');
             $projectCashFlow->date          = Helpers::setDateFormatTimestamp($request->get('date'));
             $projectCashFlow->type          = $request->get('type');

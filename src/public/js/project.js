@@ -1027,6 +1027,47 @@ function addNewBudget(e)
     }
 }
 
+function editCashFlow(e, element)
+{
+  e.preventDefault();
+ 
+  let idCashFlow = $(element).data('idcashflow');
+
+  let cashflowId = $(`input[name=cashflow_id_${idCashFlow}]`).val();
+  let cashflowDate = $(`input[name=cashflow_date_${idCashFlow}]`).val();
+  let cashflowType = $(`input[name=cashflow_type_${idCashFlow}]`).val();
+  let cashflowAmount = $(`input[name=cashflow_amount_${idCashFlow}]`).val();
+  let cashflowTax = $(`input[name=cashflow_tax_${idCashFlow}]`).val();
+  let cashflowPaymentType = $(`input[name=cashflow_payment_type_${idCashFlow}]`).val();
+  let cashflowIdItem = $(`input[name=cashflow_id_item_${idCashFlow}]`).val();
+  let cashflowIdSubitem = $(`input[name=cashflow_id_subitem_${idCashFlow}]`).val();
+  let cashflowDetail = $(`input[name=cashflow_detail_${idCashFlow}]`).val();
+  let cashflowClarification = $(`input[name=cashflow_clarification_${idCashFlow}]`).val();
+  let cashflowIdProvider = $(`input[name=cashflow_id_provider_${idCashFlow}]`).val();
+
+  projectJS.getProvidersFromItem($(`input[name=cashflow_id_item_${idCashFlow}]`), 'cash_flow_id_provider', 'cash_flow_id_subitem');
+
+  $('input[name=cash_flow_id]').val(cashflowId);
+  $('input[name=cash_flow_date]').val(cashflowDate);
+  $('select[name=cash_flow_type]').val(cashflowType).prop("selected", "selected");
+  $('input[name=cash_flow_amount]').val(cashflowAmount);
+  $('input[name=cash_flow_tax]').val(cashflowTax);
+  $('select[name=cash_flow_payment_type]').val(cashflowPaymentType).prop("selected", "selected");
+  $('select[name=cash_flow_id_item]').val(cashflowIdItem).prop("selected", "selected");
+  $('select[name=cash_flow_id_subitem]').val(cashflowIdSubitem).prop("selected", "selected");
+  $('select[name=cash_flow_detail]').val(cashflowDetail).prop("selected", "selected");
+  $('input[name=cash_flow_clarification]').val(cashflowClarification);
+  
+  setTimeout(function(){
+    $('select[name=cash_flow_id_provider]').val(cashflowIdProvider).prop("selected", "selected");
+    $('.selectpicker').selectpicker('refresh');
+  }, 1000);
+
+  $('.selectpicker').selectpicker('refresh');
+  $('.label-action-cashflow').text('Editar');
+  projectJS.scrollPosition('wizardProfile');
+}
+
 function addCashFlow(e)
 {
     e.preventDefault();
@@ -1039,6 +1080,7 @@ function addCashFlow(e)
     if(type == "entry")
     {
       data = {
+          id            : $('input[name=cash_flow_id]').val(),
           id_project    : $('input[name=id_project]').val(),
           date          : $('input[name=cash_flow_date]').val(),
           type          : $('select[name=cash_flow_type]').find(':selected').val(),
@@ -1057,6 +1099,7 @@ function addCashFlow(e)
     } else if(type == "egress") {
 
       data = {
+        id            : $('input[name=cash_flow_id]').val(),
         id_project    : $('input[name=id_project]').val(),
         date          : $('input[name=cash_flow_date]').val(),
         type          : $('select[name=cash_flow_type]').find(':selected').val(),
@@ -1074,6 +1117,7 @@ function addCashFlow(e)
 
     } else if(type == "direct_payment") {
       data = {
+        id            : $('input[name=cash_flow_id]').val(),
         id_project    : $('input[name=id_project]').val(),
         date          : $('input[name=cash_flow_date]').val(),
         type          : $('select[name=cash_flow_type]').find(':selected').val(),
@@ -1130,8 +1174,11 @@ function addCashFlowAjax(data)
     data: data,
     success: function(result){
       if(result.status){
+
+        let title = ($('input[name=cash_flow_id]').val() == "0" ? 'Flujo de Caja agregado con Exito!' : 'Flujo de Caja editado con Exito!')
+
         Swal.fire({
-          title: 'Flujo de Caja agregado con Exito!',
+          title: title,
           type: 'info',
           showCancelButton: false,
           confirmButtonColor: '#3085d6',
@@ -1237,10 +1284,10 @@ let projectJS = {
       success: function(result){
         
         let data      = result.data;
-          
+
         providers.empty();
 
-        if(data.length >= 1)
+        if(data && data.length >= 1)
         {
             providers.append("<option value=''>Seleccionar</option>");
             $.each(data, function(i,v){
@@ -1497,8 +1544,6 @@ let projectJS = {
   sendRealCostMailClient: (e) => {
     e.preventDefault();
 
-    console.log();
-    
     Swal.fire({
       title: `Elegir Cliente para enviar Seguimiento`,
       html: getTemplateClients(),
