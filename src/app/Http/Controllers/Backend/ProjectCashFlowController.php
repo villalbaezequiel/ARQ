@@ -10,6 +10,7 @@ use App\ProjectRealCost;
 use App\ProjectCashFlow;
 use App\User;
 use Illuminate\Support\Facades\Auth;
+use Carbon\Carbon;
 
 class ProjectCashFlowController extends Controller
 {
@@ -54,12 +55,12 @@ class ProjectCashFlowController extends Controller
             if((float) $request->get('id') > 0)
             {
                 $projectCashFlow = ProjectCashFlow::find($request->get('id'));
+                $amountOld       = $projectCashFlow->amount;
             } else {
                 $projectCashFlow = new ProjectCashFlow;
             }
-
+            
             $projectCashFlow->id_project    = $request->get('id_project');
-            $projectCashFlow->date          = Helpers::setDateFormatTimestamp($request->get('date'));
             $projectCashFlow->type          = $request->get('type');
             $projectCashFlow->amount        = Project::setParseFormatPrice($request->get('amount'));
             $projectCashFlow->tax           = Project::setParseFormatTax($request->get('tax'));
@@ -74,6 +75,8 @@ class ProjectCashFlowController extends Controller
             $projectCashFlow->is_approved   = ($userPermission == "admin" ? '1' : '0');
             $projectCashFlow->save();
 
+            $projectCashFlow->setDate(Helpers::setDateFormatTimestamp($request->get('date')));
+
             if($userPermission == "admin")
             {
                 if($request->get('type') == "egress" || $request->get('type') == "direct_payment")
@@ -83,7 +86,7 @@ class ProjectCashFlowController extends Controller
                                                 ->where('id_subitem', $request->get('id_subitem'))
                                                 ->first();
                     if($realCost) {
-                        $realCost->paid         = $realCost->paid + Project::setParseFormatPrice($request->get('amount'));
+                        $realCost->paid         = ($realCost->paid - $amountOld) + Project::setParseFormatPrice($request->get('amount'));
                         $realCost->balance_item = $realCost->budget_total - $realCost->paid;
                         $realCost->save();
                     }

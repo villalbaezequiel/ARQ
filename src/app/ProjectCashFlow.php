@@ -52,4 +52,10 @@ class ProjectCashFlow extends Model
         return $types[$key];
     }
     
+    public function setDate($date)
+    {
+        $this->timestamps = false;
+        $this->date = $date;
+        $this->save();
+    }
 }
