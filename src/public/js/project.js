@@ -546,7 +546,8 @@ function formatNumberTax(n)
 
 function formatTax(input, blur)
 {
-  var input_val = input.val();
+  var input_val     = input.val();
+  let negativeCheck = input_val;
 
   if (input_val === "") { return; }
 
@@ -567,11 +568,23 @@ function formatTax(input, blur)
     }
     
     right_side  = right_side.substring(0, 2);
-    input_val   = "%" + left_side + "." + right_side;
+
+    if(negativeCheck < 0)
+    { 
+      input_val   = "-%" + left_side + "." + right_side;
+    } else {
+      input_val   = "%" + left_side + "." + right_side;
+    }
 
   } else {
     input_val = formatNumberTax(input_val);
-    input_val = "%" + input_val;
+
+    if(negativeCheck < 0)
+    { 
+      input_val = "-%" + input_val;
+    } else {
+      input_val = "%" + input_val;
+    }
     
     if (blur === "blur") { input_val += ".00"; }
   }
@@ -598,7 +611,8 @@ function formatNumber(n)
 
 function formatCurrency(input, blur)
 {
-  var input_val = input.val();
+  var input_val     = input.val();
+  let negativeCheck = input_val;
 
   if (input_val === "") { return; }
 
@@ -619,12 +633,24 @@ function formatCurrency(input, blur)
     }
     
     right_side  = right_side.substring(0, 2);
-    input_val   = "$" + left_side + "." + right_side;
+
+    if(negativeCheck < 0)
+    { 
+      input_val = "-$" + left_side + "." + right_side;
+    } else {
+      input_val = "$" + left_side + "." + right_side;
+    }
 
   } else {
     input_val = formatNumber(input_val);
-    input_val = "$" + input_val;
-    
+
+    if(negativeCheck < 0)
+    {
+      input_val = "-$" + input_val; 
+    } else {
+      input_val = "$" + input_val; 
+    }
+
     if (blur === "blur") { input_val += ".00"; }
   }
 

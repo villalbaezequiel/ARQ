@@ -47,6 +47,7 @@ class ProjectCashFlowController extends Controller
     public function store(Request $request)
     {
         $status         = true;
+        $edit           = false;
         $amount         = str_replace(array('.', ','), array('', '.'), $request->get('amount'));
         $userPermission = User::getPermission($request->get('id_user'));
 
@@ -56,6 +57,7 @@ class ProjectCashFlowController extends Controller
             {
                 $projectCashFlow = ProjectCashFlow::find($request->get('id'));
                 $amountOld       = $projectCashFlow->amount;
+                $edit            = true;
             } else {
                 $projectCashFlow = new ProjectCashFlow;
             }
@@ -85,8 +87,13 @@ class ProjectCashFlowController extends Controller
                                                 ->where('id_item', $request->get('id_item'))
                                                 ->where('id_subitem', $request->get('id_subitem'))
                                                 ->first();
-                    if($realCost) {
-                        $realCost->paid         = ($realCost->paid - $amountOld) + Project::setParseFormatPrice($request->get('amount'));
+                    if($realCost)
+                    {
+                        if($edit){
+                            $realCost->paid         = ($realCost->paid - $amountOld) + Project::setParseFormatPrice($request->get('amount'));
+                        } else {
+                            $realCost->paid         = $realCost->paid + Project::setParseFormatPrice($request->get('amount'));
+                        }
                         $realCost->balance_item = $realCost->budget_total - $realCost->paid;
                         $realCost->save();
                     }

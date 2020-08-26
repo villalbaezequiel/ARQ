@@ -397,7 +397,6 @@ class ProjectController extends Controller
                                 $projectRealCost->tax          = Project::setParseFormatTax($val['tax']);
                                 $projectRealCost->budget_total = Project::setParseFormatPrice($val['budget_total']);
                                 $projectRealCost->balance_item = $projectRealCost->budget_total - $projectRealCost->paid;
-                                $projectRealCost->budget_variation_pesos   = Project::setParseFormatPrice($val['budget_variation_pesos']);
                                 $projectRealCost->budget_variation_pesos   = ($totalBudget ? $projectRealCost->budget_total - $totalBudget : 0);
                                 $projectRealCost->budget_variation_tax     = ($totalBudget ? $projectRealCost->budget_variation_pesos / $totalBudget : 0);        
                                 $projectRealCost->save();
@@ -431,7 +430,6 @@ class ProjectController extends Controller
                                     $issetItemSubItem->tax          = Project::setParseFormatTax($val['tax']);
                                     $issetItemSubItem->budget_total = Project::setParseFormatPrice($val['budget_total']);
                                     $issetItemSubItem->balance_item = $projectRealCost->budget_total - $projectRealCost->paid;
-                                    $issetItemSubItem->budget_variation_pesos   = Project::setParseFormatPrice($val['budget_variation_pesos']);
                                     $issetItemSubItem->budget_variation_pesos   = ($totalBudget ? $projectRealCost->budget_total - $totalBudget : 0);
                                     $issetItemSubItem->budget_variation_tax     = ($totalBudget ? $projectRealCost->budget_variation_pesos / $totalBudget : 0);        
                                     $issetItemSubItem->save();
