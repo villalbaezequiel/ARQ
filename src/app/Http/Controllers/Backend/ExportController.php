@@ -57,23 +57,59 @@ class ExportController extends Controller
                                                 ->where('id_provider', $idProvider)
                                                 ->where('type', 'egress')
                                                 ->orderBy('created_at', 'ASC')
-                                                ->get();
+                                                ->get()->toArray();
             $avance = 1;
 
 
             foreach($providerHistory as &$provider)
             {
-                $provider->avance   = $avance;
-                $provider->date     = Helpers::getDateParseFormat($provider->date);
-                $provider->amount   = Helpers::getFormatSalary($provider->amount);
-                $provider->tax      = "%".$provider->tax;
-                $provider->payment_type = ProjectCashFlow::getPaymentType($provider->payment_type);
-                $provider->id_item  = Item::getName($provider->id_item);
-                $provider->id_subitem   = SubItem::getName($provider->id_subitem);
-                $provider->detail   = ProjectCashFlow::getDetail($provider->detail);
+                $provider['avance']   = $avance;
+                $provider['date']     = Helpers::getDateParseFormat($provider['date']);
+                $provider['amount']   = Helpers::getFormatSalary($provider['amount']);
+                $provider['tax']      = "%".$provider['tax'];
+                $provider['payment_type'] = ProjectCashFlow::getPaymentType($provider['payment_type']);
+                $provider['id_item']  = Item::getName($provider['id_item']);
+                $provider['id_subitem']   = SubItem::getName($provider['id_subitem']);
+                $provider['detail']   = ProjectCashFlow::getDetail($provider['detail']);
 
                 $avance++;
             }
+
+            array_push($providerHistory, [
+                "avance"    => '',
+                "date"      => '',
+                "amount"    => '',
+                "tax"       => '',
+                "payment_type"  => '',
+                "id_item"   => '',
+                "id_subitem"=> '',
+                "detail"    => '',
+                "clarification" => ''
+            ]);
+
+            array_push($providerHistory, [
+                "avance"    => '',
+                "date"      => '',
+                "amount"    => '',
+                "tax"       => '',
+                "payment_type"  => '',
+                "id_item"   => '',
+                "id_subitem"=> '',
+                "detail"    => '',
+                "clarification" => ''
+            ]);
+
+            array_push($providerHistory, [
+                "avance"    => 'RECIBI LA SUMA DE PESOS ........ EN CONCEPTO DE AVANCE N* ........',
+                "date"      => '',
+                "amount"    => '',
+                "tax"       => '',
+                "payment_type"  => '',
+                "id_item"   => '',
+                "id_subitem"=> '',
+                "detail"    => '',
+                "clarification" => ''
+            ]);
 
             $name = Provider::getName($idProvider);
 
