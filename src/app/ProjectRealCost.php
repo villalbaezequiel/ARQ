@@ -44,7 +44,7 @@ class ProjectRealCost extends Model
                 $value->id_subitem  = SubItem::getName($value->id_subitem);
             }
 
-            return (new ProjectRealCostExport($projectRealCost))->download("seguimiento_{$idProject}_{$timestamp}.csv", \Maatwebsite\Excel\Excel::TSV);
+            return (new ProjectRealCostExport($projectRealCost))->download("seguimiento_{$idProject}_{$timestamp}.xls");
 
         } catch (\Exception $err) {
             return $err;

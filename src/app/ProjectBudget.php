@@ -31,7 +31,7 @@ class ProjectBudget extends Model
                 $value->id_subitem  = SubItem::getName($value->id_subitem);
             }
 
-            return (new ProjectBudgetExport($projectBudget))->download("presupuesto_{$idProject}_{$timestamp}.csv", \Maatwebsite\Excel\Excel::TSV);
+            return (new ProjectBudgetExport($projectBudget))->download("presupuesto_{$idProject}_{$timestamp}.xls");
 
         } catch (\Exception $err) {
             return $err;
