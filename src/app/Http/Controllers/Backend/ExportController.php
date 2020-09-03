@@ -113,7 +113,7 @@ class ExportController extends Controller
 
             $name = Provider::getName($idProvider);
 
-            return (new ProjectProviderExport($providerHistory))->download("{$name}_{$idProject}_{$timestamp}.csv", \Maatwebsite\Excel\Excel::TSV);
+            return (new ProjectProviderExport($providerHistory))->download("{$name}_{$idProject}_{$timestamp}.xls");
 
         } catch (\Exception $err) {
             
