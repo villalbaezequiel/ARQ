@@ -1229,7 +1229,7 @@ function addCashFlowAjax(data)
           confirmButtonText: 'Aceptar'
         })
         .then((result) => {
-          location.reload()
+          window.location.href = window.location.origin + window.location.pathname + "?project_cash_flow=1";
         });
       }
     },

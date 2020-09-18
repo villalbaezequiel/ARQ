@@ -50,7 +50,7 @@
 
               @if(Auth::user()->permissions != "junior")
               <li class="nav-item" style="width: 50%;">
-                <a class="nav-link disabled-click" href="#module_five" data-toggle="tab" role="tab">
+                <a class="nav-link disabled-click cash_flow_link" href="#module_five" data-toggle="tab" role="tab">
                   Flujo de caja
                 </a>
               </li>
@@ -295,9 +295,30 @@
 @section('javascript')
   <script>
     $(document).ready(function(){
-      $('.disabled-click').click(false);
-    });
     
+      $.urlParam = function(name){
+        var results = new RegExp('[\?&]' + name + '=([^&#]*)').exec(window.location.href);
+        return (results ? results[1] || 0 : null);
+      }
+
+      if($.urlParam('project_cash_flow') != null)
+      { 
+        $('.cash_flow_link').removeClass('disabled-click');
+        setTimeout(() => {
+          $('.cash_flow_link').click();
+          $('.cash_flow_link').addClass('disabled-click');
+        }, 500);
+
+        setTimeout(() => {
+          $('.disabled-click').click(false);
+        }, 1000);
+
+      } else {
+        $('.disabled-click').click(false);
+      }
+
+    });
+
     let collectionClients = {!! json_encode($clients,JSON_FORCE_OBJECT) !!};
     let projectID = {!! json_encode($project->id,JSON_FORCE_OBJECT) !!};
 
