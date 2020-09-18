@@ -1103,6 +1103,20 @@ function addCashFlow(e)
 
     let cashFlowClarification = $('input[name=cash_flow_clarification]').val();
 
+    if(!type)
+    {
+      Swal.fire({
+        title: 'Debes seleccionar un Tipo de Flujo de Caja!',
+        type: 'info',
+        showCancelButton: false,
+        confirmButtonColor: '#3085d6',
+        cancelButtonColor: '#d33',
+        confirmButtonText: 'Aceptar'
+      });
+
+      return; 
+    }
+
     if(type == "entry")
     {
       data = {
@@ -1142,6 +1156,9 @@ function addCashFlow(e)
       }
 
     } else if(type == "direct_payment") {
+
+      let idProviderVal = $('select[name=cash_flow_id_provider]').find(':selected').val();
+      
       data = {
         id            : $('input[name=cash_flow_id]').val(),
         id_project    : $('input[name=id_project]').val(),
@@ -1153,7 +1170,7 @@ function addCashFlow(e)
         id_item       : $('select[name=cash_flow_id_item]').find(':selected').val(),
         id_subitem    : $('select[name=cash_flow_id_subitem]').find(':selected').val(),
         detail        : $('select[name=cash_flow_detail]').find(':selected').val(),
-        id_provider   : "0",
+        id_provider   : (idProviderVal ? idProviderVal : "0"),
         clarification : (cashFlowClarification ? cashFlowClarification : " "),
         id_user       : $('select[name=cash_flow_id_user]').find(':selected').val(),
         id_client     : "0"

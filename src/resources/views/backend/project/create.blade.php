@@ -66,6 +66,17 @@
             </div>
           </div>
           <div class="card-body">
+
+            <div class="row pr-3 pl-3">
+                <div class="mr-auto">
+                    <input type="button" class="btn btn-previous btn-fill btn-default btn-wd disabled" name="previous" value="Anterior">
+                </div>
+                <div class="ml-auto">
+                    <input type="button" class="btn btn-next btn-fill btn-primary btn-wd" name="next" value="Siguiente">
+                    <input type="submit" class="btn btn-finish btn-fill btn-primary btn-wd show-content-observation" name="finish" value="Guardar" style="display: none;" />
+                </div>
+            </div>
+
             <div class="tab-content">
 
               <div class="tab-pane active" id="module_one">

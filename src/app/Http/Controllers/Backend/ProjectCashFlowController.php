@@ -47,7 +47,6 @@ class ProjectCashFlowController extends Controller
     public function store(Request $request)
     {
         $status         = true;
-        $edit           = false;
         $amount         = str_replace(array('.', ','), array('', '.'), $request->get('amount'));
         $userPermission = User::getPermission($request->get('id_user'));
 
@@ -57,7 +56,10 @@ class ProjectCashFlowController extends Controller
             {
                 $projectCashFlow = ProjectCashFlow::find($request->get('id'));
                 $amountOld       = $projectCashFlow->amount;
-                $edit            = true;
+                $typetOld        = $projectCashFlow->type;
+                $approvedOld     = $projectCashFlow->is_approved;
+                $idItemOld       = $projectCashFlow->id_item;
+                $idSubItemOld    = $projectCashFlow->id_subitem;
             } else {
                 $projectCashFlow = new ProjectCashFlow;
             }
@@ -79,22 +81,37 @@ class ProjectCashFlowController extends Controller
 
             $projectCashFlow->setDate(Helpers::setDateFormatTimestamp($request->get('date')));
 
+            if(isset($typetOld))
+            {
+                if($typetOld == "egress" || $typetOld == "direct_payment")
+                {
+                    $realCost = ProjectRealCost::where('id_project', $request->get('id_project'))
+                                ->where('id_item', $idItemOld)
+                                ->where('id_subitem', $idSubItemOld)
+                                ->first();
+
+                    if($realCost && (float)$approvedOld)
+                    {
+                        $realCost->paid         = $realCost->paid - $amountOld;                        
+                        $realCost->balance_item = $realCost->balance_item + $amountOld;
+                        $realCost->save();    
+                    }
+                }
+            }
+
             if($userPermission == "admin")
             {
                 if($request->get('type') == "egress" || $request->get('type') == "direct_payment")
                 {
                     $realCost = ProjectRealCost::where('id_project', $request->get('id_project'))
-                                                ->where('id_item', $request->get('id_item'))
-                                                ->where('id_subitem', $request->get('id_subitem'))
-                                                ->first();
+                            ->where('id_item', $request->get('id_item'))
+                            ->where('id_subitem', $request->get('id_subitem'))
+                            ->first();
+
                     if($realCost)
                     {
-                        if($edit){
-                            $realCost->paid         = ($realCost->paid - $amountOld) + Project::setParseFormatPrice($request->get('amount'));
-                        } else {
-                            $realCost->paid         = $realCost->paid + Project::setParseFormatPrice($request->get('amount'));
-                        }
-                        $realCost->balance_item = $realCost->budget_total - $realCost->paid;
+                        $realCost->paid         = $realCost->paid + Project::setParseFormatPrice($request->get('amount'));                        
+                        $realCost->balance_item = $realCost->balance_item - $realCost->paid;
                         $realCost->save();
                     }
                 }

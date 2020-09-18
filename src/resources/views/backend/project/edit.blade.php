@@ -24,7 +24,7 @@
         {!! Form::open(['route' => ['projects.update', $project->id], 'method' => 'PUT', 'class' => 'form-horizontal', 'onKeyPress' => 'return disableEnterKey(event)', 'id' => 'logic_project', 'data-id' => $project->id, 'enctype' => 'multipart/form-data']) !!}
           <div class="card-header text-center">
             <h3 class="card-title">
-              Editar Proyecto
+              Editar Proyecto: <strong>{{ $project->name }}</strong>
             </h3>
           </div>
           <div class="wizard-navigation">
@@ -73,8 +73,18 @@
             </div>
           </div>
           <div class="card-body">
-            <div class="tab-content">
 
+            <div class="row pr-3 pl-3">
+                <div class="mr-auto">
+                    <input type="button" class="btn btn-previous btn-fill btn-default btn-wd save-continue disabled" name="previous" value="Anterior">
+                </div>
+                <div class="ml-auto">
+                    <input type="button" class="btn btn-next btn-fill btn-primary btn-wd save-continue" name="next" value="Guardar y Siguiente">
+                    <input type="submit" class="btn btn-finish btn-fill btn-primary btn-wd show-content-observation" name="finish" value="Guardar" />
+                </div>
+            </div>
+
+            <div class="tab-content">
               <div class="tab-pane active" id="module_one">
                 <h5 class="info-text"> Información General </h5>
                 <div class="row justify-content-center">
@@ -255,15 +265,15 @@
 
             </div>
           </div>
+
+          <textarea name="observations" class="hidden">{{ $project->observations }}</textarea>
+          <input type="hidden" name="id_project" value="{{ $project->id }}">
+
           <div class="card-footer">
             <div class="mr-auto">
               <input type="button" class="btn btn-previous btn-fill btn-default btn-wd save-continue disabled" name="previous" value="Anterior">
             </div>
             <div class="ml-auto">
-
-              <textarea name="observations" class="hidden">{{ $project->observations }}</textarea>
-
-              <input type="hidden" name="id_project" value="{{ $project->id }}">
               <input type="button" class="btn btn-next btn-fill btn-primary btn-wd save-continue" name="next" value="Guardar y Siguiente">
               <input type="submit" class="btn btn-finish btn-fill btn-primary btn-wd show-content-observation" name="finish" value="Guardar" />
             </div>

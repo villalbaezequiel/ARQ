@@ -20,6 +20,7 @@
                 Tipo<span class="default-required required-red">*</span>
             </span>
             <select class="selectpicker" data-live-search="true" data-style="select-with-transition" onchange="projectJS.toggleFieldRequired(this);" name="cash_flow_type">
+                <option value="">Seleccionar</option>
                 @foreach(\App\ProjectCashFlow::getTypes() as $key => $val)
                     <option value="{{ $key }}">{{ $val }}</option>
                 @endforeach
