@@ -14,7 +14,6 @@ class IsApprovedProjectCashFlow extends Migration
      */
     public function up()
     {
-        DB::connection()->getDoctrineSchemaManager()->getDatabasePlatform()->registerDoctrineTypeMapping('enum', 'string');
         
         Schema::table('project_cash_flows', function (Blueprint $table) {
             $table->enum('is_approved', [1, 0])->after('id_client');

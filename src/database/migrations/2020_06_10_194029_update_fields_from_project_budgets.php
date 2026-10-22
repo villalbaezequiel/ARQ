@@ -14,7 +14,6 @@ class UpdateFieldsFromProjectBudgets extends Migration
      */
     public function up()
     {
-        DB::connection()->getDoctrineSchemaManager()->getDatabasePlatform()->registerDoctrineTypeMapping('enum', 'string');
         
         Schema::table('project_budgets', function (Blueprint $table) {
             $table->dropColumn('tax');

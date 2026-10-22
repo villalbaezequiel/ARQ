@@ -1,5 +1,21 @@
 <?php
 
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\Backend\ClientController;
+use App\Http\Controllers\Backend\ExportController;
+use App\Http\Controllers\Backend\ItemController;
+use App\Http\Controllers\Backend\JsonController;
+use App\Http\Controllers\Backend\ProjectCashFlowController;
+use App\Http\Controllers\Backend\ProjectController;
+use App\Http\Controllers\Backend\ProjectDocumentController;
+use App\Http\Controllers\Backend\ProviderController;
+use App\Http\Controllers\Backend\RolController;
+use App\Http\Controllers\Backend\SubItemController;
+use App\Http\Controllers\Backend\UserController;
+use App\Http\Controllers\Backend\UserFileController;
+use App\Http\Controllers\HomeController;
+
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -26,44 +42,44 @@ Route::get('/home', function(){
 
 Auth::routes();
 
-Route::get('/home', 'HomeController@index')->name('home');
+Route::get('/home', [HomeController::class, 'index'])->name('home');
 
 Route::group(['middleware' => ['auth']], function () {
-    Route::resource('/projects', 'Backend\ProjectController');
-    Route::resource('/project_documents', 'Backend\ProjectDocumentController');
-    Route::resource('/clients', 'Backend\ClientController');
-    Route::resource('/providers', 'Backend\ProviderController');
-    Route::resource('/user_files', 'Backend\UserFileController');
-    Route::resource('/items', 'Backend\ItemController');
-    Route::resource('/sub_items', 'Backend\SubItemController');
-    Route::resource('/users', 'Backend\UserController');
-    Route::resource('/roles', 'Backend\RolController');
-    Route::resource('/project_cash_flow', 'Backend\ProjectCashFlowController');
+    Route::resource('/projects', ProjectController::class);
+    Route::resource('/project_documents', ProjectDocumentController::class);
+    Route::resource('/clients', ClientController::class);
+    Route::resource('/providers', ProviderController::class);
+    Route::resource('/user_files', UserFileController::class);
+    Route::resource('/items', ItemController::class);
+    Route::resource('/sub_items', SubItemController::class);
+    Route::resource('/users', UserController::class);
+    Route::resource('/roles', RolController::class);
+    Route::resource('/project_cash_flow', ProjectCashFlowController::class);
 
-    Route::get('/json/budgets/delete-item', 'Backend\JsonController@deleteBudgetItem');
-    Route::get('/json/budgets/delete-subitem', 'Backend\JsonController@deleteBudgetSubitem');
-    Route::get('/json/budgets/open', 'Backend\JsonController@setOpenBudget');
-    Route::get('/json/costreal/delete-item', 'Backend\JsonController@deleteRealCostItem');
-    Route::get('/json/costreal/delete-subitem', 'Backend\JsonController@deleteRealCostSubitem');
-    Route::get('/json/providers/item/{iditem}', 'Backend\JsonController@getProvidersFromItem');
-    Route::get('/json/items/sub_items', 'Backend\JsonController@getSubItemsFromItems');
-    Route::get('/json/project_providers/item/{idProject}/{idItem}', 'Backend\JsonController@searchProviders');
-    Route::get('/json/project_provider_history/{idProject}/{idProvider}', 'Backend\JsonController@getHistoryProvider');
+    Route::get('/json/budgets/delete-item', [JsonController::class, 'deleteBudgetItem']);
+    Route::get('/json/budgets/delete-subitem', [JsonController::class, 'deleteBudgetSubitem']);
+    Route::get('/json/budgets/open', [JsonController::class, 'setOpenBudget']);
+    Route::get('/json/costreal/delete-item', [JsonController::class, 'deleteRealCostItem']);
+    Route::get('/json/costreal/delete-subitem', [JsonController::class, 'deleteRealCostSubitem']);
+    Route::get('/json/providers/item/{iditem}', [JsonController::class, 'getProvidersFromItem']);
+    Route::get('/json/items/sub_items', [JsonController::class, 'getSubItemsFromItems']);
+    Route::get('/json/project_providers/item/{idProject}/{idItem}', [JsonController::class, 'searchProviders']);
+    Route::get('/json/project_provider_history/{idProject}/{idProvider}', [JsonController::class, 'getHistoryProvider']);
 
-    Route::get('/json/check_cash_flow', 'Backend\JsonController@checkCashFlow');
-    Route::get('/json/projects/budget/{id}', 'Backend\JsonController@processDataBudget');
-    Route::get('/json/projects/real-cost/{id}', 'Backend\JsonController@processDataRealCost');
+    Route::get('/json/check_cash_flow', [JsonController::class, 'checkCashFlow']);
+    Route::get('/json/projects/budget/{id}', [JsonController::class, 'processDataBudget']);
+    Route::get('/json/projects/real-cost/{id}', [JsonController::class, 'processDataRealCost']);
 
-    Route::post('/json/send-email-realcost', 'Backend\JsonController@sendEmailRealCost');
+    Route::post('/json/send-email-realcost', [JsonController::class, 'sendEmailRealCost']);
     
-    Route::get('/export/project_budgets/{id}', 'Backend\ExportController@projectBudgets');
-    Route::get('/export/project_provider', 'Backend\ExportController@projectHistoryProvider');
-    Route::get('/export/providers', 'Backend\ExportController@providers');
-    Route::get('/export/clients', 'Backend\ExportController@clients');
+    Route::get('/export/project_budgets/{id}', [ExportController::class, 'projectBudgets']);
+    Route::get('/export/project_provider', [ExportController::class, 'projectHistoryProvider']);
+    Route::get('/export/providers', [ExportController::class, 'providers']);
+    Route::get('/export/clients', [ExportController::class, 'clients']);
 
 });
 
-Route::get('/export/project_realcost/{id}', 'Backend\ExportController@projectRealCost')->name('export.project_realcost');
+Route::get('/export/project_realcost/{id}', [ExportController::class, 'projectRealCost'])->name('export.project_realcost');
 
 Route::get('/registro-proveedor', function(){
     return view('frontend.provider.create');

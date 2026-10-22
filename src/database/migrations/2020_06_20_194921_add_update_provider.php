@@ -14,7 +14,6 @@ class AddUpdateProvider extends Migration
      */
     public function up()
     {
-        DB::connection()->getDoctrineSchemaManager()->getDatabasePlatform()->registerDoctrineTypeMapping('enum', 'string');
         
         Schema::table('providers', function (Blueprint $table) {
             $table->renameColumn('id_category', 'id_items');

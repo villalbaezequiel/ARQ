@@ -14,7 +14,6 @@ class UpdateClientFromProject extends Migration
      */
     public function up()
     {
-        DB::connection()->getDoctrineSchemaManager()->getDatabasePlatform()->registerDoctrineTypeMapping('enum', 'string');
 
         Schema::table('projects', function (Blueprint $table) {
             $table->string('id_client')->nullable()->change();
