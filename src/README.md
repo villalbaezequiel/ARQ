@@ -1,11 +1,49 @@
-<p align="center"><img src="https://res.cloudinary.com/dtfbvvkyp/image/upload/v1566331377/laravel-logolockup-cmyk-red.svg" width="400"></p>
+# ARQ
 
-<p align="center">
-<a href="https://travis-ci.org/laravel/framework"><img src="https://travis-ci.org/laravel/framework.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://poser.pugx.org/laravel/framework/d/total.svg" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://poser.pugx.org/laravel/framework/v/stable.svg" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://poser.pugx.org/laravel/framework/license.svg" alt="License"></a>
-</p>
+Gestión de proyectos de arquitectura: presupuestos, costos reales, flujo de caja, clientes y proveedores. Detalle en [Docs/Brief.md](Docs/Brief.md).
+
+Stack: Laravel 12, PHP 8.2+, MySQL 8.4, Laravel Sail.
+
+## Desarrollo con Laravel Sail
+
+Requiere Docker.
+
+```bash
+cp .env.example .env
+
+# instalar dependencias PHP (primera vez, sin PHP local)
+docker run --rm -u "$(id -u):$(id -g)" -v "$(pwd):/var/www/html" -w /var/www/html \
+    laravelsail/php84-composer:latest composer install --ignore-platform-reqs
+
+./vendor/bin/sail up -d
+./vendor/bin/sail artisan key:generate
+./vendor/bin/sail artisan migrate
+./vendor/bin/sail npm install
+./vendor/bin/sail npm run dev
+```
+
+App en http://localhost. MySQL expuesto en el puerto `3306` (usuario `sail`, password `password`).
+
+Variables útiles en `.env`: `APP_PORT`, `FORWARD_DB_PORT`.
+
+Alias opcional:
+
+```bash
+alias sail='[ -f sail ] && sh sail || sh vendor/bin/sail'
+```
+
+Comandos comunes:
+
+```bash
+sail up -d          # levantar
+sail down           # apagar
+sail artisan ...    # artisan
+sail composer ...   # composer
+sail test           # tests
+sail mysql          # cliente MySQL
+```
+
+---
 
 ## About Laravel
 
